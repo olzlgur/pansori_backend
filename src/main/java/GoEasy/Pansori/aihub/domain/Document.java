@@ -1,4 +1,4 @@
-package GoEasy.Pansori.parse.domain;
+package GoEasy.Pansori.aihub.domain;
 
 //import GoEasy.Pansori.parse.domain.DocumentScore;
 import lombok.*;
@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Setter
-public class Documents {
+public class Document {
 
 
     @Id
