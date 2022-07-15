@@ -11,6 +11,10 @@ public class DocumentBrief {
 
     private Long id;
 
+    private String category;
+
+    private String abstractive;
+
     private String title;
 
     private String publish_date;

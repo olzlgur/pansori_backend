@@ -12,5 +12,5 @@ public class DocumentBriefList {
 
     private int count;
 
-    private int total = 1367;
+    private int total = 2734;
 }

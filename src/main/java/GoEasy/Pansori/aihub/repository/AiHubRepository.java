@@ -29,11 +29,11 @@ public class AiHubRepository {
         List<DocumentBrief> documentBriefArr = new ArrayList<>();
         DocumentBrief documentBrief;
         Document document;
-        int number = (pageNumber -1)*20 + 1;
+        int number = (pageNumber -1)*10 + 1;
 //        select * from pansoriDB.documents order by publish_date desc limit 1, 20;
         TypedQuery<Document> query = em.createQuery("select d from Document d order by d.publish_date desc", Document.class);
         List<Document> documentArr = query.setFirstResult(number)
-                .setMaxResults(pageNumber * 20)
+                .setMaxResults(10)
                 .getResultList();
         for(int i=0; i<documentArr.size(); i++) {
             documentBrief = new DocumentBrief();
@@ -41,6 +41,8 @@ public class AiHubRepository {
             documentBrief.setId(document.getId());
             documentBrief.setTitle(document.getTitle());
             documentBrief.setPublish_date(document.getPublish_date());
+            documentBrief.setCategory(document.getCategory());
+            documentBrief.setAbstractive(document.getAbstractive());
             documentBriefArr.add(documentBrief);
         }
         documentBriefList.setDocumentBriefList(documentBriefArr);
