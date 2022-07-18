@@ -55,4 +55,10 @@ public class AiHubRepository {
 //    List<Author> authors = query.setFirstResult(5)
 //            .setMaxResults(5)
 //            .getResultList();
+
+    public DocumentBriefList search(List<String> contents){
+        DocumentBriefList documentBriefList = new DocumentBriefList();
+
+        return documentBriefList;
+    }
 }

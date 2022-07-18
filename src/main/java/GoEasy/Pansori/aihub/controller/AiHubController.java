@@ -4,6 +4,7 @@ import GoEasy.Pansori.aihub.domain.Document;
 import GoEasy.Pansori.aihub.domain.DocumentBrief;
 import GoEasy.Pansori.aihub.domain.DocumentBriefList;
 import GoEasy.Pansori.aihub.service.AiHubService;
+import kr.co.shineware.nlp.komoran.model.Token;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,6 +28,11 @@ public class AiHubController {
     @GetMapping("/documents/findPage")
     public DocumentBriefList findAiHubPage(@RequestParam(value = "page")int page){
         return aiHubService.findPage(page,10,2734);
+    }
+
+    @GetMapping("/documents/search")
+    public List<String> search(@RequestParam(value = "content")String content){
+        return aiHubService.morphemeAnalysis(content);
     }
 
 //    @GetMapping("/documents/search")
