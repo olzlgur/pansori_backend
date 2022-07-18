@@ -24,16 +24,16 @@ public class AiHubRepository {
         return em.find(Document.class, id);
     }
 
-    public DocumentBriefList findPage(int pageNumber){
+    public DocumentBriefList findPage(int page, int limit,  int total){
         DocumentBriefList documentBriefList = new DocumentBriefList();
         List<DocumentBrief> documentBriefArr = new ArrayList<>();
         DocumentBrief documentBrief;
         Document document;
-        int number = (pageNumber -1)*10 + 1;
+        int number = (page -1)*limit + 1;
 //        select * from pansoriDB.documents order by publish_date desc limit 1, 20;
         TypedQuery<Document> query = em.createQuery("select d from Document d order by d.publish_date desc", Document.class);
         List<Document> documentArr = query.setFirstResult(number)
-                .setMaxResults(10)
+                .setMaxResults(limit)
                 .getResultList();
         for(int i=0; i<documentArr.size(); i++) {
             documentBrief = new DocumentBrief();
@@ -46,7 +46,8 @@ public class AiHubRepository {
             documentBriefArr.add(documentBrief);
         }
         documentBriefList.setDocumentBriefList(documentBriefArr);
-        documentBriefList.setCount(pageNumber);
+        documentBriefList.setCount(page);
+        documentBriefList.setTotal(total);
 
         return documentBriefList;
     }

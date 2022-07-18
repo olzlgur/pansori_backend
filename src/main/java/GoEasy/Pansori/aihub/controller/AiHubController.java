@@ -25,9 +25,12 @@ public class AiHubController {
     }
 
     @GetMapping("/documents/findPage")
-    public DocumentBriefList findAiHubPage(@RequestParam(value = "pageNumber")int pageNumber){
-        return aiHubService.findPage(pageNumber);
+    public DocumentBriefList findAiHubPage(@RequestParam(value = "page")int page){
+        return aiHubService.findPage(page,10,2734);
     }
+
+//    @GetMapping("/documents/search")
+//    public DocumentBriefList searchData( )
 
 //    public Documents<Li>
 

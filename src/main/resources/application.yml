@@ -13,3 +13,7 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+elasticsearch:
+  host: 127.0.0.1
+  port: 9200

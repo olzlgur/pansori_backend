@@ -20,7 +20,7 @@ public class AiHubService {
         return aiHubRepository.findOne(documents_id);
     }
 
-    public DocumentBriefList findPage(int pageNumber) {
-        return aiHubRepository.findPage(pageNumber);
+    public DocumentBriefList findPage(int pageNumber, int limit,  int total) {
+        return aiHubRepository.findPage(pageNumber, limit, total);
     }
 }

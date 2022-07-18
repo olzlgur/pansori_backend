@@ -1,4 +1,7 @@
 //package GoEasy.Pansori.elasticsearch;
 //
-//public interface ElasticsearchOperations extends DocumentOperations, SearchOperations{
+//import org.springframework.data.elasticsearch.core.DocumentOperations;
+//import org.springframework.data.elasticsearch.core.SearchOperations;
+//
+//public interface ElasticsearchOperations extends DocumentOperations, SearchOperations {
 //}
