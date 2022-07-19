@@ -22,6 +22,7 @@ public class PrecedentService {
         return precedentRepository.save(precedent);
     }
 
+
     public Precedent findById(Long id){
         return precedentRepository.findOne(id);
     }
