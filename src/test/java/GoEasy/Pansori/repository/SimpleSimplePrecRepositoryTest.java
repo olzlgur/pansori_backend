@@ -1,7 +1,6 @@
 package GoEasy.Pansori.repository;
 
-import GoEasy.Pansori.domain.Precedent;
-import org.assertj.core.api.Assertions;
+import GoEasy.Pansori.domain.SimplePrecedent;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,30 +9,29 @@ import org.springframework.boot.test.context.SpringBootTest;
 import javax.transaction.Transactional;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
-class PrecedentRepositoryTest {
+class SimpleSimplePrecRepositoryTest {
 
-    @Autowired private PrecedentRepository precedentRepository;
+    @Autowired private SimplePrecRepository simplePrecRepository;
 
     @Test
     public void 판례저장_기본() throws Exception {
         //given
-        Precedent precedent = new Precedent();
-        precedent.setId(new Long(1));
-        precedent.setTitle("판례사건1");
+        SimplePrecedent simplePrecedent = new SimplePrecedent();
+        simplePrecedent.setId(new Long(1));
+        simplePrecedent.setTitle("판례사건1");
 
 
         //when
-        Long saveId = precedentRepository.save(precedent);
+        Long saveId = simplePrecRepository.save(simplePrecedent);
 
         //then
-        assertThat(saveId).isEqualTo(precedent.getId());
+        assertThat(saveId).isEqualTo(simplePrecedent.getId());
 
-        Precedent findOne = precedentRepository.findOne(saveId);
-        assertThat(findOne.getTitle()).isEqualTo(precedent.getTitle());
+        SimplePrecedent findOne = simplePrecRepository.findOne(saveId);
+        assertThat(findOne.getTitle()).isEqualTo(simplePrecedent.getTitle());
     }
 
     @Test
@@ -53,13 +51,13 @@ class PrecedentRepositoryTest {
         jsonObject.put("사건종류코드",400107);
         jsonObject.put("사건종류명","일반행정");
 
-        Precedent precedent = Precedent.JsonToPrecedent(jsonObject);
+        SimplePrecedent simplePrecedent = SimplePrecedent.JsonToSimplePrec(jsonObject);
 
         //when
-        Long saveId = precedentRepository.save(precedent);
+        Long saveId = simplePrecRepository.save(simplePrecedent);
 
         //then
-        assertThat(saveId).isEqualTo(precedent.getId());
+        assertThat(saveId).isEqualTo(simplePrecedent.getId());
     }
 
 

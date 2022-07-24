@@ -1,8 +1,10 @@
 package GoEasy.Pansori.api;
 
 
-import GoEasy.Pansori.domain.Precedent;
-import GoEasy.Pansori.service.PrecedentService;
+import GoEasy.Pansori.domain.DetailPrecedent;
+import GoEasy.Pansori.domain.SimplePrecedent;
+import GoEasy.Pansori.service.DetailPrecService;
+import GoEasy.Pansori.service.SimplePrecService;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.XML;
@@ -11,18 +13,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
 @RestController
 public class OpenLawController {
 
-    private final PrecedentService precedentService;
+    private final SimplePrecService simplePrecService;
+    private final DetailPrecService detailPrecService;
 
-    public OpenLawController(PrecedentService precedentService) {
-        this.precedentService = precedentService;
+    public OpenLawController(SimplePrecService simplePrecService, DetailPrecService detailPrecService) {
+        this.simplePrecService = simplePrecService;
+        this.detailPrecService = detailPrecService;
     }
 
     @GetMapping("/api/openlaw/search") //판례 목록 조회 API
@@ -49,8 +51,8 @@ public class OpenLawController {
 
                 for(int i = 0; i < precList.length(); i++){
                     JSONObject prec = (JSONObject) precList.get(i);
-                    Precedent precedent = Precedent.JsonToPrecedent(prec);
-                    precedentService.join(precedent);
+                    SimplePrecedent simplePrecedent = SimplePrecedent.JsonToSimplePrec(prec);
+                    simplePrecService.join(simplePrecedent);
                 }
 
 
@@ -77,22 +79,21 @@ public class OpenLawController {
         String ocId = "eogns0824";
         String urlString;
 
-        int offset = 650;
-        Precedent pre;
+        int offset = 36516;
 
-        List<Precedent> precedentList = precedentService.findAll();
+        List<SimplePrecedent> simplePrecedentList = simplePrecService.findAll();
 
-        for(int i = offset; i < precedentList.size(); i++){
-            Precedent precedent = precedentList.get(i);
-            System.out.println("CURRENT ID : " + i + "     Prec ID : " + precedent.getId());
+        for(int i = offset; i < simplePrecedentList.size(); i++){
+            SimplePrecedent simplePrecedent = simplePrecedentList.get(i);
+            System.out.println("CURRENT ID : " + i + "     Prec ID : " + simplePrecedent.getId());
 
 
             try {
-                Thread.sleep(50);
+                Thread.sleep(10);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            urlString = "http://www.law.go.kr/DRF/lawService.do?target=prec&type=XML&OC=" + ocId + "&ID=" + Long.toString(precedent.getId());
+            urlString = "http://www.law.go.kr/DRF/lawService.do?target=prec&type=XML&OC=" + ocId + "&ID=" + Long.toString(simplePrecedent.getId());
 
             try{
                 URL url = new URL(urlString);
@@ -108,7 +109,8 @@ public class OpenLawController {
                 JSONObject jsonObject = XML.toJSONObject(xmlResult);
                 JSONObject precContent = (JSONObject) jsonObject.get("PrecService");
 
-                precedentService.findById(precedent.getId()).addContent(precContent);
+                DetailPrecedent detailPrecedent = DetailPrecedent.JsonToDetailPrec(precContent);
+                detailPrecService.join(detailPrecedent);
             }
             catch(Exception e) {
                 e.printStackTrace();

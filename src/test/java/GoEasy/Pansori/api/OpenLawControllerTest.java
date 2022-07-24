@@ -1,7 +1,7 @@
 package GoEasy.Pansori.api;
 
-import GoEasy.Pansori.domain.Precedent;
-import GoEasy.Pansori.service.PrecedentService;
+import GoEasy.Pansori.domain.SimplePrecedent;
+import GoEasy.Pansori.service.SimplePrecService;
 import org.json.JSONObject;
 import org.json.XML;
 import org.junit.jupiter.api.Test;
@@ -16,14 +16,12 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 
 @SpringBootTest
 @Transactional
 class OpenLawControllerTest {
 
-    @Autowired private PrecedentService precedentService;
+    @Autowired private SimplePrecService simplePrecService;
 
     @Test
     @Rollback(value = false)
@@ -33,12 +31,12 @@ class OpenLawControllerTest {
         for(int i = 0; i < 10; i++){
 
         }
-        Precedent precedent = new Precedent();
-        precedent.setId(Integer.toUnsignedLong(64443));
+        SimplePrecedent simplePrecedent = new SimplePrecedent();
+        simplePrecedent.setId(Integer.toUnsignedLong(64443));
 
         //when
         try{
-            URL url = new URL("http://www.law.go.kr/DRF/lawService.do?target=prec&type=XML&OC=" + "eogns0824" + "&ID=" + precedent.getId().toString());
+            URL url = new URL("http://www.law.go.kr/DRF/lawService.do?target=prec&type=XML&OC=" + "eogns0824" + "&ID=" + simplePrecedent.getId().toString());
 
             BufferedReader bf = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"));
             String XMLdata = "";
@@ -52,7 +50,7 @@ class OpenLawControllerTest {
 
             System.out.println(jsonObject.get("참조판례").toString());
 
-            Precedent findOne = precedentService.findById(precedent.getId());
+            SimplePrecedent findOne = simplePrecService.findById(simplePrecedent.getId());
 
             findOne.addContent(jsonObject);
 
@@ -67,11 +65,11 @@ class OpenLawControllerTest {
     @Rollback(value = false)
     public void 판례본문_리스트_업데이트() throws Exception {
         //given
-        List<Precedent> precedentList = precedentService.findAll();
+        List<SimplePrecedent> simplePrecedentList = simplePrecService.findAll();
         for(int i = 0; i < 15; i++){
-            Precedent precedent = precedentList.get(i);
+            SimplePrecedent simplePrecedent = simplePrecedentList.get(i);
             try{
-                URL url = new URL("http://www.law.go.kr/DRF/lawService.do?target=prec&type=XML&OC=" + "eogns0824" + "&ID=" + precedent.getId().toString());
+                URL url = new URL("http://www.law.go.kr/DRF/lawService.do?target=prec&type=XML&OC=" + "eogns0824" + "&ID=" + simplePrecedent.getId().toString());
 
                 BufferedReader bf = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"));
                 String XMLdata = "";
@@ -83,7 +81,7 @@ class OpenLawControllerTest {
 
                 JSONObject jsonObject = (JSONObject) XML.toJSONObject(XMLdata).get("PrecService");
 
-                Precedent findOne = precedentService.findById(precedent.getId());
+                SimplePrecedent findOne = simplePrecService.findById(simplePrecedent.getId());
 
                 findOne.addContent(jsonObject);
 
