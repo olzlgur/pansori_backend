@@ -31,6 +31,12 @@ public class DetailPrecedent {
     @Column(columnDefinition = "LONGTEXT")
     private String precContent; //판례 내용
 
+    @Column(columnDefinition = "LONGTEXT")
+    private String precReason;
+
+    @Column(columnDefinition = "LONGTEXT")
+    private String precMain;
+
     public static  DetailPrecedent JsonToDetailPrec(JSONObject jsonObject){
 
         DetailPrecedent detailPrecedent = new DetailPrecedent();

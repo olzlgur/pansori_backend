@@ -24,7 +24,6 @@ class OpenLawControllerTest {
     @Autowired private SimplePrecService simplePrecService;
 
     @Test
-    @Rollback(value = false)
     public void 판례본문_단일_업데이트() throws Exception {
         //given
 
@@ -52,8 +51,6 @@ class OpenLawControllerTest {
 
             SimplePrecedent findOne = simplePrecService.findById(simplePrecedent.getId());
 
-            findOne.addContent(jsonObject);
-
         }catch(Exception e){
             System.out.println(e.getMessage());
         }
@@ -62,7 +59,6 @@ class OpenLawControllerTest {
     }
 
     @Test
-    @Rollback(value = false)
     public void 판례본문_리스트_업데이트() throws Exception {
         //given
         List<SimplePrecedent> simplePrecedentList = simplePrecService.findAll();
@@ -83,7 +79,6 @@ class OpenLawControllerTest {
 
                 SimplePrecedent findOne = simplePrecService.findById(simplePrecedent.getId());
 
-                findOne.addContent(jsonObject);
 
             }catch(Exception e){
                 System.out.println(e.getMessage());
