@@ -35,8 +35,11 @@ public class AiHubController {
         return aiHubService.morphemeAnalysis(content);
     }
 
-//    @GetMapping("/documents/search")
-//    public DocumentBriefList searchData( )
+    @GetMapping("/documents/searchAccuray")
+    public DocumentBriefList searchData(@RequestParam(value = "content")String content,
+                                        @RequestParam(value = "page", defaultValue = "1")int page){
+        return aiHubService.searchAccuray(content, 10, page);
+    }
 
 //    public Documents<Li>
 

@@ -4,11 +4,14 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Column;
+
 @Data
 @Getter
 @Setter
 public class DocumentBrief {
 
+    @Column( name = "documents_id")
     private Long id;
 
     private String category;
@@ -18,4 +21,6 @@ public class DocumentBrief {
     private String title;
 
     private String publish_date;
+
+    private Long score;
 }

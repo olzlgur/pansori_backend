@@ -29,6 +29,10 @@ public class AiHubService {
         return aiHubRepository.findPage(pageNumber, limit, total);
     }
 
+    public DocumentBriefList searchAccuray(String content, int limit, int number){
+        return aiHubRepository.searchAccuray(morphemeAnalysis(content), limit, number);
+    }
+
 
     public List<String> morphemeAnalysis(String searchContent) {
         Komoran korman = new Komoran(DEFAULT_MODEL.FULL);
@@ -41,7 +45,7 @@ public class AiHubService {
         List<Token> tokenList = analyzeResultList.getTokenList();
 
         for (Token token : tokenList) {
-            if(token.getPos().equals("NNP")){
+            if(token.getPos().contains("NN")){
                 contents.add(token.getMorph());
             }
 //            System.out.format("(%2d, %2d) %s/%s\n", token.getBeginIndex(), token.getEndIndex(), token.getMorph(), token.getPos());
