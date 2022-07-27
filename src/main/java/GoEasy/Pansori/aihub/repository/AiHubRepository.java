@@ -51,7 +51,7 @@ public class AiHubRepository {
         }
         documentBriefList.setDocumentBriefList(documentBriefArr);
         documentBriefList.setCount(page);
-        documentBriefList.setTotal(total);
+//        documentBriefList.setTotal(total);
 
         return documentBriefList;
     }
@@ -66,7 +66,7 @@ public class AiHubRepository {
         DocumentBrief documentBrief;
         int number = (page - 1) * limit;
 
-        String sql = "select documents_id, title, category, abstractive, publish_date, ";
+        String sql = "select count(*) over(), documents_id, title, category, abstractive, publish_date, ";
 
         System.out.println(contents.size());
         sql += "(abstractive like '%" + contents.get(0) + "%') ";
@@ -74,7 +74,7 @@ public class AiHubRepository {
         for (int index = 1; index<contents.size(); index++) {
             sql += "+ (abstractive like '%" + contents.get(index) + "%') ";
         }
-        sql = sql + "as score " +
+        sql += "as score " +
                 "from document " +
                 "where abstractive like '%" + contents.get(0) + "%' ";
 
@@ -89,17 +89,58 @@ public class AiHubRepository {
 
         Query query = em.createNativeQuery(sql);
 
-        List<Object []> resultList =query
+        List<Object []> resultList = query
                 .getResultList();
 
         for (Object [] row : resultList) {
             documentBrief = new DocumentBrief();
-            documentBrief.setId(Long.parseLong(String.valueOf(row[0])));
-            documentBrief.setTitle((String) row[1]);
-            documentBrief.setCategory((String) row[2]);
-            documentBrief.setAbstractive((String) row[3]);
-            documentBrief.setPublish_date((String) row[4]);
-            documentBrief.setScore(Long.parseLong(String.valueOf(row[5])));
+            documentBrief.setId(Long.parseLong(String.valueOf(row[1])));
+            documentBrief.setTitle((String) row[2]);
+            documentBrief.setCategory((String) row[3]);
+            documentBrief.setAbstractive((String) row[4]);
+            documentBrief.setPublish_date((String) row[5]);
+            documentBrief.setScore(Long.parseLong(String.valueOf(row[6])));
+            documentBriefArr.add(documentBrief);
+        }
+        documentBriefList.setCount(page);
+        documentBriefList.setDocumentBriefList(documentBriefArr);
+        documentBriefList.setTotal((Long.parseLong(String.valueOf(resultList.get(0)[0]))+9)/limit);
+
+        return documentBriefList;
+    }
+
+    public DocumentBriefList searchRecent(List<String> contents, int limit, int page) {
+        DocumentBriefList documentBriefList = new DocumentBriefList();
+        List<DocumentBrief> documentBriefArr = new ArrayList<>();
+        DocumentBrief documentBrief;
+        int number = (page - 1) * limit;
+
+        String sql = "select d from Document as d ";
+
+        System.out.println(contents.size());
+
+        sql += "where d.abstractive like '%" + contents.get(0) + "%' ";
+
+        for (int index = 1; index<contents.size(); index++) {
+            sql += "or d.abstractive like '%" + contents.get(index) + "%' ";
+        }
+
+        sql += "order by d.publish_date desc";
+
+        System.out.println(sql);
+
+        List<Document> resultList = em.createQuery(sql, Document.class)
+                .setFirstResult(number)
+                .setMaxResults(limit)
+                .getResultList();
+
+        for (Document row : resultList) {
+            documentBrief = new DocumentBrief();
+            documentBrief.setId(row.getId());
+            documentBrief.setTitle(row.getTitle());
+            documentBrief.setCategory(row.getCategory());
+            documentBrief.setAbstractive(row.getAbstractive());
+            documentBrief.setPublish_date(row.getPublish_date());
             documentBriefArr.add(documentBrief);
         }
         documentBriefList.setCount(page);
@@ -108,7 +149,8 @@ public class AiHubRepository {
 
         return documentBriefList;
     }
-
 //    @Query(value = "select count(v) as cnt, v.answer from Survey v group by v.answer")
 //    public List<?> findSurveyCount();
 }
+
+//    select (select count(*) from pansoriDB.document where abstractive like '%음주운전%') as cnt, title from pansoriDB.document where abstractive like '%음주운전%' limit 1, 10;

@@ -33,6 +33,10 @@ public class AiHubService {
         return aiHubRepository.searchAccuray(morphemeAnalysis(content), limit, number);
     }
 
+    public DocumentBriefList searchRecent(String content, int limit, int number){
+        return aiHubRepository.searchRecent(morphemeAnalysis(content), limit, number);
+    }
+
 
     public List<String> morphemeAnalysis(String searchContent) {
         Komoran korman = new Komoran(DEFAULT_MODEL.FULL);

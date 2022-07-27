@@ -36,11 +36,16 @@ public class AiHubController {
     }
 
     @GetMapping("/documents/searchAccuray")
-    public DocumentBriefList searchData(@RequestParam(value = "content")String content,
+    public DocumentBriefList searchAccuray(@RequestParam(value = "content")String content,
                                         @RequestParam(value = "page", defaultValue = "1")int page){
         return aiHubService.searchAccuray(content, 10, page);
     }
 
+    @GetMapping("/documents/searchRecent")
+    public DocumentBriefList searchRecent(@RequestParam(value = "content")String content,
+                                        @RequestParam(value = "page", defaultValue = "1")int page){
+        return aiHubService.searchRecent(content, 10, page);
+    }
 //    public Documents<Li>
 
 }
