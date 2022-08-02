@@ -15,19 +15,19 @@ public class Member {
     @Column( name = "member_id")
     private Long id;
 
-    private String userId;
+    @Column(nullable = false)
+    private String userEmail; // id
 
-    private String password;
+    @Column(nullable = false)
+    private String password; // password
 
-    private String name;
+//    private String name; // 이름
 
-    private String userJob;
+    private String userJob; // 직업
 
-    private String phoneNumber;
+//    private String phoneNumber; // 전화번호
 
-    private String email;
+//    private String sex; // 성별
 
-    private String sex;
-
-    private String Region;
+    private String Region; // 선택
 }

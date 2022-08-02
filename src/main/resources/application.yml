@@ -13,7 +13,24 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  jwt:
+    secret-key: Goeasy1234!
 
-elasticsearch:
-  host: 127.0.0.1
-  port: 9200
+  mail:
+    host: smtp.naver.com
+    port: 587
+    username: olzlgur@naver.com
+    password: s05280528
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: true
+#            required: true
+#          auth: true
+#          connectiontimeout: 5000
+#          timeout: 5000
+#          writetimeout: 5000
+#elasticsearch:
+#  host: 127.0.0.1
+#  port: 9200
