@@ -1,9 +1,15 @@
 package GoEasy.Pansori.api.service;
 
+import GoEasy.Pansori.api.config.jwt.JwtProvider;
 import GoEasy.Pansori.api.domain.Member;
 import GoEasy.Pansori.api.repository.MemberRepository;
 import GoEasy.Pansori.exception.customException.CustomTypeException;
 //import GoEasy.Pansori.exception.customException.EmailTypeException;
+import io.jsonwebtoken.JwtBuilder;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,31 +18,57 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
+@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class MemberService {
 
-    private MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtProvider jwtProvider;
 
-    public MemberService(MemberRepository memberRepository) {
-        this.memberRepository = memberRepository;
-    }
+
+//    public MemberService(MemberRepository memberRepository) {
+//        this.memberRepository = memberRepository;
+//    }
 
     /**
      * 회원가입
      */
-    @Transactional //변경
-    public Long join(Member member) {
+    @Transactional
+    public Long join(Member member) { // 회원가입
         validateDuplicateMember(member); //중복 회원 검증
         validateEmailType(member.getUserEmail());
         validatePasswordType(member.getPassword());
+        String encPassword = passwordEncoder.encode(member.getPassword());
+        member.setPassword(encPassword);
         memberRepository.save(member);
         return member.getId();
     }
 
+    public String login(String email, String password) { // 로그인
+        Member member = memberRepository
+                .findByUserEmail(email);
+        validateEmail(member);
+        checkPassword(password, member.getPassword());
+        return jwtProvider.createToken(member.getUserEmail());
+    }
+
+    private void checkPassword(String password, String encodedPassword) {
+        boolean isSame = passwordEncoder.matches(password, encodedPassword);
+        if(!isSame) {
+            throw new CustomTypeException("아이디 혹은 비밀번호를 확인하세요.");
+        }
+    }
+
+    private void validateEmail(Member member){
+        if(member == null){
+            throw new CustomTypeException("존재하지 안흔 회원입니다.");
+        }
+    }
     private void validateDuplicateMember(Member member) {
-        List<Member> findMembers =
-                memberRepository.findByEmail(member.getUserEmail());
-        if (!findMembers.isEmpty()) {
+        Member findMembers =
+                memberRepository.findByUserEmail(member.getUserEmail());
+        if (findMembers != null) {
             throw new CustomTypeException("이미 존재하는 회원입니다."); }
     }
 
