@@ -1,7 +1,6 @@
 package GoEasy.Pansori.service;
 
-import GoEasy.Pansori.domain.DetailPrecedent;
-import GoEasy.Pansori.domain.SimplePrecedent;
+import GoEasy.Pansori.api.domain.DetailPrecedent;
 import GoEasy.Pansori.repository.DetailPrecRepository;
 import org.springframework.stereotype.Service;
 

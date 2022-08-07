@@ -1,7 +1,6 @@
 package GoEasy.Pansori.repository;
 
-import GoEasy.Pansori.domain.DetailPrecedent;
-import GoEasy.Pansori.domain.SimplePrecedent;
+import GoEasy.Pansori.api.domain.DetailPrecedent;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
