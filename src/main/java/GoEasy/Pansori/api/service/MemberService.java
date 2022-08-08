@@ -62,7 +62,7 @@ public class MemberService {
 
     private void validateEmail(Member member){
         if(member == null){
-            throw new CustomTypeException("존재하지 안흔 회원입니다.");
+            throw new CustomTypeException("존재하지 않는 회원입니다.");
         }
     }
     private void validateDuplicateMember(Member member) {
