@@ -1,7 +1,6 @@
 package GoEasy.Pansori.api.repository;
 
 import GoEasy.Pansori.api.domain.Member;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

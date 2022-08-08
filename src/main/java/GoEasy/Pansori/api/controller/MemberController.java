@@ -22,13 +22,12 @@ public class MemberController {
 //        this.memberService = memberService;
 //    }
 
-    @PostMapping(value = "/join")
-    public Long join(@RequestBody Member member, HttpServletResponse response) throws IOException {
-
+    @PostMapping(value = "/api/member/join")
+    public Long join(@RequestBody Member member, HttpServletResponse response){
             return memberService.join(member);
         }
 
-    @PostMapping("/login")
+    @PostMapping("/api/member/login")
     public LoginResponseDto login(@RequestBody LoginRequestDto loginRequestDto) {
         String token = memberService.login(loginRequestDto.getUserEmail(), loginRequestDto.getPassword());
         return new LoginResponseDto(token);

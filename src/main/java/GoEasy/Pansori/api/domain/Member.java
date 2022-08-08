@@ -22,7 +22,6 @@ public class Member {
     private String password; // password
 
 //    private String name; // 이름
-
     private String userJob; // 직업
 
 //    private String phoneNumber; // 전화번호
