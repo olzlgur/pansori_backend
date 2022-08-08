@@ -12,12 +12,12 @@ import javax.servlet.http.HttpServletRequest;
 public class MailController {
     private final MailSendService mailService;
 
-    @PostMapping("/mail")
+    @PostMapping("/api/mail/execute")
     public void execMail(@RequestBody MailDto mailDto, HttpServletRequest request) {
         mailService.mailSend(mailDto, request);
     }
 
-    @GetMapping("/confirm")
+    @GetMapping("/api/mail/confirm")
     public String confirmAuthKey(@RequestParam(value = "userEmail")String userEmail,
                                @RequestParam(value = "authKey")String authKey, HttpServletRequest request){
         return mailService.confirmAuthKey(userEmail, authKey, request);
