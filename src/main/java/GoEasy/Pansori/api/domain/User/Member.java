@@ -1,4 +1,4 @@
-package GoEasy.Pansori.api.domain;
+package GoEasy.Pansori.api.domain.User;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -29,4 +29,7 @@ public class Member {
 //    private String sex; // 성별
 
     private String Region; // 선택
+
+    @OneToOne(mappedBy = "member", fetch = FetchType.LAZY)
+    private LitList litList;
 }
