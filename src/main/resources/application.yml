@@ -1,10 +1,12 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://goeasy-db.clvgcrbhh40l.ap-northeast-2.rds.amazonaws.com/pansoriDB?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+#    username: admin
+#    password: rhdlwl123!
     url: jdbc:mysql://127.0.0.1:3306/PansoriDB?serverTimezone=UTC&characterEncoding=UTF-8
-    username: root
-    password: 1234
-
+    username: goeasy
+    password: Goeasy1234!
   jpa:
     hibernate:
       ddl-auto: update
