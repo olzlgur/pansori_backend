@@ -1,4 +1,4 @@
-package GoEasy.Pansori.controller;
+package GoEasy.Pansori.api;
 
 import GoEasy.Pansori.dto.MailDto;
 import GoEasy.Pansori.service.MailSendService;
