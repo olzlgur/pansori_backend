@@ -1,4 +1,4 @@
-package GoEasy.Pansori.controller;
+package GoEasy.Pansori.api;
 
 import GoEasy.Pansori.domain.User.Member;
 import GoEasy.Pansori.dto.LoginRequestDto;

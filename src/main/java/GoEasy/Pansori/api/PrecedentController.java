@@ -1,4 +1,4 @@
-package GoEasy.Pansori.controller;
+package GoEasy.Pansori.api;
 
 import GoEasy.Pansori.domain.DetailPrecedent;
 import GoEasy.Pansori.dto.PrecedentApiDto;

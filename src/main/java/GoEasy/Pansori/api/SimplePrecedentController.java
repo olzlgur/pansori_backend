@@ -1,4 +1,4 @@
-package GoEasy.Pansori.controller;
+package GoEasy.Pansori.api;
 
 import GoEasy.Pansori.dto.PrecedentInsertDto;
 import GoEasy.Pansori.service.SimplePrecedentService;
@@ -21,3 +21,5 @@ public class SimplePrecedentController {
         return simpleprecedentService.insertPrecedent(precedentInsertDto);
     }
 }
+
+// api controller
