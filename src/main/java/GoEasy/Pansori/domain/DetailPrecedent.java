@@ -37,3 +37,4 @@ public class DetailPrecedent {
     private String precMain;
 
 }
+

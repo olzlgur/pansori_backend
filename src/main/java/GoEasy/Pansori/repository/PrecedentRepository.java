@@ -49,7 +49,6 @@ public class PrecedentRepository {
         System.out.println(sql);
 
         Query query = em.createNativeQuery(sql);
-
         List<Object[]> resultList = query.getResultList();
         for (Object[] row : resultList) {
             precedentDto = new PrecedentDto();
