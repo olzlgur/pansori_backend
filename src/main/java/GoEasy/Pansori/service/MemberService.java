@@ -40,6 +40,16 @@ public class MemberService {
         return member.getId();
     }
 
+    /*
+    {
+        "result": string -> success / failed,
+        "data": {
+            //
+            "member_id": number,
+        },
+    }
+     */
+
     public String login(String email, String password) { // 로그인
         Member member = memberRepository
                 .findByUserEmail(email);
