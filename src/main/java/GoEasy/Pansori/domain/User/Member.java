@@ -21,15 +21,10 @@ public class Member {
     @Column(nullable = false)
     private String password; // password
 
-//    private String name; // 이름
     private String userJob; // 직업
-
-//    private String phoneNumber; // 전화번호
-
-//    private String sex; // 성별
 
     private String Region; // 선택
 
-    @OneToOne(mappedBy = "member", fetch = FetchType.LAZY)
-    private LitList litList;
+//    @OneToOne(mappedBy = "member", fetch = FetchType.LAZY)
+//    private Litigation litigation;
 }
