@@ -1,4 +1,4 @@
-package GoEasy.Pansori.service;
+package GoEasy.Pansori.exception.service;
 
 import GoEasy.Pansori.domain.DetailPrecedent;
 import GoEasy.Pansori.dto.PrecedentApiDto;

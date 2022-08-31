@@ -1,4 +1,4 @@
-package GoEasy.Pansori.service;
+package GoEasy.Pansori.exception.service;
 
 import GoEasy.Pansori.config.jwt.JwtProvider;
 import GoEasy.Pansori.domain.User.Member;

@@ -3,7 +3,7 @@ package GoEasy.Pansori.api;
 import GoEasy.Pansori.domain.User.Member;
 import GoEasy.Pansori.dto.LoginRequestDto;
 import GoEasy.Pansori.dto.LoginResponseDto;
-import GoEasy.Pansori.service.MemberService;
+import GoEasy.Pansori.exception.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
