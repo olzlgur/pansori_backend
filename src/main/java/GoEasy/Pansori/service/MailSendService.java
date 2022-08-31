@@ -1,4 +1,4 @@
-package GoEasy.Pansori.exception.service;
+package GoEasy.Pansori.service;
 
 import GoEasy.Pansori.dto.MailDto;
 import GoEasy.Pansori.exception.customException.CustomTypeException;
