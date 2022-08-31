@@ -1,7 +1,7 @@
 package GoEasy.Pansori.api;
 
 import GoEasy.Pansori.dto.PrecedentInsertDto;
-import GoEasy.Pansori.exception.service.SimplePrecedentService;
+import GoEasy.Pansori.service.SimplePrecedentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

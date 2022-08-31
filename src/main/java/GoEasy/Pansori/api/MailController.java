@@ -1,7 +1,7 @@
 package GoEasy.Pansori.api;
 
 import GoEasy.Pansori.dto.MailDto;
-import GoEasy.Pansori.exception.service.MailSendService;
+import GoEasy.Pansori.service.MailSendService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

@@ -4,7 +4,7 @@ import GoEasy.Pansori.domain.DetailPrecedent;
 import GoEasy.Pansori.dto.PrecedentApiDto;
 import GoEasy.Pansori.dto.PrecedentListDto;
 import GoEasy.Pansori.dto.SearchRequestDto;
-import GoEasy.Pansori.exception.service.PrecedentService;
+import GoEasy.Pansori.service.PrecedentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
