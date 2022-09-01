@@ -21,7 +21,6 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
 
-
 //    public MemberService(MemberRepository memberRepository) {
 //        this.memberRepository = memberRepository;
 //    }

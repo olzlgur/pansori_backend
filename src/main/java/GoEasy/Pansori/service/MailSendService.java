@@ -19,7 +19,7 @@ public class MailSendService {
     private JavaMailSender javaMailSender;
     private static final String from_address = "olzlgur@naver.com";
     private static final String text = "이메일 인증 코드";
-    public void mailSend(MailDto mailDto, HttpServletRequest request){
+    public String mailSend(MailDto mailDto, HttpServletRequest request){
         String toEmail = mailDto.getUserEmail();
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(toEmail);
@@ -27,6 +27,8 @@ public class MailSendService {
         message.setSubject(text);
         message.setText("판소리 회원가입 인증번호 \n" + createAuthKey(toEmail, request));
         javaMailSender.send(message);
+
+        return "메일 전송";
     }
 
     private String createAuthKey(String toEmail, HttpServletRequest request){

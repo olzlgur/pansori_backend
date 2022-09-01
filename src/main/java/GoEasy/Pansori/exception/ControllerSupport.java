@@ -2,28 +2,40 @@ package GoEasy.Pansori.exception;
 
 //import GoEasy.Pansori.exception.customException.EmailTypeException;
 //import GoEasy.Pansori.exception.customException.PasswordTypeException;
+import GoEasy.Pansori.domain.response.CommonResult;
 import GoEasy.Pansori.exception.customException.CustomTypeException;
+import GoEasy.Pansori.service.ResponseService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestControllerAdvice
+@RequiredArgsConstructor
 public class ControllerSupport {
 
+    private final ResponseService responseService;
+
+    private final MessageSource messageSource;
+
     @ExceptionHandler(CustomTypeException.class)
-    public ResponseEntity<ErrorResponse> handle(Exception ex) {
-        final ErrorResponse response
-                = ErrorResponse
-                .create()
-                .status(HttpStatus.METHOD_NOT_ALLOWED.value())
-                .message(ex.getMessage());
-        return new ResponseEntity<>(response, HttpStatus.METHOD_NOT_ALLOWED);
+    public CommonResult handle(HttpServletRequest request, Exception ex) {
+        return responseService.getFailResult(404, ex.getMessage());
     }
 
-//    @ExceptionHandler(EmailTypeException.class)
-//    public String EmailTypeHandler(Exception ex) { return "올바르지 않은 이메일 형식입니다.";}
-//
-//    @ExceptionHandler(PasswordTypeException.class)
-//    public String PasswordTypeHandler(Exception ex) { return "올바르지 않은 패스워드 형식입니다.";}
+    // code 정보에 해당하는 메시지를 조회합니다.
+//    private String getMessage(String code) {
+//        return getMessage(code, null);
+//    }
+
+    // code 정보, 추가 argument 로 현재 locale 에 맞는 메시지를 조회합니다.
+//    private String getMessage(String code, Object[] args) {
+//        return messageSource.getMessage(code, args, LocaleContextHolder.getLocale());
+//    }
 }
