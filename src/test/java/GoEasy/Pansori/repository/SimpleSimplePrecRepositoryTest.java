@@ -1,6 +1,6 @@
 //package GoEasy.Pansori.repository;
 //
-//import GoEasy.Pansori.domain.SimplePrecedent;
+//import GoEasy.Pansori.domain.precedent.SimplePrecedent;
 //import org.json.JSONObject;
 //import org.junit.jupiter.api.Test;
 //import org.springframework.beans.factory.annotation.Autowired;

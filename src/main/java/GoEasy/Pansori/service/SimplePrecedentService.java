@@ -1,6 +1,6 @@
 package GoEasy.Pansori.service;
 
-import GoEasy.Pansori.domain.SimplePrecedent;
+import GoEasy.Pansori.domain.precedent.SimplePrecedent;
 import GoEasy.Pansori.dto.PrecedentInsertDto;
 import GoEasy.Pansori.repository.SimplePrecedentRepository;
 import lombok.RequiredArgsConstructor;

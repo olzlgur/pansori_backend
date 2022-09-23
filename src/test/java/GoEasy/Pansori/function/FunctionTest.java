@@ -1,7 +1,7 @@
 //package GoEasy.Pansori.function;
 //
 //import GoEasy.Pansori.api.domain.DetailPrecedent;
-//import GoEasy.Pansori.domain.DetailPrecedent;
+//import GoEasy.Pansori.domain.precedent.DetailPrecedent;
 //import GoEasy.Pansori.service.DetailPrecService;
 //import org.junit.jupiter.api.Test;
 //import org.springframework.beans.factory.annotation.Autowired;

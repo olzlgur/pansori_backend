@@ -1,39 +1,124 @@
 package GoEasy.Pansori.config.jwt;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import GoEasy.Pansori.domain.User.Member;
+import GoEasy.Pansori.dto.token.TokenDto;
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.Base64;
+import java.security.Key;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 @Component
+@Slf4j
 @RequiredArgsConstructor
 public class JwtProvider {
     @Value("${spring.jwt.secret-key}")
     private String SECRET_KEY;
     private static final Long TOKEN_VALID_TIME = 1000L * 60 * 3; // 3m
 
+    private static final String BEARER_TYPE = "bearer";
+    private static final String AUTHORITIES_KEY = "auth";
+    private static final String EMAIL_KEY = "email";
+    private final Long ACCESS_TOKEN_VALID_TIME = 10 * 60 * 1000L; // 10min
+    private final Long REFRESH_TOKEN_VALID_TIME = 24 * 60 * 60 * 1000L; // 24hours
+
+    private Key key;
+
     // 의존성 주입 후, 초기화를 수행
     // 객체 초기화, secretKey Base64로 인코딩한다.
     @PostConstruct
     protected void init() {
-        SECRET_KEY = Base64.getEncoder().encodeToString(SECRET_KEY.getBytes());
+        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY); // Base64로 인코딩
+        this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String createToken(String userId){
-        Claims claims = Jwts.claims().setSubject(userId); // claims 생성 및 payload 설정
-//        claims.put("roles", roles); // 권한 설정, key/ value 쌍으로 저장
-        Date date = new Date();
-        return Jwts.builder()
-                .setClaims(claims) // 발행 유저 정보 저장
-                .setIssuedAt(date) // 발행 시간 저장
-                .setExpiration(new Date(date.getTime() + TOKEN_VALID_TIME)) // 토큰 유효 시간 저장
-                .signWith(SignatureAlgorithm.HS256, SECRET_KEY) // 해싱 알고리즘 및 키 설정
-                .compact(); // 생성
+
+    // JWT 생성
+    public TokenDto generateToken(Member member){
+
+        long now = (new Date()).getTime();
+
+        // Access Token 생성
+        Date accessTokenExpireTime = new Date(now + ACCESS_TOKEN_VALID_TIME);
+        String accessToken = Jwts.builder()
+                .setSubject(member.getEmail())    // payload "sub" : "id"
+//                .claim(EMAIL_KEY, member.getEmail()) // payload : "email" : "user email"
+                .claim(AUTHORITIES_KEY, member.getAuthority())     // payload : "auth" : "ROLE_USER" or "ROLE_AUTH"
+                .setExpiration(accessTokenExpireTime)    // payload : "exp" : 1516239022(에시)
+                .signWith(key, SignatureAlgorithm.HS256) // header "alg" : "HS256"
+                .compact();
+
+        // Refresh Token 생성
+        Date refreshTokenExpireTime = new Date(now + REFRESH_TOKEN_VALID_TIME);
+        String refreshToken = Jwts.builder()
+                .setExpiration(refreshTokenExpireTime)
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+
+        return new TokenDto(accessToken, refreshToken);
+    }
+
+    public Authentication getAuthentication(String accessToken){
+
+        //토큰 복호화
+        Claims claims = parseClaims(accessToken);
+
+        if(claims.get(AUTHORITIES_KEY) == null){
+            throw new RuntimeException("권한 정보가 없는 토큰입니다.");
+        }
+
+        //클레임에서 권한 정보 가져오기
+        Collection<? extends GrantedAuthority> authorities =
+                Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
+                        .map(SimpleGrantedAuthority::new)
+                        .collect(Collectors.toList());
+
+        // UserDetails 객체를 만들어서 Authentication 리턴
+        UserDetails principal = new User(claims.getSubject(), "", authorities);
+        return new UsernamePasswordAuthenticationToken(principal, "", authorities);
+    }
+
+    public boolean validateToken(String token){
+        try{
+            Jwts.parserBuilder().setSigningKey(SECRET_KEY).build().parseClaimsJws(token);
+            return true;
+        }
+        catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e){
+            log.info("잘못된 JWT 서명입니다.");
+        }
+        catch (ExpiredJwtException e){
+            log.info("만료된 JWT 토큰입니다.");
+        }
+        catch (UnsupportedJwtException e){
+            log.info("지원되지 않는 JWT 토큰입니다.");
+        }
+        catch (IllegalArgumentException e){
+            log.info("올바른 JWT 토큰이 아닙니다.");
+        }
+        return false;
+    }
+
+    private Claims parseClaims(String accessToken){
+        try{
+            return Jwts.parserBuilder().setSigningKey(SECRET_KEY).build().parseClaimsJws(accessToken).getBody();
+        }
+        catch (ExpiredJwtException e){
+            return e.getClaims();
+        }
     }
 }

@@ -1,8 +1,7 @@
 package GoEasy.Pansori.api;
 
-import GoEasy.Pansori.domain.DetailPrecedent;
-import GoEasy.Pansori.domain.response.CommonResult;
-import GoEasy.Pansori.domain.response.SuccessResult;
+import GoEasy.Pansori.domain.CommonResponse;
+import GoEasy.Pansori.domain.precedent.DetailPrecedent;
 import GoEasy.Pansori.dto.PrecedentApiDto;
 import GoEasy.Pansori.dto.PrecedentListDto;
 import GoEasy.Pansori.dto.SearchRequestDto;
@@ -23,23 +22,27 @@ public class PrecedentController {
     private final ResponseService responseService;
 
     @GetMapping("/api/precedent/findOne")
-    public SuccessResult<DetailPrecedent> findOne(@RequestParam(value = "id")Long id){
-        return responseService.getResult(precedentService.findOne(id));
+    public CommonResponse<Object> findOne(@RequestParam(value = "id")Long id){
+        DetailPrecedent precedent = precedentService.findOne(id);
+        return responseService.getSuccessResponse("성공했습니다..", precedent);
     }
 
     @PostMapping("/api/precedent/searchAccuracy")
-    public SuccessResult<PrecedentListDto> searchAccuracy(@RequestBody SearchRequestDto searchRequestDto){
-        return responseService.getResult(precedentService.searchAccuracy(searchRequestDto.getContent()));
+    public CommonResponse<Object> searchAccuracy(@RequestBody SearchRequestDto searchRequestDto){
+        PrecedentListDto precedentListDto = precedentService.searchAccuracy(searchRequestDto.getContent());
+        return responseService.getSuccessResponse("성공했습니다.", precedentListDto);
     }
 
     @PostMapping("/api/precedent/searchRecent")
-    public SuccessResult<PrecedentListDto> searchRecent(@RequestBody SearchRequestDto searchRequestDto){
-        return responseService.getResult(precedentService.searchRecent(searchRequestDto.getContent()));
+    public CommonResponse<Object> searchRecent(@RequestBody SearchRequestDto searchRequestDto){
+        PrecedentListDto precedentListDto = precedentService.searchRecent(searchRequestDto.getContent());
+        return responseService.getSuccessResponse("성공했습니다.", precedentListDto);
     }
 
     @GetMapping("/onePrecedent")
-    public SuccessResult<PrecedentApiDto> findOnePrecedent(@RequestParam(value = "id")Long id){
-        return responseService.getResult(precedentService.findOnePrecedent(id));
+    public CommonResponse<Object> findOnePrecedent(@RequestParam(value = "id")Long id){
+        PrecedentApiDto onePrecedent = precedentService.findOnePrecedent(id);
+        return responseService.getSuccessResponse("성공했습니다.", onePrecedent);
     }
 
 }

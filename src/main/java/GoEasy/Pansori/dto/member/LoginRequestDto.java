@@ -1,13 +1,13 @@
-package GoEasy.Pansori.dto;
+package GoEasy.Pansori.dto.member;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 public class LoginRequestDto {
-    private String userEmail;
+    private String email;
     private String password;
-
-    public LoginRequestDto(){}
 }

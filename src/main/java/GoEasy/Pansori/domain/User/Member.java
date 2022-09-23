@@ -1,13 +1,16 @@
 package GoEasy.Pansori.domain.User;
 
+import GoEasy.Pansori.domain.Authority;
+import GoEasy.Pansori.dto.member.JoinRequestDto;
+import com.sun.istack.NotNull;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
-@Setter
+@NoArgsConstructor
 public class Member {
 
     @Id
@@ -15,16 +18,38 @@ public class Member {
     @Column( name = "member_id")
     private Long id;
 
-    @Column(nullable = false)
-    private String userEmail; // id
+    @NotNull
+    private String email; // id
 
-    @Column(nullable = false)
+    @NotNull
     private String password; // password
 
-    private String userJob; // 직업
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private Authority authority;
 
-    private String Region; // 선택
+    private String job; // 직업 (선택)
 
-//    @OneToOne(mappedBy = "member", fetch = FetchType.LAZY)
-//    private Litigation litigation;
+    private String region; // 선택
+
+    public static Member registerMember(JoinRequestDto request){
+        Member member = new Member();
+        member.email = request.getEmail();
+        member.password = request.getPassword();
+        member.authority = Authority.ROLE_USER;
+        member.job = request.getJob();
+        member.region = request.getRegion();
+        return member;
+    }
+
+    public static Member createMemberByEmailAndPW(String email, String password){
+        Member member = new Member();
+        member.email = email;
+        member.password = password;
+        return member;
+    }
+
+    public void encodingPW(String password){
+        this.password = password;
+    }
 }

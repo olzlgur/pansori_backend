@@ -1,8 +1,8 @@
 //package GoEasy.Pansori.api;
 //
 //
-//import GoEasy.Pansori.domain.DetailPrecedent;
-//import GoEasy.Pansori.domain.SimplePrecedent;
+//import GoEasy.Pansori.domain.precedent.DetailPrecedent;
+//import GoEasy.Pansori.domain.precedent.SimplePrecedent;
 //import GoEasy.Pansori.service.DetailPrecService;
 //import GoEasy.Pansori.service.SimplePrecService;
 //import lombok.Data;

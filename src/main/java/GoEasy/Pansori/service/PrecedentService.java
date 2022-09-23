@@ -1,6 +1,6 @@
 package GoEasy.Pansori.service;
 
-import GoEasy.Pansori.domain.DetailPrecedent;
+import GoEasy.Pansori.domain.precedent.DetailPrecedent;
 import GoEasy.Pansori.dto.PrecedentApiDto;
 import GoEasy.Pansori.dto.PrecedentListDto;
 import GoEasy.Pansori.repository.PrecedentRepository;

@@ -2,28 +2,28 @@ package GoEasy.Pansori.service;
 
 import GoEasy.Pansori.config.jwt.JwtProvider;
 import GoEasy.Pansori.domain.User.Member;
+import GoEasy.Pansori.dto.token.TokenDto;
 import GoEasy.Pansori.repository.MemberRepository;
 import GoEasy.Pansori.exception.customException.CustomTypeException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Slf4j
 public class MemberService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
-
-//    public MemberService(MemberRepository memberRepository) {
-//        this.memberRepository = memberRepository;
-//    }
 
     /**
      * 회원가입
@@ -31,30 +31,20 @@ public class MemberService {
     @Transactional
     public Long join(Member member) { // 회원가입
         validateDuplicateMember(member); //중복 회원 검증
-        validateEmailType(member.getUserEmail());
+        validateEmailType(member.getEmail());
         validatePasswordType(member.getPassword());
         String encPassword = passwordEncoder.encode(member.getPassword());
-        member.setPassword(encPassword);
+        member.encodingPW(encPassword);
         memberRepository.save(member);
         return member.getId();
     }
 
-    /*
-    {
-        "result": string -> success / failed,
-        "data": {
-            //
-            "member_id": number,
-        },
-    }
-     */
-
-    public String login(String email, String password) { // 로그인
+    public TokenDto login(String email, String password) { // 로그인
         Member member = memberRepository
-                .findByUserEmail(email);
+                .findByEmail(email).get();
         validateEmail(member);
         checkPassword(password, member.getPassword());
-        return jwtProvider.createToken(member.getUserEmail());
+        return jwtProvider.generateToken(member);
     }
 
     private void checkPassword(String password, String encodedPassword) {
@@ -70,9 +60,9 @@ public class MemberService {
         }
     }
     private void validateDuplicateMember(Member member) {
-        Member findMembers =
-                memberRepository.findByUserEmail(member.getUserEmail());
-        if (findMembers != null) {
+        Optional<Member> findMembers =
+                memberRepository.findByEmail(member.getEmail());
+        if (findMembers.isPresent()) {
             throw new CustomTypeException("이미 존재하는 회원입니다."); }
     }
 
@@ -89,7 +79,9 @@ public class MemberService {
     public void validatePasswordType(String password){
         String regex = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*\\W).{8,20}$";
         Pattern p = Pattern.compile(regex);
+        System.out.println("여기까지됨");
         Matcher m = p.matcher(password);
+        System.out.println("여기안됨");
         if(!m.matches()) {
             throw new CustomTypeException("올바르지 않은 패스워드 형식입니다.");
         }

@@ -8,5 +8,5 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class MailDto {
-    private String userEmail;
+    private String email;
 }

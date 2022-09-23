@@ -1,4 +1,4 @@
-package GoEasy.Pansori.dto;
+package GoEasy.Pansori.dto.member;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

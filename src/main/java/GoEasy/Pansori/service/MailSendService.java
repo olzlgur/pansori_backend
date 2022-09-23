@@ -20,7 +20,7 @@ public class MailSendService {
     private static final String from_address = "olzlgur@naver.com";
     private static final String text = "이메일 인증 코드";
     public String mailSend(MailDto mailDto, HttpServletRequest request){
-        String toEmail = mailDto.getUserEmail();
+        String toEmail = mailDto.getEmail();
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(toEmail);
         message.setFrom(MailSendService.from_address);

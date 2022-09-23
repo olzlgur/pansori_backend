@@ -1,70 +1,42 @@
 package GoEasy.Pansori.service;
 
-import GoEasy.Pansori.domain.response.CommonResult;
-import GoEasy.Pansori.domain.response.SuccessResult;
+import GoEasy.Pansori.domain.CommonResponse;
+import org.json.simple.JSONObject;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 @Service
 public class ResponseService {
 
-    public enum CommonResponse {
-        SUCCESS(0, "성공하였습니다.");
-
-        int code;
-        String msg;
-
-        CommonResponse(int code, String  msg) {
-            this.code = code;
-            this.msg = msg;
-        }
-
-        public int getCode() {
-            return code;
-        }
-
-        public String getMsg() {
-            return msg;
-        }
+    public <T> CommonResponse<Object> getSuccessResponse(String msg, T data){
+        return CommonResponse.builder()
+                .success(true)
+                .code(HttpStatus.OK.value())
+                .msg(msg)
+                .data(data)
+                .build();
     }
 
-    // 단일 건에 대한 결과 처리 메서드
-    public <T> SuccessResult<T> getResult(T data){
-        SuccessResult<T> result = new SuccessResult<>();
-        result.setData(data);
-        setSuccessResult(result);
-        return result;
+    public CommonResponse<Object> getFailureResponse(Integer code,String msg){
+        return CommonResponse.builder()
+                .success(false)
+                .code(code)
+                .msg(msg)
+                .build();
     }
 
-    // 다중 건에 대한 결과 처리 메서드
-//    public <T> ListResult<T> getListResult(List<T> list) {
-//        ListResult<T> result = new ListResult<>();
-//        result.setList(list);
-//        setSuccessResult(result);
-//        return result;
-//    }
+    public void convertHttpToResposne(HttpServletResponse response, CommonResponse commonResponse) throws IOException {
+        response.setContentType("application/json;charset=UTF-8");
+        JSONObject responseJson = new JSONObject();
 
-    // 성공 결과 처리 메서드
-    public SuccessResult getSuccessResult() {
-        SuccessResult result = new SuccessResult();
-        setSuccessResult(result);
-        return result;
-    }
+        responseJson.put("code", commonResponse.getCode());
+        responseJson.put("success", commonResponse.getSuccess());
+        responseJson.put("msg", commonResponse.getMsg());
+        responseJson.put("data", commonResponse.getData());
 
-    // 실패 결과만 처리하는 메서드
-    public SuccessResult getFailResult(int code, String msg){
-        SuccessResult result = new SuccessResult();
-        result.setSuccess(false);
-        result.setCode(code);
-        result.setMsg(msg);
-
-        return result;
-    }
-
-    public void setSuccessResult(CommonResult result){
-        result.setSuccess(true);
-        result.setCode(CommonResponse.SUCCESS.getCode());
-        result.setMsg(CommonResponse.SUCCESS.getMsg());
+        response.getWriter().print(responseJson);
     }
 }

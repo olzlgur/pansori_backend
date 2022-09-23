@@ -1,6 +1,6 @@
 package GoEasy.Pansori.service;
 
-import GoEasy.Pansori.domain.SimplePrecedent;
+import GoEasy.Pansori.domain.precedent.SimplePrecedent;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,19 +12,19 @@ import javax.transaction.Transactional;
 @Transactional
 class SimpleSimplePrecServiceTest {
 
-    @Autowired private SimplePrecService simplePrecService;
-
-    @Test
-    @Rollback(value = false)
-    public void 업데이트_단일() throws Exception {
-        //given
-        SimplePrecedent simplePrecedent = simplePrecService.findById(new Long(221857));
-
-        //when
-        simplePrecedent.setCourtTypeCode(null);
-
-        //then
-    }
+//    @Autowired private SimplePrecService simplePrecService;
+//
+//    @Test
+//    @Rollback(value = false)
+//    public void 업데이트_단일() throws Exception {
+//        //given
+//        SimplePrecedent simplePrecedent = simplePrecService.findById(new Long(221857));
+//
+//        //when
+//        simplePrecedent.setCourtTypeCode(null);
+//
+//        //then
+//    }
 
 
 }

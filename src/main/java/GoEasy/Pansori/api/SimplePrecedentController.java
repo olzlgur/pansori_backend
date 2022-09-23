@@ -1,7 +1,6 @@
 package GoEasy.Pansori.api;
 
-import GoEasy.Pansori.domain.response.CommonResult;
-import GoEasy.Pansori.domain.response.SuccessResult;
+import GoEasy.Pansori.domain.CommonResponse;
 import GoEasy.Pansori.dto.PrecedentInsertDto;
 import GoEasy.Pansori.service.ResponseService;
 import GoEasy.Pansori.service.SimplePrecedentService;
@@ -22,9 +21,8 @@ public class SimplePrecedentController {
     private final ResponseService responseService;
 
     @PostMapping("/insertPrecedent")
-    public SuccessResult<Long> insertPrecedent(@RequestBody PrecedentInsertDto precedentInsertDto){
-        return responseService.getResult(simpleprecedentService.insertPrecedent(precedentInsertDto));
+    public CommonResponse<Object> insertPrecedent(@RequestBody PrecedentInsertDto precedentInsertDto){
+        Long id = simpleprecedentService.insertPrecedent(precedentInsertDto);
+        return responseService.getSuccessResponse("성공했습니다.", id);
     }
 }
-
-// api controller
