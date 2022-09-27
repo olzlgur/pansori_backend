@@ -11,7 +11,6 @@ spring:
     url: jdbc:h2:tcp://localhost/~/pansoriDB
     username: sa
     password:
-
   jpa:
     hibernate:
       ddl-auto: none
@@ -42,3 +41,7 @@ spring:
 #elasticsearch:
 #  host: 127.0.0.1
 #  port: 9200
+
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher

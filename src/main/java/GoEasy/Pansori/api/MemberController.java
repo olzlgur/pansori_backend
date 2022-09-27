@@ -2,14 +2,10 @@ package GoEasy.Pansori.api;
 
 import GoEasy.Pansori.domain.CommonResponse;
 import GoEasy.Pansori.domain.User.Member;
-import GoEasy.Pansori.dto.member.LoginRequestDto;
-import GoEasy.Pansori.dto.token.TokenDto;
 import GoEasy.Pansori.dto.member.JoinRequestDto;
-import GoEasy.Pansori.service.AuthService;
 import GoEasy.Pansori.service.MemberService;
 import GoEasy.Pansori.service.ResponseService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
