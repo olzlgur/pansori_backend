@@ -1,7 +1,7 @@
 package GoEasy.Pansori.service;
 
 import GoEasy.Pansori.domain.precedent.SimplePrecedent;
-import GoEasy.Pansori.dto.PrecedentInsertDto;
+import GoEasy.Pansori.dto.Precedent.PrecedentInsertDto;
 import GoEasy.Pansori.repository.SimplePrecedentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

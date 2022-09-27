@@ -30,7 +30,6 @@ public class AuthService {
 
     @Transactional
     public TokenDto login(LoginRequestDto request){
-        //Member member = memberRepository.findByEmail(request.getEmail()).get();
         Member member = Member.createMemberByEmailAndPW(request.getEmail(), request.getPassword());
 
         // Login id/pw 기반으로 AuthenticationToken 생성
@@ -39,6 +38,8 @@ public class AuthService {
         // 실제 검증이 이루어지는 부분
         // authenticate 메서드가 실행이 될 때 CustomeUserDetailService에서 만든 loadUserByUsername 메서드 실행
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+
+         member = memberRepository.findByEmail(member.getEmail()).get(); //인증 성공 후 멤버 정보 가져오기
 
         // 인증 정보를 기반으로 JWT 토큰 생성
         TokenDto tokenDto = jwtProvider.generateToken(member);
@@ -75,7 +76,7 @@ public class AuthService {
             throw new RuntimeException("토큰의 유저 정보가 일치하지 않습니다.");
         }
 
-        Member member = memberRepository.findById(Long.parseLong(authentication.getName())).get();
+        Member member = memberRepository.findByEmail(authentication.getName()).get();
 
         // 새로운 토큰 생성
         TokenDto newToken = jwtProvider.generateToken(member);

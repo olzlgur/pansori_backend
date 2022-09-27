@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 public class MemberController {
 
     private final MemberService memberService;
-    private final AuthService authService;
     private final ResponseService responseService;
 
     @PostMapping(value = "/api/join")
@@ -26,14 +25,6 @@ public class MemberController {
         Long id = memberService.join(member);
         return responseService.getSuccessResponse("회원가입에 성공했습니다.", id);
     }
-
-    @PostMapping("/api/login")
-    public CommonResponse<Object> login(@RequestBody LoginRequestDto request) {
-        System.out.println("로그인 위치");
-        TokenDto tokenDto = authService.login(request);
-        return responseService.getSuccessResponse("로그인에 성공했습니다.", tokenDto);
-    }
-
 
 
 }

@@ -57,8 +57,8 @@ public class JwtProvider {
         Date accessTokenExpireTime = new Date(now + ACCESS_TOKEN_VALID_TIME);
         String accessToken = Jwts.builder()
                 .setSubject(member.getEmail())    // payload "sub" : "id"
-//                .claim(EMAIL_KEY, member.getEmail()) // payload : "email" : "user email"
                 .claim(AUTHORITIES_KEY, member.getAuthority())     // payload : "auth" : "ROLE_USER" or "ROLE_AUTH"
+                .claim("test", "test")
                 .setExpiration(accessTokenExpireTime)    // payload : "exp" : 1516239022(에시)
                 .signWith(key, SignatureAlgorithm.HS256) // header "alg" : "HS256"
                 .compact();

@@ -1,4 +1,4 @@
-package GoEasy.Pansori.dto;
+package GoEasy.Pansori.dto.Precedent;
 
 import lombok.Data;
 import lombok.Setter;
