@@ -3,7 +3,7 @@ package GoEasy.Pansori.service;
 import GoEasy.Pansori.config.jwt.JwtProvider;
 import GoEasy.Pansori.domain.RefreshToken;
 import GoEasy.Pansori.domain.User.Member;
-import GoEasy.Pansori.dto.token.TokenDto;
+import GoEasy.Pansori.dto.member.token.TokenDto;
 import GoEasy.Pansori.dto.member.LoginRequestDto;
 import GoEasy.Pansori.repository.MemberRepository;
 import GoEasy.Pansori.repository.RefreshTokenRepository;
@@ -14,8 +14,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

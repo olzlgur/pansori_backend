@@ -3,11 +3,12 @@ package GoEasy.Pansori.api;
 import GoEasy.Pansori.domain.CommonResponse;
 import GoEasy.Pansori.dto.RefreshRequestDto;
 import GoEasy.Pansori.dto.member.LoginRequestDto;
-import GoEasy.Pansori.dto.token.TokenDto;
+import GoEasy.Pansori.dto.member.token.TokenDto;
 import GoEasy.Pansori.service.AuthService;
 import GoEasy.Pansori.service.ResponseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,7 +22,6 @@ public class AuthController {
 
     @PostMapping("/api/login")
     public CommonResponse<Object> login(@RequestBody LoginRequestDto request) {
-        System.out.println("로그인 위치");
         TokenDto tokenDto = authService.login(request);
         return responseService.getSuccessResponse("로그인에 성공했습니다.", tokenDto);
     }
@@ -36,5 +36,10 @@ public class AuthController {
         catch(Exception e){
             return responseService.getFailureResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
         }
+    }
+
+    @GetMapping("/api/auth/test")
+    public CommonResponse<Object> authTest(){
+        return responseService.getSuccessResponse("Authorization 인증 성공", null);
     }
 }

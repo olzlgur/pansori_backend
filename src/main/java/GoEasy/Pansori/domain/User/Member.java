@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -32,6 +34,9 @@ public class Member {
 
     private String region; // 선택
 
+    @OneToMany(mappedBy = "member")
+    private List<Bookmark> bookmarks = new ArrayList<>();
+
     public static Member registerMember(JoinRequestDto request){
         Member member = new Member();
         member.email = request.getEmail();
@@ -52,4 +57,10 @@ public class Member {
     public void encodingPW(String password){
         this.password = password;
     }
+
+    // === 연관관계 편의 메서드 === //
+    public void setBookmarks(Bookmark bookmark){
+        this.bookmarks.add(bookmark);
+    }
+
 }

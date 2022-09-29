@@ -1,4 +1,4 @@
-package GoEasy.Pansori.dto.token;
+package GoEasy.Pansori.dto.member.token;
 
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;

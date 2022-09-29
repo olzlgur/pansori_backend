@@ -1,7 +1,7 @@
 package GoEasy.Pansori.config.jwt;
 
 import GoEasy.Pansori.domain.User.Member;
-import GoEasy.Pansori.dto.token.TokenDto;
+import GoEasy.Pansori.dto.member.token.TokenDto;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
