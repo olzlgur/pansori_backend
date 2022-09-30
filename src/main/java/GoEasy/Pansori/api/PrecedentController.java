@@ -42,4 +42,5 @@ public class PrecedentController {
         return responseService.getResult(precedentService.findOnePrecedent(id));
     }
 
+
 }

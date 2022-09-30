@@ -22,6 +22,7 @@ import java.util.List;
 public class PrecedentService {
     private final PrecedentRepository precedentRepository;
 
+
     public DetailPrecedent findOne(Long precedent_id) {
         return precedentRepository.findOne(precedent_id);
     }
@@ -50,12 +51,10 @@ public class PrecedentService {
 
 
     public List<String> morphemeAnalysis(String searchContent) {
-        Komoran korman = new Komoran(DEFAULT_MODEL.FULL);
+        Komoran komoran = new Komoran(DEFAULT_MODEL.FULL);
         List<String> contents = new ArrayList<>();
 
-        KomoranResult analyzeResultList = korman.analyze(searchContent);
-
-        System.out.println(analyzeResultList.getPlainText());
+        KomoranResult analyzeResultList = komoran.analyze(searchContent);
 
         List<Token> tokenList = analyzeResultList.getTokenList();
 

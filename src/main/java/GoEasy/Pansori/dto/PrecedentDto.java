@@ -1,4 +1,5 @@
 package GoEasy.Pansori.dto;
+import com.querydsl.core.annotations.QueryProjection;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,4 +27,16 @@ public class PrecedentDto {
     private String courtName; // 법원명
 
     private String abstractive; // 요약
+    @QueryProjection
+    public PrecedentDto(Long id, String title, Date date, String caseType, String verdict, String courtName, String abstractive) {
+        this.id = id;
+        this.title = title;
+        this.date = date;
+        this.caseType = caseType;
+        this.verdict = verdict;
+        this.courtName = courtName;
+        this.abstractive = abstractive;
+    }
+
+    public PrecedentDto() {}
 }

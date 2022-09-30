@@ -5,6 +5,9 @@ import GoEasy.Pansori.domain.DetailPrecedent;
 import GoEasy.Pansori.domain.SimplePrecedent;
 import GoEasy.Pansori.dto.PrecedentDto;
 import GoEasy.Pansori.dto.PrecedentListDto;
+import GoEasy.Pansori.dto.QPrecedentDto;
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -13,14 +16,26 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static GoEasy.Pansori.domain.QSimplePrecedent.simplePrecedent;
+
 @Repository
 public class PrecedentRepository {
     private final EntityManager em;
+    private final JPAQueryFactory queryFactory;
+
 
     public PrecedentRepository(EntityManager em) {
-        this.em = em;}
+        this.em = em;
+        this.queryFactory = new JPAQueryFactory(em);
+    }
+
     public DetailPrecedent findOne(Long id) {
         return em.find(DetailPrecedent.class, id);
+    }
+
+    public List<DetailPrecedent> findAll() {
+        return em.createQuery("select d from DetailPrecedent d", DetailPrecedent.class)
+                .getResultList();
     }
 
     public PrecedentListDto searchAccuracy(List<String> contents) {
@@ -46,7 +61,6 @@ public class PrecedentRepository {
 
         sql += "order by date desc, score desc ";
 
-        System.out.println(sql);
 
         Query query = em.createNativeQuery(sql);
         List<Object[]> resultList = query.getResultList();
@@ -58,13 +72,36 @@ public class PrecedentRepository {
             precedentDto.setCaseType((String) row[3]);
             precedentDto.setVerdict((String) row[4]);
             precedentDto.setCourtName((String) row[5]);
-            precedentDto.setAbstractive((String)row[6]);
+            precedentDto.setAbstractive((String) row[6]);
             precedentDtos.add(precedentDto);
         }
         precedentListDto.setPrecedentDtoList(precedentDtos);
 
         return precedentListDto;
     }
+
+    public List<PrecedentDto> searchRecent2(List<String> contents) {
+        BooleanBuilder builder = new BooleanBuilder();
+
+        for (int index = 0; index < contents.size(); index++) {
+            builder.and(simplePrecedent.abstractive.contains(contents.get(index)));
+        }
+
+        return queryFactory
+                .select(new QPrecedentDto(
+                        simplePrecedent.id,
+                        simplePrecedent.title,
+                        simplePrecedent.date,
+                        simplePrecedent.caseType,
+                        simplePrecedent.verdict,
+                        simplePrecedent.courtName,
+                        simplePrecedent.abstractive))
+                .from(simplePrecedent)
+                .where(builder)
+                .orderBy(simplePrecedent.date.desc())
+                .fetch();
+    }
+
 
     public PrecedentListDto searchRecent(List<String> contents) {
         PrecedentListDto precedentListDto = new PrecedentListDto();
@@ -101,5 +138,26 @@ public class PrecedentRepository {
         precedentListDto.setPrecedentDtoList(precedentDtos);
 
         return precedentListDto;
+    }
+
+    public String searchMistake(String word){
+
+        System.out.println(word);
+
+        String sql = "select word, ";
+
+        sql += "(word like '%" + word.charAt(0) + "%') ";
+
+        for (int index = 1; index < word.length(); index++) {
+            sql += "+ (word like '%" + word.charAt(index) + "%') ";
+        }
+
+        sql += "as score from search_table order by count, score desc limit 1";
+
+        Query query = em.createNativeQuery(sql);
+        List<Object[]> resultList = query.getResultList();
+        Object[] words = resultList.get(0);
+
+        return (String) words[0];
     }
 }
