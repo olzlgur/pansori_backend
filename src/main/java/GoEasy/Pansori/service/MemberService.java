@@ -1,10 +1,11 @@
 package GoEasy.Pansori.service;
 
 import GoEasy.Pansori.config.jwt.JwtProvider;
+import GoEasy.Pansori.domain.SearchRecord;
 import GoEasy.Pansori.domain.User.Bookmark;
 import GoEasy.Pansori.domain.User.Member;
-import GoEasy.Pansori.repository.BookmarkRepository;
-import GoEasy.Pansori.repository.MemberRepository;
+import GoEasy.Pansori.domain.precedent.SimplePrecedent;
+import GoEasy.Pansori.repository.*;
 import GoEasy.Pansori.exception.customException.CustomTypeException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +13,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,6 +27,8 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final BookmarkRepository bookmarkRepository;
+    private final SearchRecordRepository recordRepository;
+    private final SimplePrecedentRepository precedentRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
 
@@ -49,7 +54,6 @@ public class MemberService {
     @Transactional
     public Long addBookmark(Member member, Bookmark bookmark){
         if(bookmark.getPrecedent() == null){
-            System.out.println("this is null");
             throw new IllegalStateException("존재하지 않는 판례입니다.");
         }
 
@@ -65,11 +69,27 @@ public class MemberService {
         return bookmark.getId();
     }
 
+    // 판례 즐겨찾기 삭제
     @Transactional
     public Long deleteBookmark(Member member, Bookmark bookmark){
         member.deleteBookmark(bookmark);
         bookmarkRepository.delete(bookmark);
         return bookmark.getId();
+    }
+
+    // 판례 검색기록 추가
+    @Transactional
+    public void addSearchRecord(Member member, Long prec_id){
+        //Search Record 생성
+        SimplePrecedent precedent = precedentRepository.findOne(prec_id);
+        if(precedent == null){ throw new RuntimeException("해당 판례는 존재하지 않습니다."); }
+        SearchRecord searchRecord = SearchRecord.createSearchRecord(member, precedent);
+
+        //검색 기록 로직
+        List<SearchRecord> records = member.getSearchRecordList();
+        records.add(searchRecord); // 검색 기록 추가
+
+        recordRepository.save(searchRecord);
     }
 
     private void checkPassword(String password, String encodedPassword) {

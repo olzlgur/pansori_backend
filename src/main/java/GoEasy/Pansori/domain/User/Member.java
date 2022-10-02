@@ -1,6 +1,7 @@
 package GoEasy.Pansori.domain.User;
 
 import GoEasy.Pansori.domain.Authority;
+import GoEasy.Pansori.domain.SearchRecord;
 import GoEasy.Pansori.dto.member.JoinRequestDto;
 import com.sun.istack.NotNull;
 import lombok.Getter;
@@ -34,6 +35,8 @@ public class Member {
 
     private String region; // 선택
 
+    @OneToMany(mappedBy = "member")
+    private List<SearchRecord> searchRecordList;
     @OneToMany(mappedBy = "member")
     private List<Bookmark> bookmarks = new ArrayList<>();
 

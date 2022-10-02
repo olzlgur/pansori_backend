@@ -2,6 +2,7 @@ package GoEasy.Pansori.api;
 
 import GoEasy.Pansori.config.jwt.JwtUtils;
 import GoEasy.Pansori.domain.CommonResponse;
+import GoEasy.Pansori.domain.SearchRecord;
 import GoEasy.Pansori.domain.User.Bookmark;
 import GoEasy.Pansori.domain.User.Member;
 import GoEasy.Pansori.domain.precedent.DetailPrecedent;
@@ -112,6 +113,22 @@ public class MemberController {
 
 
         return responseService.getSuccessResponse("회원 북마크 조회 성공", bookmarks);
+    }
+
+    // TEST API
+    @GetMapping(value = "/api/member/searchRecord")
+    public CommonResponse<Object> testSearchRecord(HttpServletRequest request, @RequestParam(value = "id") Long prec_id){
+        String email = jwtUtils.getEmailFromRequestHeader(request);
+        Member member = memberService.findOneByEmail(email);
+
+
+        try{
+            memberService.addSearchRecord(member, prec_id);
+            return responseService.getSuccessResponse("검색 기록 추가 성공", null);
+        }
+        catch (Exception e){
+            return responseService.getFailureResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
+        }
     }
 
 

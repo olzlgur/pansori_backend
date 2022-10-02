@@ -1,6 +1,7 @@
 package GoEasy.Pansori.config.jwt;
 
 import GoEasy.Pansori.domain.CommonResponse;
+import GoEasy.Pansori.exception.ErrorCode;
 import GoEasy.Pansori.service.ResponseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,11 +23,20 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
 
-        CommonResponse<Object> commonResponse = responseService.getFailureResponse(
-                HttpStatus.UNAUTHORIZED.value(),
-                "토큰 인증 과정 중에 오류가 발생했습니다. 다시 로그인하세요."
-        );
+        ErrorCode errorCode = (ErrorCode) request.getAttribute("exception");
+        CommonResponse<Object> responseData;
 
-        responseService.convertHttpToResposne(response, commonResponse);
+        if( errorCode == null ){
+            responseData = responseService.getFailureResponse(
+                    ErrorCode.UNKNOWN_ERROR.getHttpStatus().value(),
+                    ErrorCode.UNKNOWN_ERROR.getMessage());
+        }
+        else {
+            responseData = responseService.getFailureResponse(
+                    errorCode.getHttpStatus().value(),
+                    errorCode.getMessage());
+        }
+
+        responseService.convertHttpToResposne(response, responseData);
     }
 }

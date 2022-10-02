@@ -1,5 +1,6 @@
 package GoEasy.Pansori.config.jwt;
 
+import GoEasy.Pansori.exception.FilterException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -35,15 +36,21 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         // Token validation 검증
-        // 정상 토큰이면 해당 토큰을 Authentication를 가져와서 SecurityContext에 저장
-        if(StringUtils.hasText(jwt) && jwtProvider.validateToken(jwt)){
-            Authentication authentication = jwtProvider.getAuthentication(jwt);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            System.out.println(SecurityContextHolder.getContext().getAuthentication());
+        try{
+            jwtProvider.validateToken(jwt);
+
+            // 정상 토큰이면 해당 토큰을 Authentication를 가져와서 SecurityContext에 저장
+            if(StringUtils.hasText(jwt)){
+                Authentication authentication = jwtProvider.getAuthentication(jwt);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+        }
+        catch(FilterException exception){
+            request.setAttribute("exception", exception.getErrorCode());
         }
 
-        filterChain.doFilter(request, response);
 
+        filterChain.doFilter(request, response);
     }
 
     private String resolveToken(HttpServletRequest request){

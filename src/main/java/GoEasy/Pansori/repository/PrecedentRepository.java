@@ -17,8 +17,7 @@ import java.util.List;
 public class PrecedentRepository {
     private final EntityManager em;
 
-    public PrecedentRepository(EntityManager em) {
-        this.em = em;}
+    public PrecedentRepository(EntityManager em) {this.em = em;}
     public DetailPrecedent findOne(Long id) {
         return em.find(DetailPrecedent.class, id);
     }
