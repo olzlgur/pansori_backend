@@ -46,10 +46,10 @@ public class MemberController {
         Member member = memberService.findOneByEmail(request.getEmail());
         //판례 정보 가져오기
         SimplePrecedent precedent = precedentRepository.findOne(request.getPrecedent_id());
+
         // 북마크 생성
         Bookmark bookmark = Bookmark.builder()
-                .precId(precedent.getId())
-                .title(precedent.getTitle())
+                .precedent(precedent)
                 .member(member).build();
         //북마크 저장
         try{
@@ -66,13 +66,15 @@ public class MemberController {
         //회원 정보 가져오기
         Member member = memberService.findOneByEmail(request.getEmail());
         //삭제할 북마크 판례 번호
-        Long precId = request.getPrecedent_id();
+        Long precedent_id = request.getPrecedent_id();
+        //판례 정보 가져오기
+        SimplePrecedent precedent = precedentRepository.findOne(precedent_id);
 
         //북마크 삭제
         try{
             boolean find = false;
             for (Bookmark bookmark : member.getBookmarks()) {
-                if(bookmark.getPrecId() == precId){
+                if(bookmark.getPrecedent() == precedent){
                     find = true;
                     memberService.deleteBookmark(member, bookmark);
                     break;
@@ -103,8 +105,8 @@ public class MemberController {
 
         for (Bookmark bookmark : member.getBookmarks()) {
             BookmarkResponseDto bookmarkDto = BookmarkResponseDto.builder()
-                    .title(bookmark.getTitle())
-                    .precId(bookmark.getPrecId()).build();
+                    .title(bookmark.getPrecedent().getTitle())
+                    .precedent_id(bookmark.getPrecedent().getId()).build();
             bookmarks.add(bookmarkDto);
         }
 

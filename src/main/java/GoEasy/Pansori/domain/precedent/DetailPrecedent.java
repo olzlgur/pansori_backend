@@ -1,6 +1,7 @@
 package GoEasy.Pansori.domain.precedent;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Column;
@@ -9,6 +10,7 @@ import javax.persistence.Id;
 
 @Entity
 @Getter @Setter
+@NoArgsConstructor
 public class DetailPrecedent {
 
     @Id

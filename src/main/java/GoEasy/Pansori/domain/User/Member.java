@@ -59,8 +59,9 @@ public class Member {
     }
 
     // === 연관관계 편의 메서드 === //
-    public void setBookmarks(Bookmark bookmark){
+    public void addBookmark(Bookmark bookmark){
         this.bookmarks.add(bookmark);
     }
 
+    public void deleteBookmark(Bookmark bookmark) {this.bookmarks.remove(bookmark);}
 }

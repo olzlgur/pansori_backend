@@ -25,5 +25,5 @@ public class JoinRequestDto {
 
     private String job; // 선택
 
-    private String Region; // 선택
+    private String region; // 선택
 }

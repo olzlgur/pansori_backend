@@ -9,6 +9,4 @@ import lombok.NoArgsConstructor;
 public class AddBookmarkRequestDto {
     private String email;
     private Long precedent_id;
-
-
 }

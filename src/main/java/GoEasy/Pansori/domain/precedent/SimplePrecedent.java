@@ -1,6 +1,7 @@
 package GoEasy.Pansori.domain.precedent;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Column;
@@ -11,6 +12,7 @@ import java.util.Date;
 
 @Entity
 @Getter @Setter
+@NoArgsConstructor
 public class SimplePrecedent {
 
     @Id
@@ -38,20 +40,4 @@ public class SimplePrecedent {
 
     private String abstractive; // 요약
 
-    public SimplePrecedent() {
-    }
-
-//    public SimplePrecedent(Long id, String caseId, String title, LocalDate date, String courtName, Integer courtTypeCode, String caseType, Integer caseTypeCode, String verdictType, String verdict, String abstractive) {
-//        this.id = id;
-//        this.caseId = caseId;
-//        this.title = title;
-//        this.date = date;
-//        this.courtName = courtName;
-//        this.courtTypeCode = courtTypeCode;
-//        this.caseType = caseType;
-//        this.caseTypeCode = caseTypeCode;
-//        this.verdictType = verdictType;
-//        this.verdict = verdict;
-//        this.abstractive = abstractive;
-//    }
 }

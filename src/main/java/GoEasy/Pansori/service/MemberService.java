@@ -48,22 +48,26 @@ public class MemberService {
     // 판례 즐겨찾기 추가
     @Transactional
     public Long addBookmark(Member member, Bookmark bookmark){
+        if(bookmark.getPrecedent() == null){
+            System.out.println("this is null");
+            throw new IllegalStateException("존재하지 않는 판례입니다.");
+        }
 
         for (Bookmark _bookmark : member.getBookmarks()) {
-            if(_bookmark.getPrecId() == bookmark.getPrecId()){
+            if(_bookmark.getPrecedent() == bookmark.getPrecedent()){
                 throw new IllegalStateException("이미 북마크에 존재하는 판례입니다.");
             }
         }
 
 
-        member.setBookmarks(bookmark);
+        member.addBookmark(bookmark);
         bookmarkRepository.save(bookmark);
         return bookmark.getId();
     }
 
     @Transactional
     public Long deleteBookmark(Member member, Bookmark bookmark){
-        member.setBookmarks(bookmark);
+        member.deleteBookmark(bookmark);
         bookmarkRepository.delete(bookmark);
         return bookmark.getId();
     }

@@ -7,12 +7,12 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class BookmarkResponseDto {
-    private Long precId;
+    private Long precedent_id;
     private String title;
 
     @Builder
-    public BookmarkResponseDto(Long precId, String title) {
-        this.precId = precId;
+    public BookmarkResponseDto(Long precedent_id, String title) {
+        this.precedent_id = precedent_id;
         this.title = title;
     }
 }
