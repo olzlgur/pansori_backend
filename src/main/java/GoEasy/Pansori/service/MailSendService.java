@@ -22,9 +22,7 @@ public class MailSendService {
     private static final String from_address = "olzlgur@naver.com";
     private static final String text = "이메일 인증 코드";
 
-    public String mailSend(MailDto mailDto, HttpServletRequest request){
-        String toEmail = mailDto.getEmail();
-
+    public String mailSend(String toEmail, HttpServletRequest request, Integer purpose){
         //인증메일 보내기
         try {
             //메세지 메타데이터 설정
@@ -33,26 +31,19 @@ public class MailSendService {
             sendMail.setFrom(MailSendService.from_address, "관리자");
             sendMail.setTo(toEmail);
 
-
-
-                    //메세지 내용 설정
+            //메세지 내용 설정
             String msg = "";
-            msg += "<div style=\"width: 50%; padding:36px 24px\">";
-            msg += "<h1 style=\"font-size:36px;\"> 이메일 인증 코드</h1>";
-            msg += "<br>";
-            msg += "<div>";
-            msg += "        <p>" + toEmail + "님, 안녕하세요.</p>\n" +
-                    "        <p>귀하의 이메일 주소를 통해 Pansori 계정에 대한 비밀번호 찾기가 요청되었습니다.</p>\n" +
-                    "        <p>Pansori 인증 코드는 다음과 같습니다.</p>\n" +
-                    "\n" +
-                    "        <p style=\"background-color: rgba(0, 0, 0, 0.1); font-size: 48px; padding:8px 24px;\">" +  createAuthKey(toEmail, request) +  "</p>\n" +
-                    "\n" +
-                    "        <p>이 코드를 요청하지 않았다면 다른 사람이 Pansori 계정 " + toEmail + "에 액세스하려고 시도하는 것일 수 있습니다.</p>\n" +
-                    "        <p>누구에게도 이 코드를 전달하거나 제공하면 안 됩니다.</p>\n" +
-                    "        <p>Pansori 계정팀</p>";
-            msg += "</div></div>";
-            sendMail.setText(msg);
+            if(purpose == 1){
+                msg = sendMail.getNewAccountConfirmMsgForm(toEmail, createAuthKey(toEmail, request));
+            }
+            else if(purpose == 2){
+                msg = sendMail.getPWConfirmMsgForm(toEmail, createAuthKey(toEmail, request));
+            }
+            else{
+                throw new MessagingException("알 수 없는 오류가 발생했습니다.");
+            }
 
+            sendMail.setText(msg);
             //메세지 전송
             sendMail.send();
         } catch (MessagingException e) {

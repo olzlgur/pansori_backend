@@ -1,4 +1,4 @@
-package GoEasy.Pansori.config.jwt;
+package GoEasy.Pansori.jwt;
 
 import GoEasy.Pansori.domain.CommonResponse;
 import GoEasy.Pansori.exception.ErrorCode;

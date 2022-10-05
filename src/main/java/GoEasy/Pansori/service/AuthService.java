@@ -1,6 +1,6 @@
 package GoEasy.Pansori.service;
 
-import GoEasy.Pansori.config.jwt.JwtProvider;
+import GoEasy.Pansori.jwt.JwtProvider;
 import GoEasy.Pansori.domain.RefreshToken;
 import GoEasy.Pansori.domain.User.Member;
 import GoEasy.Pansori.dto.member.token.TokenDto;

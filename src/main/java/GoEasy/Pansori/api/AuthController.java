@@ -42,4 +42,9 @@ public class AuthController {
     public CommonResponse<Object> authTest(){
         return responseService.getSuccessResponse("Authorization 인증 성공", null);
     }
+
+    @GetMapping("/api/member/test")
+    public CommonResponse<Object> memberTest(){
+        return responseService.getSuccessResponse("Authorization 인증 성공", null);
+    }
 }

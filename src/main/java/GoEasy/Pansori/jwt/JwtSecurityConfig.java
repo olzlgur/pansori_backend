@@ -1,4 +1,4 @@
-package GoEasy.Pansori.config.jwt;
+package GoEasy.Pansori.jwt;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;

@@ -1,4 +1,4 @@
-package GoEasy.Pansori.config.jwt;
+package GoEasy.Pansori.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;

@@ -1,4 +1,4 @@
-package GoEasy.Pansori.config.jwt;
+package GoEasy.Pansori.jwt;
 
 import GoEasy.Pansori.exception.FilterException;
 import lombok.RequiredArgsConstructor;

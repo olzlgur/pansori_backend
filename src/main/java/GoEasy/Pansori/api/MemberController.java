@@ -1,22 +1,17 @@
 package GoEasy.Pansori.api;
 
-import GoEasy.Pansori.config.jwt.JwtUtils;
+import GoEasy.Pansori.jwt.JwtUtils;
 import GoEasy.Pansori.domain.CommonResponse;
-import GoEasy.Pansori.domain.SearchRecord;
 import GoEasy.Pansori.domain.User.Bookmark;
 import GoEasy.Pansori.domain.User.Member;
-import GoEasy.Pansori.domain.precedent.DetailPrecedent;
 import GoEasy.Pansori.domain.precedent.SimplePrecedent;
 import GoEasy.Pansori.dto.member.JoinRequestDto;
 import GoEasy.Pansori.dto.member.bookmark.AddBookmarkRequestDto;
 import GoEasy.Pansori.dto.member.bookmark.BookmarkResponseDto;
 import GoEasy.Pansori.dto.member.bookmark.DeleteBookmarkRequestDto;
-import GoEasy.Pansori.repository.BookmarkRepository;
 import GoEasy.Pansori.repository.SimplePrecedentRepository;
 import GoEasy.Pansori.service.MemberService;
-import GoEasy.Pansori.service.PrecedentService;
 import GoEasy.Pansori.service.ResponseService;
-import GoEasy.Pansori.service.SimplePrecedentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
