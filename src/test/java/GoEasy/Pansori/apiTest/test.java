@@ -1,7 +1,7 @@
 package GoEasy.Pansori.apiTest;
 
-import GoEasy.Pansori.api.domain.Member;
-import GoEasy.Pansori.api.service.MemberService;
+import GoEasy.Pansori.domain.User.Member;
+import GoEasy.Pansori.service.MemberService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
