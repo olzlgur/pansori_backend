@@ -1,5 +1,6 @@
 package GoEasy.Pansori.service;
 
+import GoEasy.Pansori.domain.precedent.DetailPrecedent;
 import GoEasy.Pansori.jwt.JwtProvider;
 import GoEasy.Pansori.domain.SearchRecord;
 import GoEasy.Pansori.domain.User.Bookmark;
@@ -81,14 +82,22 @@ public class MemberService {
     public void addSearchRecord(Member member, Long prec_id){
         //Search Record 생성
         SimplePrecedent precedent = precedentRepository.findOne(prec_id);
-        if(precedent == null){ throw new RuntimeException("해당 판례는 존재하지 않습니다."); }
+        if(precedent == null){ throw new RuntimeException("해당 판례 번호는 존재하지 않습니다.");}
+
         SearchRecord searchRecord = SearchRecord.createSearchRecord(member, precedent);
+
 
         //검색 기록 로직
         List<SearchRecord> records = member.getSearchRecordList();
         records.add(searchRecord); // 검색 기록 추가
 
         recordRepository.save(searchRecord);
+    }
+
+    //판례 검색기록 확인
+    @Transactional
+    public List<SearchRecord> getSearchRecords(Member member){
+        return recordRepository.findAllByMemberId(member.getId());
     }
 
     private void checkPassword(String password, String encodedPassword) {

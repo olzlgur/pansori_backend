@@ -1,7 +1,6 @@
 package GoEasy.Pansori.service;
 
 import GoEasy.Pansori.domain.precedent.DetailPrecedent;
-import GoEasy.Pansori.dto.Precedent.PrecedentApiDto;
 import GoEasy.Pansori.dto.Precedent.PrecedentListDto;
 import GoEasy.Pansori.repository.PrecedentRepository;
 import GoEasy.Pansori.exception.customException.CustomTypeException;
@@ -25,16 +24,6 @@ public class PrecedentService {
     public DetailPrecedent findOne(Long precedent_id) {
         return precedentRepository.findOne(precedent_id);
     }
-
-
-
-    public PrecedentApiDto findOnePrecedent(Long id) {
-        DetailPrecedent detailPrecedent = precedentRepository.findOne(id);
-        PrecedentApiDto precedentApiDto = PrecedentApiDto.PrecedentApiDto(detailPrecedent);
-
-        return precedentApiDto;
-    }
-
 
     public PrecedentListDto searchAccuracy(String content){
         PrecedentListDto precedentListDto = precedentRepository.searchAccuracy(morphemeAnalysis(content));

@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 public class JwtProvider {
     @Value("${spring.jwt.secret-key}")
     private String SECRET_KEY;
-    private static final Long TOKEN_VALID_TIME = 1000L * 60 * 3; // 3m
+    private static final Long TOKEN_VALID_TIME = 1000L * 60 * 60; // 60m
 
     private static final String BEARER_TYPE = "bearer";
     private static final String AUTHORITIES_KEY = "auth";

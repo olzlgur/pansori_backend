@@ -29,7 +29,6 @@ public class PrecedentRepository {
 
         String sql = "select precedent_id, title, date, case_type, verdict, court_name, abstractive, ";
 
-        System.out.println(contents.size());
         sql += "(abstractive like '%" + contents.get(0) + "%') ";
 
         for (int index = 1; index < contents.size(); index++) {
@@ -44,8 +43,6 @@ public class PrecedentRepository {
         }
 
         sql += "order by date desc, score desc ";
-
-        System.out.println(sql);
 
         Query query = em.createNativeQuery(sql);
         List<Object[]> resultList = query.getResultList();

@@ -1,7 +1,9 @@
 package GoEasy.Pansori.domain;
 
 import GoEasy.Pansori.domain.User.Member;
+import GoEasy.Pansori.domain.precedent.DetailPrecedent;
 import GoEasy.Pansori.domain.precedent.SimplePrecedent;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -14,6 +16,8 @@ import java.util.List;
 @NoArgsConstructor
 public class SearchRecord extends BaseTimeEntity{
 
+
+
     @Id
     @GeneratedValue
     @Column(name = "searchRecord_id")
@@ -21,9 +25,10 @@ public class SearchRecord extends BaseTimeEntity{
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
+    @JsonIgnore
     private Member member;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     private SimplePrecedent precedent;
 
     static public SearchRecord createSearchRecord(Member member, SimplePrecedent precedent){
