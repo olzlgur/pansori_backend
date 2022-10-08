@@ -31,13 +31,12 @@ import java.util.stream.Collectors;
 public class JwtProvider {
     @Value("${spring.jwt.secret-key}")
     private String SECRET_KEY;
-    private static final Long TOKEN_VALID_TIME = 1000L * 60 * 60; // 60m
 
     private static final String BEARER_TYPE = "bearer";
     private static final String AUTHORITIES_KEY = "auth";
     private static final String EMAIL_KEY = "email";
-    private final Long ACCESS_TOKEN_VALID_TIME = 10 * 60 * 1000L; // 10min
-    private final Long REFRESH_TOKEN_VALID_TIME = 24 * 60 * 60 * 1000L; // 24hours
+    private static final Long ACCESS_TOKEN_VALID_TIME = 60 * 60 * 1000L; // 60min -> 추후에 10min으로 변경할 것
+    private static final Long REFRESH_TOKEN_VALID_TIME = 24 * 60 * 60 * 1000L; // 24hours
 
     private Key key;
 

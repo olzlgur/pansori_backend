@@ -29,22 +29,8 @@ public class AuthController {
     @PostMapping("/api/refresh")
     public CommonResponse<Object> refresh(@RequestBody RefreshRequestDto request){
         TokenDto tokenDto = new TokenDto(request.getAccessToken(), request.getRefreshToken());
-        try{
-            TokenDto response = authService.reissueToken(tokenDto);
-            return responseService.getSuccessResponse("액세스 토큰이 재발급되었습니다.", response);
-        }
-        catch(Exception e){
-            return responseService.getFailureResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
-        }
-    }
 
-    @GetMapping("/api/auth/test")
-    public CommonResponse<Object> authTest(){
-        return responseService.getSuccessResponse("Authorization 인증 성공", null);
-    }
-
-    @GetMapping("/api/member/test")
-    public CommonResponse<Object> memberTest(){
-        return responseService.getSuccessResponse("Authorization 인증 성공", null);
+        TokenDto response = authService.reissueToken(tokenDto);
+        return responseService.getSuccessResponse("액세스 토큰이 재발급되었습니다.", response);
     }
 }
