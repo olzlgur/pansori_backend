@@ -4,8 +4,6 @@ import GoEasy.Pansori.domain.response.CommonResult;
 import GoEasy.Pansori.domain.response.SuccessResult;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class ResponseService {
 
