@@ -4,6 +4,7 @@ import GoEasy.Pansori.domain.DetailPrecedent;
 import GoEasy.Pansori.domain.response.CommonResult;
 import GoEasy.Pansori.domain.response.SuccessResult;
 import GoEasy.Pansori.dto.PrecedentApiDto;
+import GoEasy.Pansori.dto.PrecedentDetailDto;
 import GoEasy.Pansori.dto.PrecedentListDto;
 import GoEasy.Pansori.dto.SearchRequestDto;
 import GoEasy.Pansori.service.PrecedentService;
@@ -23,7 +24,7 @@ public class PrecedentController {
     private final ResponseService responseService;
 
     @GetMapping("/api/precedent/findOne")
-    public SuccessResult<DetailPrecedent> findOne(@RequestParam(value = "id")Long id){
+    public SuccessResult<PrecedentDetailDto> findOne(@RequestParam(value = "id")Long id){
         return responseService.getResult(precedentService.findOne(id));
     }
 

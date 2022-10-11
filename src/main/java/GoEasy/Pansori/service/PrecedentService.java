@@ -2,6 +2,8 @@ package GoEasy.Pansori.service;
 
 import GoEasy.Pansori.domain.DetailPrecedent;
 import GoEasy.Pansori.dto.PrecedentApiDto;
+import GoEasy.Pansori.dto.PrecedentDetailDto;
+import GoEasy.Pansori.dto.PrecedentDto;
 import GoEasy.Pansori.dto.PrecedentListDto;
 import GoEasy.Pansori.repository.PrecedentRepository;
 import GoEasy.Pansori.exception.customException.CustomTypeException;
@@ -22,12 +24,23 @@ import java.util.List;
 public class PrecedentService {
     private final PrecedentRepository precedentRepository;
 
-
-    public DetailPrecedent findOne(Long precedent_id) {
-        return precedentRepository.findOne(precedent_id);
+    public PrecedentDetailDto findOne(Long precedent_id) {
+        DetailPrecedent detailPrecedent = precedentRepository.findOne(precedent_id);
+        String content = (String) detailPrecedent.getPrecContent();
+        String temp = "";
+        String contentSplit[];
+        String[] contents = content.split("【");
+        for(int i=1; i<contents.length; i++){
+            contentSplit = contents[i].split("】");
+            if(contentSplit[0].contains("주") && contentSplit[0].contains("문")) {
+                break;
+            }
+            temp = temp + contentSplit[0] + contentSplit[1] + " /";
+        }
+        return new PrecedentDetailDto(detailPrecedent.getId(), detailPrecedent.getJudgeCase(),
+                detailPrecedent.getJudgePoint(), detailPrecedent.getReferClause(), detailPrecedent.getReferPrec(),
+                detailPrecedent.getPrecMain(), detailPrecedent.getPrecReason(), temp);
     }
-
-
 
     public PrecedentApiDto findOnePrecedent(Long id) {
         DetailPrecedent detailPrecedent = precedentRepository.findOne(id);
@@ -36,9 +49,11 @@ public class PrecedentService {
         return precedentApiDto;
     }
 
-
     public PrecedentListDto searchAccuracy(String content){
         PrecedentListDto precedentListDto = precedentRepository.searchAccuracy(morphemeAnalysis(content));
+        if(morphemeAnalysis(content).size() == 1) {
+            precedentListDto.setRelationWord(precedentRepository.searchRelation(morphemeAnalysis(content).get(0)));
+        }
         if (precedentListDto.getPrecedentDtoList().size() == 0){
             throw new CustomTypeException("검색 결과가 없습니다.");
         }
@@ -48,7 +63,6 @@ public class PrecedentService {
     public PrecedentListDto searchRecent(String content){
         return precedentRepository.searchRecent(morphemeAnalysis(content));
     }
-
 
     public List<String> morphemeAnalysis(String searchContent) {
         Komoran komoran = new Komoran(DEFAULT_MODEL.FULL);
@@ -68,5 +82,4 @@ public class PrecedentService {
         }
         return contents;
     }
-
 }

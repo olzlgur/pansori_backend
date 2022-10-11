@@ -1,6 +1,5 @@
 package GoEasy.Pansori.repository;
 
-
 import GoEasy.Pansori.domain.DetailPrecedent;
 import GoEasy.Pansori.domain.SimplePrecedent;
 import GoEasy.Pansori.dto.PrecedentDto;
@@ -16,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static GoEasy.Pansori.domain.QSearchTable.searchTable;
 import static GoEasy.Pansori.domain.QSimplePrecedent.simplePrecedent;
 
 @Repository
@@ -45,7 +45,6 @@ public class PrecedentRepository {
 
         String sql = "select precedent_id, title, date, case_type, verdict, court_name, abstractive, ";
 
-        System.out.println(contents.size());
         sql += "(abstractive like '%" + contents.get(0) + "%') ";
 
         for (int index = 1; index < contents.size(); index++) {
@@ -79,7 +78,15 @@ public class PrecedentRepository {
 
         return precedentListDto;
     }
-
+    public List<String> searchRelation(String word){
+        return queryFactory
+                .select(searchTable.word)
+                .from(searchTable)
+                .where(searchTable.word.startsWith(word))
+                .orderBy(searchTable.count.desc())
+                .limit(5)
+                .fetch();
+    }
     public List<PrecedentDto> searchRecent2(List<String> contents) {
         BooleanBuilder builder = new BooleanBuilder();
 
