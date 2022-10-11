@@ -20,9 +20,9 @@ public class DetailPrecedent {
     @Column(columnDefinition = "LONGTEXT")
     private String judgeCase; //판시 사항
 
-
     @Column(columnDefinition = "LONGTEXT")
     private String judgePoint; //판결 요지
+
     @Column(columnDefinition = "LONGTEXT")
     private String referClause; //참조 조문
 

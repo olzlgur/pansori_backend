@@ -3,6 +3,8 @@ package GoEasy.Pansori.apiTest;
 
 import GoEasy.Pansori.service.MemberService;
 import org.aspectj.weaver.Member;
+import GoEasy.Pansori.domain.User.Member;
+import GoEasy.Pansori.service.MemberService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,5 +30,12 @@ public class test {
         memberService.validatePasswordType("s0528005280528*");
     }
 
+    @Test
+    public void 회원가입(){
+        member.setUserEmail("ksaljfd");
+        member.setPassword("s05280528*");
 
+        memberService.join(member);
+
+    }
 }
