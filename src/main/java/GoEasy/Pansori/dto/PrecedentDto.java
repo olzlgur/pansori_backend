@@ -27,6 +27,8 @@ public class PrecedentDto {
     private String courtName; // 법원명
 
     private String abstractive; // 요약
+
+
     @QueryProjection
     public PrecedentDto(Long id, String title, Date date, String caseType, String verdict, String courtName, String abstractive) {
         this.id = id;
