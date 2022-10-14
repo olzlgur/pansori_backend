@@ -1,12 +1,11 @@
 package GoEasy.Pansori.api;
 
-import GoEasy.Pansori.domain.DetailPrecedent;
 import GoEasy.Pansori.domain.SearchTable;
+import GoEasy.Pansori.domain.precedent.DetailPrecedent;
 import GoEasy.Pansori.repository.PrecedentRepository;
 import GoEasy.Pansori.repository.SearchTableRepository;
 import GoEasy.Pansori.service.PrecedentService;
 import lombok.RequiredArgsConstructor;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,11 +36,12 @@ public class searchDBController {
     }
 
     @GetMapping("api/db")
-    public void searchDB(@RequestParam(value = "start")int start, @RequestParam(value = "id")int end) {
+    public void searchDB(@RequestParam(value = "start")int start, @RequestParam(value = "end")int end) {
 
         List<DetailPrecedent> detailPrecedentList = precedentRepository.findAll();
         List<String> strarr;
-        for (int index = start; index < end; index++) {
+        
+        for (int index = start; index < start + end; index++) {
             strarr = precedentService.morphemeAnalysis(detailPrecedentList.get(index).getPrecContent());
             for (int strindex = 0; strindex < strarr.size(); strindex++) {
                 String word = strarr.get(strindex);
