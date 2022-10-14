@@ -1,24 +1,19 @@
 package GoEasy.Pansori;
 
-import GoEasy.Pansori.domain.DetailPrecedent;
 import GoEasy.Pansori.domain.SearchTable;
+import GoEasy.Pansori.domain.precedent.DetailPrecedent;
 import GoEasy.Pansori.repository.PrecedentRepository;
 import GoEasy.Pansori.repository.SearchTableRepository;
 import GoEasy.Pansori.service.PrecedentService;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 
-import java.lang.reflect.Method;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.List;
 
 
