@@ -5,13 +5,11 @@ import GoEasy.Pansori.domain.precedent.DetailPrecedent;
 import GoEasy.Pansori.domain.precedent.SimplePrecedent;
 import GoEasy.Pansori.dto.Precedent.PrecedentDto;
 import GoEasy.Pansori.dto.Precedent.PrecedentListDto;
-import GoEasy.Pansori.domain.DetailPrecedent;
-import GoEasy.Pansori.domain.SimplePrecedent;
-import GoEasy.Pansori.dto.PrecedentDto;
-import GoEasy.Pansori.dto.PrecedentListDto;
+
 import GoEasy.Pansori.dto.QPrecedentDto;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -29,7 +27,6 @@ public class PrecedentRepository {
     private final JPAQueryFactory queryFactory;
 
 
-    public PrecedentRepository(EntityManager em) {this.em = em;}
     public PrecedentRepository(EntityManager em) {
         this.em = em;
         this.queryFactory = new JPAQueryFactory(em);
@@ -44,29 +41,74 @@ public class PrecedentRepository {
                 .getResultList();
     }
 
+//    public PrecedentListDto searchAccuracy(List<String> contents) {
+//        PrecedentListDto precedentListDto = new PrecedentListDto();
+//        List<PrecedentDto> precedentDtos = new ArrayList<>();
+//        PrecedentDto precedentDto;
+//
+//        String sql = "select precedent_id, title, date, case_type, verdict, court_name, abstractive, ";
+//
+//        sql += "(abstractive like '%" + contents.get(0) + "%') ";
+//
+//        for (int index = 1; index < contents.size(); index++) {
+//            sql += "+ (abstractive like '%" + contents.get(index) + "%') ";
+//        }
+//        sql += "as score " +
+//                "from simple_precedent " +
+//                "where abstractive like '%" + contents.get(0) + "%' ";
+//
+//        for (int index = 1; index < contents.size(); index++) {
+//            sql += "or abstractive like '%" + contents.get(index) + "%' ";
+//        }
+//
+//        sql += "order by date desc, score desc ";
+//        Query query = em.createNativeQuery(sql);
+//        List<Object[]> resultList = query.getResultList();
+//        for (Object[] row : resultList) {
+//            precedentDto = new PrecedentDto();
+//            precedentDto.setId(Long.parseLong(String.valueOf(row[0])));
+//            precedentDto.setTitle((String) row[1]);
+//            precedentDto.setDate((Date) row[2]);
+//            precedentDto.setCaseType((String) row[3]);
+//            precedentDto.setVerdict((String) row[4]);
+//            precedentDto.setCourtName((String) row[5]);
+//            precedentDto.setAbstractive((String) row[6]);
+//            precedentDtos.add(precedentDto);
+//        }
+//        precedentListDto.setPrecedentDtoList(precedentDtos);
+//
+//        return precedentListDto;
+//    }
+
     public PrecedentListDto searchAccuracy(List<String> contents) {
         PrecedentListDto precedentListDto = new PrecedentListDto();
         List<PrecedentDto> precedentDtos = new ArrayList<>();
         PrecedentDto precedentDto;
 
+
         String sql = "select precedent_id, title, date, case_type, verdict, court_name, abstractive, ";
 
-        sql += "(abstractive like '%" + contents.get(0) + "%') ";
-
+        sql += "(abstractive like concat('%',?,'%')) ";
         for (int index = 1; index < contents.size(); index++) {
-            sql += "+ (abstractive like '%" + contents.get(index) + "%') ";
+            sql += "+ (abstractive like concat('%',?,'%')) ";
         }
         sql += "as score " +
                 "from simple_precedent " +
-                "where abstractive like '%" + contents.get(0) + "%' ";
+                "where abstractive like concat('%',?,'%')";
 
         for (int index = 1; index < contents.size(); index++) {
-            sql += "or abstractive like '%" + contents.get(index) + "%' ";
+            sql += "or abstractive like concat('%',?,'%')";
         }
 
         sql += "order by date desc, score desc ";
-
+        System.out.println(contents.size());
         Query query = em.createNativeQuery(sql);
+        for (int index = 1; index <= contents.size(); index++) {
+            query.setParameter(index, contents.get(index-1));
+        }
+        for (int index = 1; index <= contents.size(); index++) {
+            query.setParameter(index + contents.size(), contents.get(index-1));
+        }
         List<Object[]> resultList = query.getResultList();
         for (Object[] row : resultList) {
             precedentDto = new PrecedentDto();
@@ -83,6 +125,7 @@ public class PrecedentRepository {
 
         return precedentListDto;
     }
+
     public List<String> searchRelation(String word){
         return queryFactory
                 .select(searchTable.word)
@@ -92,28 +135,6 @@ public class PrecedentRepository {
                 .limit(5)
                 .fetch();
     }
-    public List<PrecedentDto> searchRecent2(List<String> contents) {
-        BooleanBuilder builder = new BooleanBuilder();
-
-        for (int index = 0; index < contents.size(); index++) {
-            builder.and(simplePrecedent.abstractive.contains(contents.get(index)));
-        }
-
-        return queryFactory
-                .select(new QPrecedentDto(
-                        simplePrecedent.id,
-                        simplePrecedent.title,
-                        simplePrecedent.date,
-                        simplePrecedent.caseType,
-                        simplePrecedent.verdict,
-                        simplePrecedent.courtName,
-                        simplePrecedent.abstractive))
-                .from(simplePrecedent)
-                .where(builder)
-                .orderBy(simplePrecedent.date.desc())
-                .fetch();
-    }
-
 
     public PrecedentListDto searchRecent(List<String> contents) {
         PrecedentListDto precedentListDto = new PrecedentListDto();

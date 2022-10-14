@@ -1,5 +1,4 @@
 package GoEasy.Pansori.dto.Precedent;
-package GoEasy.Pansori.dto;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Data;
 import lombok.Getter;
