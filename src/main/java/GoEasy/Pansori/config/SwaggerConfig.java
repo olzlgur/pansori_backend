@@ -32,6 +32,7 @@ public class SwaggerConfig {
                 .apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.any())
                 .build()
+                .host("pansori.site:8080")
                 .apiInfo(apiInfo(title, version));
     }
 
@@ -40,7 +41,7 @@ public class SwaggerConfig {
                 title,
                 "Swagger로 생성한 API DOCS",
                 version,
-                "www.pansori.site",
+                "pansori.site",
                 new Contact("Contact us", "www.pansori.site", "eogns0321@gmail.com"),
                 "Licenses",
                 "www.pansori.site",
