@@ -27,6 +27,7 @@ public class Bookmark extends BaseTimeEntity {
 
     @OneToOne(fetch = FetchType.LAZY)
     @NotNull
+    @JoinColumn(name = "precedent_id")
     private SimplePrecedent precedent;
 
     @Builder

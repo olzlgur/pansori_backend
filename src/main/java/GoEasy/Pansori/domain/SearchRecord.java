@@ -16,8 +16,6 @@ import java.util.List;
 @NoArgsConstructor
 public class SearchRecord extends BaseTimeEntity{
 
-
-
     @Id
     @GeneratedValue
     @Column(name = "searchRecord_id")
@@ -29,6 +27,7 @@ public class SearchRecord extends BaseTimeEntity{
     private Member member;
 
     @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "precedent_id")
     private SimplePrecedent precedent;
 
     static public SearchRecord createSearchRecord(Member member, SimplePrecedent precedent){
