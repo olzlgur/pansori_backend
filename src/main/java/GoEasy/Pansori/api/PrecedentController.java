@@ -2,9 +2,8 @@ package GoEasy.Pansori.api;
 
 import GoEasy.Pansori.domain.CommonResponse;
 import GoEasy.Pansori.domain.User.Member;
-import GoEasy.Pansori.domain.precedent.DetailPrecedent;
-import GoEasy.Pansori.dto.Precedent.PrecedentApiDto;
 import GoEasy.Pansori.dto.Precedent.PrecedentListDto;
+import GoEasy.Pansori.dto.PrecedentDetailDto;
 import GoEasy.Pansori.dto.SearchRequestDto;
 import GoEasy.Pansori.jwt.JwtUtils;
 import GoEasy.Pansori.service.MemberService;
@@ -34,7 +33,7 @@ public class PrecedentController {
         Member member = memberService.findOneByEmail(email);
 
         memberService.addSearchRecord(member, id);
-        DetailPrecedent precedent = precedentService.findOne(id);
+        PrecedentDetailDto precedent = precedentService.findOne(id);
 
         return responseService.getSuccessResponse("성공했습니다..", precedent);
     }
