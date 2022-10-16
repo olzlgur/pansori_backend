@@ -41,6 +41,9 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<Bookmark> bookmarks = new ArrayList<>();
 
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<Litigation> litigations = new ArrayList<>();
+
     public static Member registerMember(JoinRequestDto request){
         Member member = new Member();
         member.email = request.getEmail();
@@ -68,4 +71,11 @@ public class Member {
     }
 
     public void deleteBookmark(Bookmark bookmark) {this.bookmarks.remove(bookmark);}
+
+    public void addLitigation(Litigation litigation){
+        litigation.setMember(this);
+        this.litigations.add(litigation);
+    }
+
+    public void deleteLitigation(Litigation litigation){this.litigations.remove(litigation);}
 }

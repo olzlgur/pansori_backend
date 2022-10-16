@@ -1,7 +1,10 @@
 package GoEasy.Pansori.api;
 
 import GoEasy.Pansori.domain.SearchRecord;
+import GoEasy.Pansori.domain.User.Litigation;
 import GoEasy.Pansori.dto.member.LoginRequestDto;
+import GoEasy.Pansori.dto.member.litigation.LitigationRequestDto;
+import GoEasy.Pansori.dto.member.litigation.LitigationResponseDto;
 import GoEasy.Pansori.dto.member.token.TokenDto;
 import GoEasy.Pansori.jwt.JwtUtils;
 import GoEasy.Pansori.domain.CommonResponse;
@@ -89,6 +92,59 @@ public class MemberController {
         }
 
         return responseService.getSuccessResponse("회원 북마크 조회 성공", bookmarks);
+    }
+
+    //====== 소송 로직 ======//
+
+    //회원 전체 소송 조회
+    @GetMapping(value = "/api/member/getLitigations")
+    public CommonResponse<Object> getLitigations(HttpServletRequest request){
+        //Http Header에서 user email 정보 가져오기
+        String email = jwtUtils.getEmailFromRequestHeader(request);
+
+        //회원 조회
+        Member member = memberService.findOneByEmail(email);
+
+        List<Litigation> litigations = member.getLitigations();
+        List<LitigationResponseDto> litigationResponseDtos = new ArrayList<>();
+
+        for(Litigation litigation : litigations){
+            LitigationResponseDto responseDto = LitigationResponseDto.builder()
+                    .title(litigation.getTitle())
+                    .type(litigation.getType())
+                    .cost(litigation.getCost())
+                    .num_opposite(litigation.getNum_opposite())
+                    .step(litigation.getStep())
+                    .sendCost(litigation.getSendCost())
+                    .court(litigation.getCourt())
+                    .build();
+            litigationResponseDtos.add(responseDto);
+        }
+
+        return responseService.getSuccessResponse("회원 소송 조회", litigationResponseDtos);
+    }
+
+    //회원 전체 소송 추가
+    @PostMapping(value = "/api/member/addLitigation")
+    public CommonResponse<Object> addLitigation(@RequestBody LitigationRequestDto litigationRequestDto, HttpServletRequest request){
+        String email = jwtUtils.getEmailFromRequestHeader(request);
+        Member member = memberService.findOneByEmail(email);
+
+        Litigation litigation = Litigation.createByRequest(litigationRequestDto);
+        memberService.addLitigation(member, litigation);
+
+        return responseService.getSuccessResponse("소송 추가 성공", null);
+    }
+
+    //회원 소송 삭제
+    @GetMapping(value = "/api/member/deleteLitigation")
+    public CommonResponse<Object> deleteLitigation(@RequestParam Long id, HttpServletRequest request){
+        String email = jwtUtils.getEmailFromRequestHeader(request);
+        Member member = memberService.findOneByEmail(email);
+
+        memberService.deleteLitigation(member, id);
+
+        return responseService.getSuccessResponse("소송 삭제 성공", null);
     }
 
     //======= 검색 기록 로직 ======//

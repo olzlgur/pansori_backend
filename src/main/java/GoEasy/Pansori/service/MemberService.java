@@ -1,5 +1,6 @@
 package GoEasy.Pansori.service;
 
+import GoEasy.Pansori.domain.User.Litigation;
 import GoEasy.Pansori.domain.precedent.DetailPrecedent;
 import GoEasy.Pansori.jwt.JwtProvider;
 import GoEasy.Pansori.domain.SearchRecord;
@@ -27,6 +28,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final BookmarkRepository bookmarkRepository;
+    private final LitigationRepository litigationRepository;
     private final SearchRecordRepository recordRepository;
     private final SimplePrecedentRepository precedentRepository;
     private final PasswordEncoder passwordEncoder;
@@ -36,11 +38,9 @@ public class MemberService {
         return memberRepository.findByEmail(email).get();
     }
 
-    /**
-     * 회원가입
-     */
+    // 회원가입
     @Transactional
-    public Long join(Member member) { // 회원가입
+    public Long join(Member member) {
         validateDuplicateMember(member); //중복 회원 검증
         validateEmailType(member.getEmail());
         validatePasswordType(member.getPassword());
@@ -78,6 +78,7 @@ public class MemberService {
             if(bookmark.getPrecedent().getId() == prec_id){
                 find = true;
                 member.deleteBookmark(bookmark);
+                bookmarkRepository.delete(bookmark);
                 break;
             }
         }
@@ -105,11 +106,46 @@ public class MemberService {
         recordRepository.save(searchRecord);
     }
 
-    //판례 검색기록 확인
+    //소송 추가
     @Transactional
-    public List<SearchRecord> getSearchRecords(Member member){
-        return recordRepository.findAllByMemberId(member.getId());
+    public void addLitigation(Member member, Litigation litigation){
+        List<Litigation> litigations = member.getLitigations();
+
+        //동일한 소송 타이틀 확인
+        for (Litigation lit : litigations) { if(lit.getTitle() == litigation.getTitle()) throw new RuntimeException("동일한 이름의 소송이 존재합니다."); }
+
+        //나의 소송리스트에 소송 추가
+        member.addLitigation(litigation);
     }
+
+    //소송 삭제
+    @Transactional
+    public void deleteLitigation(Member member, Long id) {
+        List<Litigation> litigations = member.getLitigations();
+
+        boolean find = false;
+        for (Litigation litigation : litigations) {
+            if(litigation.getId() == id){ member.deleteLitigation(litigation); litigationRepository.delete(litigation);  find = true; break;}
+        }
+
+        if(!find) throw new RuntimeException("해당 판례는 존재하지 않습니다.");
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //====== 관련 메서드 =======//
 
     private void checkPassword(String password, String encodedPassword) {
         boolean isSame = passwordEncoder.matches(password, encodedPassword);
@@ -150,5 +186,6 @@ public class MemberService {
             throw new CustomTypeException("올바르지 않은 패스워드 형식입니다.");
         }
     }
+
 
 }
