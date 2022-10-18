@@ -9,6 +9,8 @@ import GoEasy.Pansori.jwt.JwtUtils;
 import GoEasy.Pansori.service.MemberService;
 import GoEasy.Pansori.service.PrecedentService;
 import GoEasy.Pansori.service.ResponseService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,7 +27,24 @@ public class PrecedentController {
     private final JwtUtils jwtUtils;
     private final ResponseService responseService;
 
+    @GetMapping("/api/precedent/findOne")
+    @ApiOperation(value = "비회원 판례 디테일 조회", notes = "넘어온 판례 번호를 통해 판례를 조회합니다.(해당 멤버의 검색 기록에 해당 판례가 추가됩니다.)\n\n" +
+            "[TEST DATA]\n" +
+            "id : 64440")
+    public CommonResponse<Object> findOne_NoLogin(@RequestParam(value = "id")Long id, HttpServletRequest request){
 
+        String email = jwtUtils.getEmailFromRequestHeader(request);
+        Member member = memberService.findOneByEmail(email);
+
+        memberService.addSearchRecord(member, id);
+        PrecedentDetailDto precedent = precedentService.findOne(id);
+
+        return responseService.getSuccessResponse("성공했습니다..", precedent);
+    }
+
+    @ApiOperation(value = "판례 디테일 조회", notes = "넘어온 판례 번호를 통해 판례를 조회합니다.(해당 멤버의 검색 기록에 해당 판례가 추가됩니다.)\n\n" +
+            "[TEST DATA]\n" +
+            "id : 64440")
     @GetMapping("/api/member/precedent/findOne")
     public CommonResponse<Object> findOne(@RequestParam(value = "id")Long id, HttpServletRequest request){
 
@@ -38,6 +57,9 @@ public class PrecedentController {
         return responseService.getSuccessResponse("성공했습니다..", precedent);
     }
 
+    @ApiOperation(value = "판례 검색", notes = "입력된 검색어를 통해 판례를 검색합니다.\n\n" +
+            "[TEST DATA]\n" +
+            "content : 음주운전")
     @PostMapping("/api/precedent/searchAccuracy")
     public CommonResponse<Object> searchAccuracy(@RequestBody SearchRequestDto searchRequestDto){
         PrecedentListDto precedentListDto = precedentService.searchAccuracy(searchRequestDto.getContent());

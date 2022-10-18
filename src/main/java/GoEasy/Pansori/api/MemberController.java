@@ -1,11 +1,9 @@
 package GoEasy.Pansori.api;
 
+import GoEasy.Pansori.domain.Litigation.Litigation;
 import GoEasy.Pansori.domain.SearchRecord;
-import GoEasy.Pansori.domain.User.Litigation;
-import GoEasy.Pansori.dto.member.LoginRequestDto;
 import GoEasy.Pansori.dto.member.litigation.LitigationRequestDto;
 import GoEasy.Pansori.dto.member.litigation.LitigationResponseDto;
-import GoEasy.Pansori.dto.member.token.TokenDto;
 import GoEasy.Pansori.jwt.JwtUtils;
 import GoEasy.Pansori.domain.CommonResponse;
 import GoEasy.Pansori.domain.User.Bookmark;
@@ -18,8 +16,8 @@ import GoEasy.Pansori.dto.member.bookmark.DeleteBookmarkRequestDto;
 import GoEasy.Pansori.repository.SimplePrecedentRepository;
 import GoEasy.Pansori.service.MemberService;
 import GoEasy.Pansori.service.ResponseService;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -36,6 +34,13 @@ public class MemberController {
     private final JwtUtils jwtUtils;
 
     //====== 회원 로직 ======//
+    @ApiOperation(value = " 회원가입", notes = "입력된 정보를 토대로 회원을 생성합니다.\n\n" +
+            "[TEST DATA]\n" +
+            "email : any email\n" +
+            "password : dmsgk123A!\n" +
+            "authority : USER_ROLE\n" +
+            "job : any string" +
+            "region : any string")
     @PostMapping(value = "/api/join")
     public CommonResponse<Object> join(@RequestBody JoinRequestDto request){
         Member member = Member.registerMember(request);
@@ -44,6 +49,10 @@ public class MemberController {
     }
 
     //====== 즐겨찾기(북마크) 로직 ======//
+    @ApiOperation(value = "북마크 추가", notes = "멤버 북마크 리스트에 해당 판례를 추가합니다.\n\n" +
+            "[TEST DATA]\n" +
+            "email : testEmail@gmail.com\n" +
+            "precedent_id : 64440")
     @PostMapping(value = "/api/member/addBookmark")
     public CommonResponse<Object> addBookmark(@RequestBody AddBookmarkRequestDto request){
         //회원 정보 가져오기
@@ -61,6 +70,10 @@ public class MemberController {
         return responseService.getSuccessResponse("판례 즐겨찾기 추가 성공", null);
     }
 
+    @ApiOperation(value = "북마크 삭제", notes = "멤버 북마크 리스트에 해당 판례를 삭제합니다.\n\n" +
+            "[TEST DATA]\n" +
+            "email : testEmail@gmail.com\n" +
+            "precedent_id : 64440")
     @PostMapping(value = "/api/member/deleteBookmark")
     public CommonResponse<Object> deleteBookmark(@RequestBody DeleteBookmarkRequestDto request){
         //회원 정보 가져오기
@@ -74,6 +87,7 @@ public class MemberController {
         return responseService.getSuccessResponse("북마크 판례 삭제 성공", null);
     }
 
+    @ApiOperation(value = "북마크 조회", notes = "멤버가 추가한 북마크 리스트를 조회합니다.\n\n")
     @GetMapping(value = "/api/member/getBookmarks")
     public CommonResponse<Object> getBookmarks(HttpServletRequest request){
         //Http Header에서 user email 정보 가져오기
@@ -97,6 +111,7 @@ public class MemberController {
     //====== 소송 로직 ======//
 
     //회원 전체 소송 조회
+    @ApiOperation(value = "회원 소송리스트 조회", notes = "해당 회원의 소송 리스트를 조회합니다.")
     @GetMapping(value = "/api/member/getLitigations")
     public CommonResponse<Object> getLitigations(HttpServletRequest request){
         //Http Header에서 user email 정보 가져오기
@@ -113,7 +128,7 @@ public class MemberController {
                     .title(litigation.getTitle())
                     .type(litigation.getType())
                     .cost(litigation.getCost())
-                    .num_opposite(litigation.getNum_opposite())
+                    .num_opposite(litigation.getNumOpposite())
                     .step(litigation.getStep())
                     .sendCost(litigation.getSendCost())
                     .court(litigation.getCourt())
@@ -124,7 +139,14 @@ public class MemberController {
         return responseService.getSuccessResponse("회원 소송 조회", litigationResponseDtos);
     }
 
-    //회원 전체 소송 추가
+    //회원 소송 추가
+    @ApiOperation(value = "회원 소송 추가", notes = "회원의 소송리스트에 소송을 추가합니다.\n\n" +
+            "[TEST DATA]\n" +
+            "title : test\n" +
+            "court : test\n" +
+            "cost : 10000\n" +
+            "numOpposite : 2\n" +
+            "sendCost : 500")
     @PostMapping(value = "/api/member/addLitigation")
     public CommonResponse<Object> addLitigation(@RequestBody LitigationRequestDto litigationRequestDto, HttpServletRequest request){
         String email = jwtUtils.getEmailFromRequestHeader(request);
@@ -137,6 +159,7 @@ public class MemberController {
     }
 
     //회원 소송 삭제
+    @ApiOperation(value = "회원 소송 삭제", notes = "회원의 소송리스트에 해당 소송을 삭제합니다.")
     @GetMapping(value = "/api/member/deleteLitigation")
     public CommonResponse<Object> deleteLitigation(@RequestParam Long id, HttpServletRequest request){
         String email = jwtUtils.getEmailFromRequestHeader(request);
@@ -148,6 +171,7 @@ public class MemberController {
     }
 
     //======= 검색 기록 로직 ======//
+    @ApiOperation(value = "회원 검색기록 조회", notes = "회원의 검색 기록을 조회합니다.")
     @GetMapping(value = "/api/member/searchRecords")
     public CommonResponse<Object> getSearchRecord(HttpServletRequest request){
         //Jwt Token에서 유저 정보 가져오기
