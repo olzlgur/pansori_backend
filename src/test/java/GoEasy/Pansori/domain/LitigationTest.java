@@ -1,6 +1,6 @@
 package GoEasy.Pansori.domain;
 
-import GoEasy.Pansori.domain.User.Litigation;
+import GoEasy.Pansori.domain.Litigation.Litigation;
 import GoEasy.Pansori.domain.User.Member;
 import GoEasy.Pansori.dto.member.litigation.LitigationRequestDto;
 import GoEasy.Pansori.service.MemberService;

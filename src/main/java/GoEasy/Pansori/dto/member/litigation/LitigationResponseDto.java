@@ -21,10 +21,10 @@ public class LitigationResponseDto {
     private Long cost; //소송목적 값
     private Integer num_opposite; //당사자 수
     private Long sendCost; //송달료
-    private Integer step; //단계
+    private Long step; //단계
 
     @Builder
-    public LitigationResponseDto(String title, LitigationType type, String court, Long cost, Integer num_opposite, Long sendCost, Integer step) {
+    public LitigationResponseDto(String title, LitigationType type, String court, Long cost, Integer num_opposite, Long sendCost, Long step) {
         this.title = title;
         this.type = type;
         this.court = court;

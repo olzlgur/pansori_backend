@@ -1,7 +1,8 @@
-package GoEasy.Pansori.domain.User;
+package GoEasy.Pansori.domain.Litigation;
 
 import GoEasy.Pansori.domain.BaseTimeEntity;
 import GoEasy.Pansori.domain.LitigationType;
+import GoEasy.Pansori.domain.User.Member;
 import GoEasy.Pansori.dto.member.litigation.LitigationRequestDto;
 import com.sun.istack.NotNull;
 import lombok.Getter;
@@ -32,9 +33,15 @@ public class Litigation extends BaseTimeEntity {
     private String court; //관할 법원
 
     private Long cost; //소송목적 값
-    private Integer num_opposite; //당사자 수
+    private Integer numOpposite; //당사자 수
     private Long sendCost; //송달료
-    private Integer step; //단계
+    private Long step; //단계
+
+    private String step1 = "0,0,0,0";
+    private String step2 = "0,0,0,0";
+    private String step3 = "0,0,0,0";
+    private String step4 = "0,0,0,0";
+
 
     public static Litigation createByRequest(LitigationRequestDto request){
         Litigation litigation = new Litigation();
@@ -42,9 +49,9 @@ public class Litigation extends BaseTimeEntity {
         litigation.type = request.getType();
         litigation.court = request.getCourt();
         litigation.cost = request.getCost();
-        litigation.num_opposite = request.getNum_opposite();
+        litigation.numOpposite = request.getNumOpposite();
         litigation.sendCost = request.getSendCost();
-        litigation.step = 0;
+        litigation.step = 0l;
 
         return litigation;
     }
