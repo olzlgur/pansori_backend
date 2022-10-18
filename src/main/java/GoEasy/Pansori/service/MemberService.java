@@ -1,6 +1,6 @@
 package GoEasy.Pansori.service;
 
-import GoEasy.Pansori.domain.User.Litigation;
+import GoEasy.Pansori.domain.Litigation.Litigation;
 import GoEasy.Pansori.domain.precedent.DetailPrecedent;
 import GoEasy.Pansori.jwt.JwtProvider;
 import GoEasy.Pansori.domain.SearchRecord;
@@ -35,7 +35,10 @@ public class MemberService {
     private final JwtProvider jwtProvider;
 
     public Member findOneByEmail(String email){
-        return memberRepository.findByEmail(email).get();
+        Optional<Member> findOne = memberRepository.findByEmail(email);
+        if(findOne.isEmpty()) throw new RuntimeException("해당 이메일 사용자는 존재하지 않습니다.");
+
+        return findOne.get();
     }
 
     // 회원가입
