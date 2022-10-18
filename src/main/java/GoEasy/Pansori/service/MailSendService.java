@@ -1,10 +1,9 @@
 package GoEasy.Pansori.service;
 
-import GoEasy.Pansori.dto.MailDto;
+
 import GoEasy.Pansori.exception.customException.CustomTypeException;
 import GoEasy.Pansori.utils.MailUtils;
 import lombok.AllArgsConstructor;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +22,7 @@ public class MailSendService {
     private static final String text = "이메일 인증 코드";
 
     public String mailSend(String toEmail, HttpServletRequest request, Integer purpose){
+
         //인증메일 보내기
         try {
             //메세지 메타데이터 설정

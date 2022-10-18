@@ -40,7 +40,7 @@ public class searchDBController {
 
         List<DetailPrecedent> detailPrecedentList = precedentRepository.findAll();
         List<String> strarr;
-        
+
         for (int index = start; index < start + end; index++) {
             strarr = precedentService.morphemeAnalysis(detailPrecedentList.get(index).getPrecContent());
             for (int strindex = 0; strindex < strarr.size(); strindex++) {

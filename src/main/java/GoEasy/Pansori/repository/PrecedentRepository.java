@@ -6,10 +6,7 @@ import GoEasy.Pansori.domain.precedent.SimplePrecedent;
 import GoEasy.Pansori.dto.Precedent.PrecedentDto;
 import GoEasy.Pansori.dto.Precedent.PrecedentListDto;
 
-import GoEasy.Pansori.dto.QPrecedentDto;
-import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -19,7 +16,6 @@ import java.util.Date;
 import java.util.List;
 
 import static GoEasy.Pansori.domain.QSearchTable.searchTable;
-import static GoEasy.Pansori.domain.QSimplePrecedent.simplePrecedent;
 
 @Repository
 public class PrecedentRepository {

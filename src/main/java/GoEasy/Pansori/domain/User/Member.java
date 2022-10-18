@@ -1,9 +1,9 @@
 package GoEasy.Pansori.domain.User;
 
 import GoEasy.Pansori.domain.Authority;
+import GoEasy.Pansori.domain.Litigation.Litigation;
 import GoEasy.Pansori.domain.SearchRecord;
 import GoEasy.Pansori.dto.member.JoinRequestDto;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

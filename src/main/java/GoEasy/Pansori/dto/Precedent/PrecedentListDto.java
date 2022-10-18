@@ -9,6 +9,5 @@ import java.util.List;
 @Setter
 public class PrecedentListDto {
     private List<PrecedentDto> precedentDtoList;
-
     private List<String> relationWord;
 }
