@@ -1,5 +1,6 @@
-package GoEasy.Pansori.domain.precedent;
+package GoEasy.Pansori.elasticsearch;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -7,15 +8,13 @@ import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.util.Date;
 
-@Entity
 @Getter @Setter
 @NoArgsConstructor
 @Document(indexName = "simplePrecedent")
-public class SimplePrecedent {
+public class ElasticSimplePrecedent {
 
     @Id
     @Column(name = "precedent_id")
@@ -43,7 +42,7 @@ public class SimplePrecedent {
     private String abstractive; // 요약
 
     @PersistenceConstructor
-    public SimplePrecedent(Long id, String caseId, String title, Date date, String courtName, String courtTypeCode, String caseType, Integer caseTypeCode, String verdictType, String verdict, String abstractive) {
+    public ElasticSimplePrecedent(Long id, String caseId, String title, Date date, String courtName, String courtTypeCode, String caseType, Integer caseTypeCode, String verdictType, String verdict, String abstractive) {
         this.id = id;
         this.caseId = caseId;
         this.title = title;

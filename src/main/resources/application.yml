@@ -1,15 +1,15 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: jdbc:mysql://goeasy-db.clvgcrbhh40l.ap-northeast-2.rds.amazonaws.com/pansoriDB?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
-#    username: admin
-#    password: rhdlwl123!
+    url: jdbc:mysql://goeasy-db.clvgcrbhh40l.ap-northeast-2.rds.amazonaws.com/pansoriDB?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: admin
+    password: rhdlwl123!
 #    url: jdbc:mysql://127.0.0.1:3306/PansoriDB?serverTimezone=UTC&characterEncoding=UTF-8
 #    password: Goeasy1234!
 #    username: goeasy
-    url: jdbc:mysql://127.0.0.1:3306/PansoriDB?serverTimezone=UTC&characterEncoding=UTF-8
-    username: root
-    password: 1234
+#    url: jdbc:mysql://127.0.0.1:3306/PansoriDB?serverTimezone=UTC&characterEncoding=UTF-8
+#    username: root
+#    password: 1234
   jpa:
     hibernate:
       ddl-auto: update
@@ -37,9 +37,11 @@ spring:
 #          timeout: 5000
 #          writetimeout: 5000
 #elasticsearch:
-#  host: 127.0.0.1
+#  host: 127.0.0.1:9200
 #  port: 9200
 
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+
+  spring.main.allow-bean-definition-overriding: true

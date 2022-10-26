@@ -6,10 +6,7 @@ import GoEasy.Pansori.domain.precedent.SimplePrecedent;
 import GoEasy.Pansori.dto.Precedent.PrecedentDto;
 import GoEasy.Pansori.dto.Precedent.PrecedentListDto;
 
-import GoEasy.Pansori.dto.QPrecedentDto;
-import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -19,7 +16,6 @@ import java.util.Date;
 import java.util.List;
 
 import static GoEasy.Pansori.domain.QSearchTable.searchTable;
-import static GoEasy.Pansori.domain.QSimplePrecedent.simplePrecedent;
 
 @Repository
 public class PrecedentRepository {
@@ -101,7 +97,6 @@ public class PrecedentRepository {
         }
 
         sql += "order by date desc, score desc ";
-        System.out.println(contents.size());
         Query query = em.createNativeQuery(sql);
         for (int index = 1; index <= contents.size(); index++) {
             query.setParameter(index, contents.get(index-1));
@@ -143,8 +138,6 @@ public class PrecedentRepository {
 
         String sql = "select s from SimplePrecedent s ";
 
-        System.out.println(contents.size());
-
         sql += "where s.abstractive like '%" + contents.get(0) + "%' ";
 
         for (int index = 1; index < contents.size(); index++) {
@@ -152,8 +145,6 @@ public class PrecedentRepository {
         }
 
         sql += "order by s.date desc";
-
-        System.out.println(sql);
 
         List<SimplePrecedent> resultList = em.createQuery(sql, SimplePrecedent.class)
                 .getResultList();

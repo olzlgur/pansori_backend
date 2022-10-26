@@ -1,6 +1,5 @@
 package GoEasy.Pansori.service;
 
-import GoEasy.Pansori.domain.precedent.DetailPrecedent;
 import GoEasy.Pansori.jwt.JwtProvider;
 import GoEasy.Pansori.domain.SearchRecord;
 import GoEasy.Pansori.domain.User.Bookmark;
