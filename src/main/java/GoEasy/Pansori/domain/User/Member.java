@@ -65,6 +65,7 @@ public class Member {
         this.password = password;
     }
 
+
     // === 연관관계 편의 메서드 === //
     public void addBookmark(Bookmark bookmark){
         this.bookmarks.add(bookmark);
@@ -76,6 +77,5 @@ public class Member {
         litigation.setMember(this);
         this.litigations.add(litigation);
     }
-
     public void deleteLitigation(Litigation litigation){this.litigations.remove(litigation);}
 }

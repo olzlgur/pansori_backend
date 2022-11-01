@@ -2,6 +2,8 @@ package GoEasy.Pansori.service;
 
 import GoEasy.Pansori.domain.Litigation.Litigation;
 import GoEasy.Pansori.domain.precedent.DetailPrecedent;
+import GoEasy.Pansori.dto.member.litigation.LitigationModifyRequestDto;
+import GoEasy.Pansori.dto.member.litigation.LitigationSaveRequestDto;
 import GoEasy.Pansori.jwt.JwtProvider;
 import GoEasy.Pansori.domain.SearchRecord;
 import GoEasy.Pansori.domain.User.Bookmark;
@@ -115,7 +117,9 @@ public class MemberService {
         List<Litigation> litigations = member.getLitigations();
 
         //동일한 소송 타이틀 확인
-        for (Litigation lit : litigations) { if(lit.getTitle() == litigation.getTitle()) throw new RuntimeException("동일한 이름의 소송이 존재합니다."); }
+        for (Litigation lit : litigations) {
+            if(lit.getTitle().equals(litigation.getTitle())) throw new RuntimeException("동일한 이름의 소송이 존재합니다.");
+        }
 
         //나의 소송리스트에 소송 추가
         member.addLitigation(litigation);
@@ -131,21 +135,23 @@ public class MemberService {
             if(litigation.getId() == id){ member.deleteLitigation(litigation); litigationRepository.delete(litigation);  find = true; break;}
         }
 
-        if(!find) throw new RuntimeException("해당 판례는 존재하지 않습니다.");
+        if(!find) throw new RuntimeException("해당 번호 소송은 존재하지 않습니다.");
     }
 
+    //소송 수정
+    @Transactional
+    public Litigation updateLitigaiton(LitigationSaveRequestDto requestDto) {
+        Litigation litigation = litigationRepository.findById(requestDto.getId()).get();
+        litigation.setStep(requestDto);
+        return litigation;
+    }
 
-
-
-
-
-
-
-
-
-
-
-
+    @Transactional
+    public Litigation modifyLitigationInfo(LitigationModifyRequestDto requestDto) {
+        Litigation litigation = litigationRepository.findById(requestDto.getId()).get();
+        litigation.setInfo(requestDto);
+        return litigation;
+    }
 
 
     //====== 관련 메서드 =======//

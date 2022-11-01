@@ -1,5 +1,6 @@
 package GoEasy.Pansori.domain.Litigation;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -14,12 +15,10 @@ public class LitigationStepItem {
 
     private String name;
     private String description;
-
     private String file;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "litigationStep_id")
     private LitigationStep litigationStep;
-
-
 }

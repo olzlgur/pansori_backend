@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
-class LitigationTest {
+class LitigationApiTest {
 
     @Autowired
     private MemberService memberService;
@@ -43,7 +43,7 @@ class LitigationTest {
                 .type(LitigationType.CIVIL)
                 .build();
 
-        Litigation litigation = Litigation.createByRequest(requestDto);
+        Litigation litigation = Litigation.createLitigation(requestDto);
 
         //when
         memberService.addLitigation(member, litigation);
@@ -67,7 +67,7 @@ class LitigationTest {
                 .type(LitigationType.CIVIL)
                 .build();
 
-        Litigation litigation = Litigation.createByRequest(requestDto);
+        Litigation litigation = Litigation.createLitigation(requestDto);
         memberService.addLitigation(member, litigation); //소송추가
 
         //when
@@ -108,7 +108,7 @@ class LitigationTest {
                 .type(LitigationType.CIVIL)
                 .build();
 
-        return Litigation.createByRequest(requestDto);
+        return Litigation.createLitigation(requestDto);
     }
 
 }

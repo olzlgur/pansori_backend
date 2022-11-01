@@ -3,16 +3,22 @@ package GoEasy.Pansori.domain.Litigation;
 import GoEasy.Pansori.domain.BaseTimeEntity;
 import GoEasy.Pansori.domain.LitigationType;
 import GoEasy.Pansori.domain.User.Member;
+import GoEasy.Pansori.dto.member.litigation.LitigationModifyRequestDto;
 import GoEasy.Pansori.dto.member.litigation.LitigationRequestDto;
+import GoEasy.Pansori.dto.member.litigation.LitigationSaveRequestDto;
 import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
 @NoArgsConstructor
+@DynamicInsert
 public class Litigation extends BaseTimeEntity {
 
     @Id
@@ -37,13 +43,23 @@ public class Litigation extends BaseTimeEntity {
     private Long sendCost; //송달료
     private Long step; //단계
 
-    private String step1 = "0,0,0,0";
-    private String step2 = "0,0,0,0";
-    private String step3 = "0,0,0,0";
-    private String step4 = "0,0,0,0";
+    @ColumnDefault("0 0 0 0 0")
+    private String step0;
+
+    @ColumnDefault("0 0 0")
+    private String step1;
+
+    @ColumnDefault("0 0")
+    private String step2;
+
+    @ColumnDefault("0 0 0")
+    private String step3;
+
+    @ColumnDefault("0 0 0 0 0")
+    private String step4;
 
 
-    public static Litigation createByRequest(LitigationRequestDto request){
+    public static Litigation createLitigation(LitigationRequestDto request){
         Litigation litigation = new Litigation();
         litigation.title = request.getTitle();
         litigation.type = request.getType();
@@ -61,5 +77,22 @@ public class Litigation extends BaseTimeEntity {
         this.member = member;
     }
 
+    public void setStep(LitigationSaveRequestDto requestDto){
+        this.step = requestDto.getStep();
+        this.step0 = requestDto.getStep0();
+        this.step1 = requestDto.getStep1();
+        this.step2 = requestDto.getStep2();
+        this.step3 = requestDto.getStep3();
+        this.step4 = requestDto.getStep4();
+    }
 
+
+    public void setInfo(LitigationModifyRequestDto requestDto) {
+        this.title = requestDto.getTitle();
+        this.cost = requestDto.getCost();
+        this.court = requestDto.getCourt();
+        this.numOpposite = requestDto.getNumOpposite();
+        this.cost = requestDto.getSendCost();
+        this.type = requestDto.getType();
+    }
 }
