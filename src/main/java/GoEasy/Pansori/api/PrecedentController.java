@@ -32,13 +32,7 @@ public class PrecedentController {
             "[TEST DATA]\n" +
             "id : 64440")
     public CommonResponse<Object> findOne_NoLogin(@RequestParam(value = "id")Long id, HttpServletRequest request){
-
-        String email = jwtUtils.getEmailFromRequestHeader(request);
-        Member member = memberService.findOneByEmail(email);
-
-        memberService.addSearchRecord(member, id);
-        PrecedentDetailDto precedent = precedentService.findOne(id);
-
+       PrecedentDetailDto precedent = precedentService.findOne(id);
         return responseService.getSuccessResponse("성공했습니다..", precedent);
     }
 
