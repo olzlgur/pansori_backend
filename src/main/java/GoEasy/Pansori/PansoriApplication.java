@@ -14,6 +14,9 @@ import java.util.logging.Filter;
 @EnableJpaAuditing
 public class PansoriApplication {
 
+	static {
+		System.setProperty("com.amazonaws.sdk.disableEc2Metadata", "true");
+	}
 
 	@Trace
 	public static void main(String[] args) {

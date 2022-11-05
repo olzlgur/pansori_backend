@@ -31,21 +31,32 @@ spring:
         smtp:
           starttls:
             enable: true
-#            required: true
-#          auth: true
-#          connectiontimeout: 5000
-#          timeout: 5000
-#          writetimeout: 5000
-#elasticsearch:
-#  host: 127.0.0.1
-#  port: 9200
-
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+
+cloud:
+  aws:
+    s3:
+      bucket: pansori.s3.bucket
+    credentials:
+      access-key: AKIASKTFCHJXTQXTVPWA
+      secret-key: 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
+    region:
+      static: ap-northeast-2
+      auto: false
+    stack:
+      auto: false
 
 server:
   compression:
     enabled: true
     mime-types: text/html,text/plain,text/css,application/javascript,application/json
     min-response-size: 10000
+
+logging:
+  level:
+    com:
+      amazonaws:
+        util:
+          EC2MetadataUtils: ERROR
