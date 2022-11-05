@@ -31,10 +31,7 @@ import java.util.stream.Collectors;
 public class JwtProvider {
     @Value("${spring.jwt.secret-key}")
     private String SECRET_KEY;
-
-    private static final String BEARER_TYPE = "bearer";
     private static final String AUTHORITIES_KEY = "auth";
-    private static final String EMAIL_KEY = "email";
     private static final Long ACCESS_TOKEN_VALID_TIME = 60 * 60 * 1000L; // 60min -> 추후에 10min으로 변경할 것
     private static final Long REFRESH_TOKEN_VALID_TIME = 24 * 60 * 60 * 1000L; // 24hours
 
@@ -57,9 +54,12 @@ public class JwtProvider {
         // Access Token 생성
         Date accessTokenExpireTime = new Date(now + ACCESS_TOKEN_VALID_TIME);
         String accessToken = Jwts.builder()
-                .setSubject(member.getEmail())    // payload "sub" : "id"
+                .setSubject("access_token")    // payload "sub" : "access_token"
                 .claim(AUTHORITIES_KEY, member.getAuthority())     // payload : "auth" : "ROLE_USER" or "ROLE_AUTH"
-                .claim("test", "test")
+                .claim("email", member.getEmail())
+                .claim("job", member.getJob())
+                .claim("region", member.getRegion())
+                .claim("id", member.getId())
                 .setExpiration(accessTokenExpireTime)    // payload : "exp" : 1516239022(에시)
                 .signWith(key, SignatureAlgorithm.HS256) // header "alg" : "HS256"
                 .compact();
@@ -90,7 +90,7 @@ public class JwtProvider {
                         .collect(Collectors.toList());
 
         // UserDetails 객체를 만들어서 Authentication 리턴
-        UserDetails principal = new User(claims.getSubject(), "", authorities);
+        UserDetails principal = new User(claims.get("email").toString(), "", authorities);
         return new UsernamePasswordAuthenticationToken(principal, "", authorities);
     }
 

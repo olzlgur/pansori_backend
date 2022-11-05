@@ -1,9 +1,10 @@
 package GoEasy.Pansori.service;
 
 import GoEasy.Pansori.domain.Litigation.Litigation;
-import GoEasy.Pansori.domain.precedent.DetailPrecedent;
-import GoEasy.Pansori.dto.member.litigation.LitigationModifyRequestDto;
-import GoEasy.Pansori.dto.member.litigation.LitigationSaveRequestDto;
+import GoEasy.Pansori.dto.member.MemberUpdateRequestDto;
+import GoEasy.Pansori.dto.member.PasswordUpdateRequestDto;
+import GoEasy.Pansori.dto.member.litigation.LitModifyRequestDto;
+import GoEasy.Pansori.dto.member.litigation.LitSaveRequestDto;
 import GoEasy.Pansori.jwt.JwtProvider;
 import GoEasy.Pansori.domain.SearchRecord;
 import GoEasy.Pansori.domain.User.Bookmark;
@@ -36,11 +37,45 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
 
+    public List<Member> findAll(){
+        return memberRepository.findAll();
+    }
+
+    public Member findOneById(Long id){
+        Optional<Member> findOne = memberRepository.findById(id);
+        if(findOne.isEmpty()) throw new NullPointerException("해당 ID의 회원은 존재하지 않습니다.");
+
+        return findOne.get();
+    }
+
     public Member findOneByEmail(String email){
         Optional<Member> findOne = memberRepository.findByEmail(email);
         if(findOne.isEmpty()) throw new RuntimeException("해당 이메일 사용자는 존재하지 않습니다.");
 
         return findOne.get();
+    }
+
+    @Transactional
+    public void deleteById(Long id){
+        Optional<Member> findOne = memberRepository.findById(id);
+        if(findOne.isEmpty()) throw new IllegalArgumentException("해당 ID의 회원은 존재하지 않습니다.");
+        memberRepository.deleteById(id);
+    }
+
+    @Transactional
+    public Member update(Member member, MemberUpdateRequestDto requestDto){
+        member.updateInfo(requestDto);
+        return member;
+    }
+
+    @Transactional
+    public void updatePassword(Member member, PasswordUpdateRequestDto requestDto) {
+        if(!passwordEncoder.matches(requestDto.getExistedPassword(), member.getPassword())){
+            throw new IllegalArgumentException("기존 비밀번호가 일치하지 않습니다.");
+        }
+
+        validatePasswordType(requestDto.getNewPassword());
+        member.encodingPW(passwordEncoder.encode(requestDto.getNewPassword())); //비밀번호 수정
     }
 
     // 회원가입
@@ -80,7 +115,7 @@ public class MemberService {
         //북마크 조회 및 삭제
         boolean find = false;
         for (Bookmark bookmark : member.getBookmarks()) {
-            if(bookmark.getPrecedent().getId() == prec_id){
+            if(bookmark.getPrecedent().getId().equals(prec_id)){
                 find = true;
                 member.deleteBookmark(bookmark);
                 bookmarkRepository.delete(bookmark);
@@ -102,7 +137,6 @@ public class MemberService {
         if(precedent == null){ throw new RuntimeException("해당 판례 번호는 존재하지 않습니다.");}
 
         SearchRecord searchRecord = SearchRecord.createSearchRecord(member, precedent);
-
 
         //검색 기록 로직
         List<SearchRecord> records = member.getSearchRecordList();
@@ -132,7 +166,7 @@ public class MemberService {
 
         boolean find = false;
         for (Litigation litigation : litigations) {
-            if(litigation.getId() == id){ member.deleteLitigation(litigation); litigationRepository.delete(litigation);  find = true; break;}
+            if(litigation.getId().equals(id)){ member.deleteLitigation(litigation); litigationRepository.delete(litigation);  find = true; break;}
         }
 
         if(!find) throw new RuntimeException("해당 번호 소송은 존재하지 않습니다.");
@@ -140,15 +174,13 @@ public class MemberService {
 
     //소송 수정
     @Transactional
-    public Litigation updateLitigaiton(LitigationSaveRequestDto requestDto) {
-        Litigation litigation = litigationRepository.findById(requestDto.getId()).get();
+    public Litigation updateLitigaiton(Litigation litigation, LitSaveRequestDto requestDto) {
         litigation.setStep(requestDto);
         return litigation;
     }
 
     @Transactional
-    public Litigation modifyLitigationInfo(LitigationModifyRequestDto requestDto) {
-        Litigation litigation = litigationRepository.findById(requestDto.getId()).get();
+    public Litigation modifyLitigationInfo(Litigation litigation, LitModifyRequestDto requestDto) {
         litigation.setInfo(requestDto);
         return litigation;
     }
@@ -163,12 +195,7 @@ public class MemberService {
         }
     }
 
-    private void validateEmail(Member member){
-        if(member == null){
-            throw new CustomTypeException("존재하지 않는 회원입니다.");
-        }
-    }
-    private void validateDuplicateMember(Member member) {
+    public void validateDuplicateMember(Member member) {
         Optional<Member> findMembers =
                 memberRepository.findByEmail(member.getEmail());
         if (findMembers.isPresent()) {
@@ -195,6 +222,7 @@ public class MemberService {
             throw new CustomTypeException("올바르지 않은 패스워드 형식입니다.");
         }
     }
+
 
 
 }

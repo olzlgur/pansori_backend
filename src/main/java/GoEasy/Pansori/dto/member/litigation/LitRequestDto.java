@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class LitigationRequestDto {
+public class LitRequestDto {
 
     private String title; // 소송 제목
     private LitigationType type; //소송 유형 (민사 or 형사)
@@ -19,7 +19,7 @@ public class LitigationRequestDto {
     private Long sendCost; //송달료
 
     @Builder
-    public LitigationRequestDto(String title, LitigationType type, String court, Long cost, Integer num_opposite, Long sendCost) {
+    public LitRequestDto(String title, LitigationType type, String court, Long cost, Integer num_opposite, Long sendCost) {
         this.title = title;
         this.type = type;
         this.court = court;

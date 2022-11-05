@@ -2,20 +2,15 @@ package GoEasy.Pansori.dto.member.litigation;
 
 import GoEasy.Pansori.domain.Litigation.Litigation;
 import GoEasy.Pansori.domain.LitigationType;
-import GoEasy.Pansori.domain.User.Member;
-import com.sun.istack.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
-
-import javax.persistence.*;
 
 @Getter
 @Setter
 @NoArgsConstructor
-public class LitigationResponseDto {
+public class LitResponseDto {
 
     private Long id;
     private String title; // 소송 제목
@@ -37,7 +32,7 @@ public class LitigationResponseDto {
     private String step4;
 
     @Builder
-    public LitigationResponseDto(Long id, String title, LitigationType type, String court, Long cost, Integer num_opposite, Long sendCost, Long step, String step0, String step1, String step2, String step3, String step4) {
+    public LitResponseDto(Long id, String title, LitigationType type, String court, Long cost, Integer num_opposite, Long sendCost, Long step, String step0, String step1, String step2, String step3, String step4) {
         this.id = id;
         this.title = title;
         this.type = type;
@@ -53,8 +48,8 @@ public class LitigationResponseDto {
         this.step4 = step4;
     }
 
-    static public LitigationResponseDto createDTO(Litigation litigation){
-        LitigationResponseDto dto = new LitigationResponseDto();
+    static public LitResponseDto createDTO(Litigation litigation){
+        LitResponseDto dto = new LitResponseDto();
         dto.id = litigation.getId();
         dto.title = litigation.getTitle();
         dto.type = litigation.getType();

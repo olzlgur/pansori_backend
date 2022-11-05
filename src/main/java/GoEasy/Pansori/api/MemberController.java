@@ -1,12 +1,13 @@
 package GoEasy.Pansori.api;
 
+import GoEasy.Pansori.domain.Authority;
 import GoEasy.Pansori.domain.Litigation.Litigation;
 import GoEasy.Pansori.domain.Litigation.LitigationStep;
 import GoEasy.Pansori.domain.SearchRecord;
-import GoEasy.Pansori.dto.member.litigation.LitigationModifyRequestDto;
-import GoEasy.Pansori.dto.member.litigation.LitigationRequestDto;
-import GoEasy.Pansori.dto.member.litigation.LitigationResponseDto;
-import GoEasy.Pansori.dto.member.litigation.LitigationSaveRequestDto;
+import GoEasy.Pansori.dto.member.MemberDto;
+import GoEasy.Pansori.dto.member.MemberUpdateRequestDto;
+import GoEasy.Pansori.dto.member.PasswordUpdateRequestDto;
+import GoEasy.Pansori.dto.member.litigation.*;
 import GoEasy.Pansori.jwt.JwtUtils;
 import GoEasy.Pansori.domain.CommonResponse;
 import GoEasy.Pansori.domain.User.Bookmark;
@@ -21,15 +22,14 @@ import GoEasy.Pansori.repository.LitigationStepRepository;
 import GoEasy.Pansori.repository.SimplePrecedentRepository;
 import GoEasy.Pansori.service.MemberService;
 import GoEasy.Pansori.service.ResponseService;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -37,202 +37,100 @@ public class MemberController {
 
     private final MemberService memberService;
     private final SimplePrecedentRepository precedentRepository;
-
-    private final LitigationRepository litigationRepository;
-    private final LitigationStepRepository litigationStepRepository;
     private final ResponseService responseService;
 
     private final JwtUtils jwtUtils;
 
-    //====== 회원 로직 ======//
-    @ApiOperation(value = " 회원가입", notes = "입력된 정보를 토대로 회원을 생성합니다.\n\n" +
+    //====== 회원 전체 조회 API (관리자 전용) ======//
+    @ApiOperation(value = " 회원 전체 조회(관리자 전용)", notes = "전체 회원을 조회합니다..\n\n")
+    @GetMapping(value = "/api/members")
+    public CommonResponse<Object> getAllMembers(HttpServletRequest request){
+        String email = jwtUtils.getEmailFromRequestHeader(request);
+        Member member = memberService.findOneByEmail(email);
+        if(!member.getAuthority().equals(Authority.ROLE_ADMIN)){ throw new RuntimeException("해당 접근에 대한 권한이 없습니다.");}
+
+        List<Member> members = memberService.findAll();
+        List<MemberDto> memberDtos = new ArrayList<>();
+        for(Member _member : members){
+            memberDtos.add(new MemberDto(_member));
+        }
+        return responseService.getSuccessResponse("회원 전체 조회 성공", memberDtos);
+    }
+
+    //====== 개인 회원 조회 API (관리자 전용) ======//
+    @ApiOperation(value = " 개인 회원 조회(관리자 전용)", notes = "해당 id를 가진 회원을 조회합니다..\n\n")
+    @GetMapping(value = "/api/members/{id}")
+    public CommonResponse<Object> findOneMember(@PathVariable("id") Long id, HttpServletRequest request){
+        String email = jwtUtils.getEmailFromRequestHeader(request);
+        Member member = memberService.findOneByEmail(email);
+        if(!member.getAuthority().equals(Authority.ROLE_ADMIN)){ throw new RuntimeException("해당 접근에 대한 권한이 없습니다.");}
+
+        Member findOne = memberService.findOneById(id);
+        MemberDto memberDto = new MemberDto(findOne);
+        return responseService.getSuccessResponse("개인 회원 조회 성공", memberDto);
+    }
+
+    //====== 개인 회원 삭제 API (관리자 전용) ======//
+    @ApiOperation(value = " 개인 회원 삭제(관리자 전용)", notes = "해당 id를 가진 회원을 삭제합니다..\n\n")
+    @DeleteMapping(value = "/api/members/{id}")
+    public CommonResponse<Object> deleteMember(@PathVariable("id") Long id, HttpServletRequest request){
+        String email = jwtUtils.getEmailFromRequestHeader(request);
+        Member member = memberService.findOneByEmail(email);
+        if(!member.getAuthority().equals(Authority.ROLE_ADMIN)){ throw new RuntimeException("해당 접근에 대한 권한이 없습니다.");}
+
+        memberService.deleteById(id);
+        return responseService.getSuccessResponse("개인 회원 삭제 성공", null);
+    }
+
+    //====== 회원 가입 API ======//
+    @ApiOperation(value = " 회원 가입 API", notes = "입력된 정보를 토대로 회원을 생성합니다.\n\n" +
             "[TEST DATA]\n" +
             "email : any email\n" +
             "password : dmsgk123A!\n" +
             "authority : USER_ROLE\n" +
             "job : any string" +
             "region : any string")
-    @PostMapping(value = "/api/join")
+    @PostMapping(value = "/api/members")
     public CommonResponse<Object> join(@RequestBody JoinRequestDto request){
         Member member = Member.registerMember(request);
         Long id = memberService.join(member);
         return responseService.getSuccessResponse("회원가입에 성공했습니다.", id);
     }
 
-    //====== 즐겨찾기(북마크) 로직 ======//
-    @ApiOperation(value = "북마크 추가", notes = "멤버 북마크 리스트에 해당 판례를 추가합니다.\n\n" +
+    //====== 회원 정보 수정 API ======//
+    @ApiOperation(value = " 회원 정보 수정 API", notes = "회원 정보를 수정합니다.\n\n" +
             "[TEST DATA]\n" +
-            "email : testEmail@gmail.com\n" +
-            "precedent_id : 64440")
-    @PostMapping(value = "/api/member/bookmarks/add")
-    public CommonResponse<Object> addBookmark(@RequestBody AddBookmarkRequestDto request){
-        //회원 정보 가져오기
-        Member member = memberService.findOneByEmail(request.getEmail());
-        //판례 정보 가져오기
-        SimplePrecedent precedent = precedentRepository.findOne(request.getPrecedent_id());
-
-        // 북마크 생성
-        Bookmark bookmark = Bookmark.builder()
-                .precedent(precedent)
-                .member(member).build();
-        //북마크 저장
-        memberService.addBookmark(member, bookmark);
-
-        return responseService.getSuccessResponse("판례 즐겨찾기 추가 성공", null);
+            "email : any email\n" +
+            "password : dmsgk123A!\n" +
+            "authority : USER_ROLE\n" +
+            "job : any string" +
+            "region : any string")
+    @PutMapping(value = "/api/members/{id}")
+    public CommonResponse<Object> updateMember(@PathVariable("id") Long id, @RequestBody MemberUpdateRequestDto requestDto, HttpServletRequest request){
+        if(!jwtUtils.checkJWTwithID(request, id)) throw new AccessDeniedException("허가되지 않은 접근입니다.");
+        Member member = memberService.findOneById(id);
+        Member updatedMember = memberService.update(member, requestDto);
+        MemberDto memberDto = new MemberDto(updatedMember);
+        return responseService.getSuccessResponse("회원 정보 수정 성공", memberDto);
     }
 
-    @ApiOperation(value = "북마크 삭제", notes = "멤버 북마크 리스트에 해당 판례를 삭제합니다.\n\n" +
+    @ApiOperation(value = " 회원 비밀번호 수정 API", notes = "회원 비밀번호를 수정합니다.\n\n" +
             "[TEST DATA]\n" +
-            "email : testEmail@gmail.com\n" +
-            "precedent_id : 64440")
-    @PostMapping(value = "/api/member/bookmarks/delete")
-    public CommonResponse<Object> deleteBookmark(@RequestBody DeleteBookmarkRequestDto request){
-        //회원 정보 가져오기
-        Member member = memberService.findOneByEmail(request.getEmail());
-        //삭제할 북마크 판례 번호
-        Long precedent_id = request.getPrecedent_id();
+            "email : any email\n" +
+            "password : dmsgk123A!\n" +
+            "authority : USER_ROLE\n" +
+            "job : any string" +
+            "region : any string")
+    @PutMapping(value = "/api/members/{id}/password")
+    public CommonResponse<Object> updatePassword(@PathVariable("id") Long id, @RequestBody PasswordUpdateRequestDto requestDto, HttpServletRequest request){
+        if(!jwtUtils.checkJWTwithID(request, id)) throw new AccessDeniedException("허가되지 않은 접근입니다.");
 
-        //북마크 삭제
-        memberService.deleteBookmark(member, precedent_id);
+        if(requestDto.getExistedPassword() == null){throw new IllegalArgumentException("비밀번호는 공백이 될 수 없습니다.");}
+        if(requestDto.getNewPassword() == null){throw new IllegalArgumentException("비밀번호는 공백이 될 수 없습니다.");}
 
-        return responseService.getSuccessResponse("북마크 판례 삭제 성공", null);
-    }
-
-    @ApiOperation(value = "북마크 조회", notes = "멤버가 추가한 북마크 리스트를 조회합니다.\n\n")
-    @GetMapping(value = "/api/member/bookmarks")
-    public CommonResponse<Object> getBookmarks(HttpServletRequest request){
-        //Http Header에서 user email 정보 가져오기
-        String email = jwtUtils.getEmailFromRequestHeader(request);
-
-        //회원 조회
-        Member member = memberService.findOneByEmail(email);
-
-        List<BookmarkResponseDto> bookmarks = new ArrayList<>();
-
-        for (Bookmark bookmark : member.getBookmarks()) {
-            BookmarkResponseDto bookmarkDto = BookmarkResponseDto.builder()
-                    .title(bookmark.getPrecedent().getTitle())
-                    .precedent_id(bookmark.getPrecedent().getId()).build();
-            bookmarks.add(bookmarkDto);
-        }
-
-        return responseService.getSuccessResponse("회원 북마크 조회 성공", bookmarks);
-    }
-
-
-
-    //====== 소송 로직 ======//
-
-    //회원 전체 소송 조회
-    @ApiOperation(value = "회원 소송리스트 조회", notes = "해당 회원의 소송 리스트를 조회합니다.")
-    @GetMapping(value = "/api/member/litigations")
-    public CommonResponse<Object> getLitigations(HttpServletRequest request){
-        //Http Header에서 user email 정보 가져오기
-        String email = jwtUtils.getEmailFromRequestHeader(request);
-
-        //회원 조회
-        Member member = memberService.findOneByEmail(email);
-
-        List<Litigation> litigations = member.getLitigations();
-        List<LitigationResponseDto> litigationResponseDtos = new ArrayList<>();
-
-        for(Litigation litigation : litigations){
-            LitigationResponseDto dto = LitigationResponseDto.createDTO(litigation);
-            litigationResponseDtos.add(dto);
-        }
-
-        return responseService.getSuccessResponse("회원 소송 조회", litigationResponseDtos);
-    }
-
-    //회원 소송 추가
-    @ApiOperation(value = "회원 소송 추가", notes = "회원의 소송리스트에 소송을 추가합니다.\n\n" +
-            "[TEST DATA]\n" +
-            "title : test\n" +
-            "court : test\n" +
-            "cost : 10000\n" +
-            "numOpposite : 2\n" +
-            "sendCost : 500")
-    @PostMapping(value = "/api/member/litigations/add")
-    public CommonResponse<Object> addLitigation(@RequestBody LitigationRequestDto litigationRequestDto, HttpServletRequest request){
-        String email = jwtUtils.getEmailFromRequestHeader(request);
-        Member member = memberService.findOneByEmail(email);
-
-        Litigation litigation = Litigation.createLitigation(litigationRequestDto);
-        memberService.addLitigation(member, litigation);
-
-        return responseService.getSuccessResponse("소송 추가 성공", null);
-    }
-
-    //회원 소송 삭제
-    @ApiOperation(value = "회원 소송 삭제", notes = "회원의 소송리스트에 해당 소송을 삭제합니다.")
-    @GetMapping(value = "/api/member/litigations/delete")
-    public CommonResponse<Object> deleteLitigation(@RequestParam Long id, HttpServletRequest request){
-        String email = jwtUtils.getEmailFromRequestHeader(request);
-        Member member = memberService.findOneByEmail(email);
-
-        memberService.deleteLitigation(member, id);
-        return responseService.getSuccessResponse("소송 삭제 성공", null);
-    }
-
-    //회원 소송 체크리스트 저장
-    @ApiOperation(value = "회원 소송 체크리스트 저장", notes = "회원의 체크리스트에 대한 정보를 저장합니다.\n\n" +
-            "[TEST DATA]" +
-            "id : {소송 번호}\n" +
-            "step : {현재 단계}\n" +
-            "step0 : {단계0 진행 정보 - default : 0 0 0 0 0}\n" +
-            "step1 : {단계1 진행 정보 - default : 0 0 0}\n" +
-            "step2 : {단계2 진행 정보 - default : 0 0}\n" +
-            "step3 : {단계3 진행 정보 - default : 0 0 0}\n" +
-            "step4 : {단계4 진행 정보 - default : 0 0 0 0 0}\n")
-    @PostMapping(value = "/api/member/litigations/save")
-    public CommonResponse<Object> saveLitigationStep(@RequestBody LitigationSaveRequestDto requestDto, HttpServletRequest request){
-        String email = jwtUtils.getEmailFromRequestHeader(request);
-        Member member = memberService.findOneByEmail(email);
-
-        boolean find = false;
-        for (Litigation litigation : member.getLitigations()) {
-            if(litigation.getId() == requestDto.getId()){find = true; break;}
-        }
-        if(!find) throw new RuntimeException("현재 회원에게는 해당 번호의 소송이 존재하지 않습니다.");
-
-        Litigation litigation = memberService.updateLitigaiton(requestDto);
-        return responseService.getSuccessResponse("소송 정보 저장 성공", LitigationResponseDto.createDTO(litigation));
-    }
-
-    //회원 소송 기본 정보 수정
-    @ApiOperation(value = "회원 소송 기본 정보 수정", notes = "회원 소송의 기본적인 정보를 수정합니다.\n\n" +
-            "[TEST DATA]" +
-            "id : {소송 번호}\n" +
-            "title : {판례 제목}\n" +
-            "type : {판례 타입 - CIVIL or CRIMINAL}\n" +
-            "cost : {소송 비용}\n" +
-            "sendCost : {송달료}\n" +
-            "court : {법원 이름}\n" +
-            "numOpposite : {소송 대상자 수}" )
-    @PostMapping(value = "/api/member/litigations/modify")
-    public CommonResponse<Object> modifyLitigationInfo(@RequestBody LitigationModifyRequestDto requestDto, HttpServletRequest request){
-        String email = jwtUtils.getEmailFromRequestHeader(request);
-        Member member = memberService.findOneByEmail(email);
-
-        boolean find = false;
-        Litigation findLitigation = null;
-        for (Litigation litigation : member.getLitigations()) {
-            if(litigation.getId() == requestDto.getId()){find = true; break;}
-        }
-        if(!find) throw new RuntimeException("현재 회원에게는 해당 번호의 소송이 존재하지 않습니다.");
-
-        Litigation litigation = memberService.modifyLitigationInfo(requestDto);
-        return responseService.getSuccessResponse("소송 정보 수정 성공", LitigationResponseDto.createDTO(litigation));
-    }
-
-
-    //소송 단계 검색
-    @ApiOperation(value = "소송 단계 검색", notes = "소송의 각 단계에 대한 정보를 제공합니다.(step = 0~4)")
-    @GetMapping(value = "/api/member/litigations/info")
-    public CommonResponse<Object> getLitigationStep(@RequestParam Long step){
-        Optional<LitigationStep> findOne = litigationStepRepository.findById(step);
-        if(findOne.isEmpty()) throw new RuntimeException("해당 번호의 소송 단계는 존재하지 않습니다.");
-        return responseService.getSuccessResponse("소송 단계 검색 완료", findOne.get());
+        Member member = memberService.findOneById(id);
+        memberService.updatePassword(member, requestDto);
+        return responseService.getSuccessResponse("비밀번호 업데이트 성공", null);
     }
 
 

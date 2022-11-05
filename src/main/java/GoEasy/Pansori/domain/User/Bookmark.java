@@ -2,6 +2,7 @@ package GoEasy.Pansori.domain.User;
 
 import GoEasy.Pansori.domain.BaseTimeEntity;
 import GoEasy.Pansori.domain.precedent.SimplePrecedent;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,6 +23,7 @@ public class Bookmark extends BaseTimeEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
+    @JsonIgnore
     @NotNull
     private Member member;
 

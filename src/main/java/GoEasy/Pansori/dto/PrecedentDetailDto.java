@@ -1,15 +1,16 @@
 package GoEasy.Pansori.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 public class PrecedentDetailDto {
 
-    @Column(name = "precedent_id")
     private Long id; //판례일련번호
 
     private String judgeCase; //판시 사항

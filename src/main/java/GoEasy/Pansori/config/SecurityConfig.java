@@ -59,8 +59,11 @@ public class SecurityConfig{
                 .authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS, "/api/**").permitAll()
                 .antMatchers("/api/auth/**").authenticated()
+                .antMatchers(HttpMethod.POST,"/api/members").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/members").hasAuthority("ROLE_ADMIN")
+                .antMatchers(HttpMethod.GET, "/api/members/{\\d+}").hasAuthority("ROLE_ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/api/members/{\\d+}").hasAuthority("ROLE_ADMIN")
                 .antMatchers("/api/members/**").authenticated()
-                .antMatchers("/api/member/**").authenticated()
                 .anyRequest().permitAll()
 
                 //JwtFilter를 addFilterBefore로 등록했던 JwtSecurityConfig 클래스 적용

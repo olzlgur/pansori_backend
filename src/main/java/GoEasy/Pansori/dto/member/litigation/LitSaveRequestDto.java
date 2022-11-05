@@ -4,14 +4,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
 
 @Getter
 @Setter
 @NoArgsConstructor
-public class LitigationSaveRequestDto {
-
-    private Long id; //소송 번호
+public class LitSaveRequestDto {
 
     private Long step; //단계
 
@@ -26,7 +23,7 @@ public class LitigationSaveRequestDto {
     private String step4;
 
     @Builder
-    public LitigationSaveRequestDto(Long step, String step0, String step1, String step2, String step3, String step4) {
+    public LitSaveRequestDto(Long step, String step0, String step1, String step2, String step3, String step4) {
         this.step = step;
         this.step0 = step0;
         this.step1 = step1;

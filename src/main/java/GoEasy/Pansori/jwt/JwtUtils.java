@@ -30,7 +30,18 @@ public class JwtUtils {
     public String getEmailFromRequestHeader(HttpServletRequest request){
         String token = resolveToken(request);
         Claims claims = parseClaims(token);
-        return claims.getSubject();
+        return claims.get("email").toString();
+    }
+
+    public Boolean checkJWTwithID(HttpServletRequest request, Long _id){
+        Long id = getIdFromRequestHeader(request);
+        return id.equals(_id);
+    }
+
+    private Long getIdFromRequestHeader(HttpServletRequest request){
+        String token = resolveToken(request);
+        Claims claims = parseClaims(token);
+        return Long.parseLong(claims.get("id").toString());
     }
 
     private String resolveToken(HttpServletRequest request){

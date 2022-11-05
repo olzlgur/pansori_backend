@@ -3,15 +3,15 @@ package GoEasy.Pansori.domain.Litigation;
 import GoEasy.Pansori.domain.BaseTimeEntity;
 import GoEasy.Pansori.domain.LitigationType;
 import GoEasy.Pansori.domain.User.Member;
-import GoEasy.Pansori.dto.member.litigation.LitigationModifyRequestDto;
-import GoEasy.Pansori.dto.member.litigation.LitigationRequestDto;
-import GoEasy.Pansori.dto.member.litigation.LitigationSaveRequestDto;
+import GoEasy.Pansori.dto.member.litigation.LitModifyRequestDto;
+import GoEasy.Pansori.dto.member.litigation.LitRequestDto;
+import GoEasy.Pansori.dto.member.litigation.LitSaveRequestDto;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
-import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.*;
 
@@ -28,6 +28,7 @@ public class Litigation extends BaseTimeEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
+    @JsonIgnore
     @NotNull
     private Member member;
 
@@ -59,7 +60,7 @@ public class Litigation extends BaseTimeEntity {
     private String step4;
 
 
-    public static Litigation createLitigation(LitigationRequestDto request){
+    public static Litigation createLitigation(LitRequestDto request){
         Litigation litigation = new Litigation();
         litigation.title = request.getTitle();
         litigation.type = request.getType();
@@ -77,7 +78,7 @@ public class Litigation extends BaseTimeEntity {
         this.member = member;
     }
 
-    public void setStep(LitigationSaveRequestDto requestDto){
+    public void setStep(LitSaveRequestDto requestDto){
         this.step = requestDto.getStep();
         this.step0 = requestDto.getStep0();
         this.step1 = requestDto.getStep1();
@@ -87,7 +88,7 @@ public class Litigation extends BaseTimeEntity {
     }
 
 
-    public void setInfo(LitigationModifyRequestDto requestDto) {
+    public void setInfo(LitModifyRequestDto requestDto) {
         this.title = requestDto.getTitle();
         this.cost = requestDto.getCost();
         this.court = requestDto.getCourt();

@@ -1,18 +1,18 @@
 package GoEasy.Pansori.api;
 
 import GoEasy.Pansori.domain.CommonResponse;
+import GoEasy.Pansori.domain.User.Member;
 import GoEasy.Pansori.dto.RefreshRequestDto;
+import GoEasy.Pansori.dto.member.JoinRequestDto;
 import GoEasy.Pansori.dto.member.LoginRequestDto;
 import GoEasy.Pansori.dto.member.token.TokenDto;
 import GoEasy.Pansori.service.AuthService;
+import GoEasy.Pansori.service.MemberService;
 import GoEasy.Pansori.service.ResponseService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,6 +20,9 @@ public class AuthController {
 
     private final AuthService authService;
     private final ResponseService responseService;
+    private final MemberService memberService;
+
+
 
     @ApiOperation(value = "로그인", notes = "성공시 jwt 토큰을 data에 담아서 반환합니다.\n\n" +
             "[TEST DATA]\n" +
