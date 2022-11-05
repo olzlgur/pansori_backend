@@ -4,6 +4,7 @@ import GoEasy.Pansori.domain.Authority;
 import GoEasy.Pansori.domain.Litigation.Litigation;
 import GoEasy.Pansori.domain.SearchRecord;
 import GoEasy.Pansori.dto.member.JoinRequestDto;
+import GoEasy.Pansori.dto.member.MemberUpdateRequestDto;
 import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,8 +23,10 @@ public class Member {
     @Column( name = "member_id")
     private Long id;
 
+    private String name;
+
     @NotNull
-    private String email; // id
+    private String email;
 
     @NotNull
     private String password; // password
@@ -47,6 +50,7 @@ public class Member {
     public static Member registerMember(JoinRequestDto request){
         Member member = new Member();
         member.email = request.getEmail();
+        member.name = request.getName();
         member.password = request.getPassword();
         member.authority = Authority.ROLE_USER;
         member.job = request.getJob();
@@ -65,6 +69,12 @@ public class Member {
         this.password = password;
     }
 
+    public void updateInfo(MemberUpdateRequestDto requestDto) {
+        this.name = requestDto.getName();
+        this.job = requestDto.getJob();
+        this.region = requestDto.getRegion();
+    }
+
 
     // === 연관관계 편의 메서드 === //
     public void addBookmark(Bookmark bookmark){
@@ -78,4 +88,7 @@ public class Member {
         this.litigations.add(litigation);
     }
     public void deleteLitigation(Litigation litigation){this.litigations.remove(litigation);}
+
+
+
 }
