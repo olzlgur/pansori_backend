@@ -32,13 +32,13 @@ public class BookmarkController {
 
 
     //북마크 전체 조회
-    @ApiOperation(value = "북마크 조회", notes = "멤버가 추가한 북마크 리스트를 조회합니다.\n\n")
+    @ApiOperation(value = "북마크 조회 API", notes = "회원의 북마크 리스트를 조회합니다.\n\n")
     @GetMapping(value = "/api/members/{id}/bookmarks")
     public CommonResponse<Object> getBookmarks(@PathVariable("id") Long id, HttpServletRequest request){
-        //멤버 ID 검증
+        //회원 ID 검증
         jwtUtils.checkJWTwithID(request, id);
 
-        //멤버 정보 가져오기
+        //회원 정보 가져오기
         Member member = memberService.findOneById(id);
 
         List<BookmarkDto> bookmarks = new ArrayList<>();
@@ -54,16 +54,15 @@ public class BookmarkController {
     }
 
     //북마크 추가
-    @ApiOperation(value = "북마크 추가", notes = "멤버 북마크 리스트에 해당 판례를 추가합니다.\n\n" +
+    @ApiOperation(value = "북마크 추가 API", notes = "회원 북마크 리스트에 해당 판례를 추가합니다.\n\n" +
             "[TEST DATA]\n" +
-            "email : testEmail@gmail.com\n" +
             "precedent_id : 64440")
     @PostMapping(value = "/api/members/{id}/bookmarks")
     public CommonResponse<Object> addBookmark(@PathVariable("id") Long id, @RequestBody AddBookmarkRequestDto requestDto, HttpServletRequest request){
-        //멤버 ID 검증
+        //회원 ID 검증
         jwtUtils.checkJWTwithID(request, id);
 
-        //멤버 정보 가져오기
+        //회원 정보 가져오기
         Member member = memberService.findOneById(id);
 
         //판례 정보 가져오기
@@ -81,16 +80,13 @@ public class BookmarkController {
         return responseService.getSuccessResponse("판례 즐겨찾기 추가 성공", null);
     }
 
-    @ApiOperation(value = "북마크 삭제", notes = "멤버 북마크 리스트에 해당 판례를 삭제합니다.\n\n" +
-            "[TEST DATA]\n" +
-            "email : testEmail@gmail.com\n" +
-            "precedent_id : 64440")
+    @ApiOperation(value = "북마크 삭제 API", notes = "회원 북마크 리스트에 해당 판례를 삭제합니다.")
     @DeleteMapping(value = "/api/members/{member_id}/bookmarks/{bookmark_id}")
     public CommonResponse<Object> deleteBookmark(@PathVariable("member_id") Long member_id, @PathVariable("bookmark_id") Long bookmark_id, HttpServletRequest request){
-        //멤버 ID 검증
+        //회원 ID 검증
         jwtUtils.checkJWTwithID(request, member_id);
 
-        //멤버 정보 가져오기
+        //회원 정보 가져오기
         Member member = memberService.findOneById(member_id);
 
         //북마크 삭제

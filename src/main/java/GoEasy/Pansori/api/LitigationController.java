@@ -31,7 +31,7 @@ public class LitigationController {
 
 
     //====== 회원 전체 소송 조회 ======//
-    @ApiOperation(value = "회원 소송리스트 조회", notes = "해당 회원의 소송 리스트를 조회합니다.")
+    @ApiOperation(value = "회원 소송리스트 조회 API", notes = "해당 회원의 소송 리스트를 조회합니다.")
     @GetMapping(value = "/api/members/{id}/litigations")
     public CommonResponse<Object> getLitigations(@PathVariable("id") Long id, HttpServletRequest request){
         //Member ID 검증
@@ -54,9 +54,10 @@ public class LitigationController {
     }
 
     //====== 회원 소송 추가 ======//
-    @ApiOperation(value = "회원 소송 추가", notes = "회원의 소송리스트에 소송을 추가합니다.\n\n" +
+    @ApiOperation(value = "회원 소송 추가 API", notes = "회원의 소송리스트에 소송을 추가합니다.\n\n" +
             "[TEST DATA]\n" +
             "title : test\n" +
+            "type :  {판례 타입 - CIVIL or CRIMINAL}\n" +
             "court : test\n" +
             "cost : 10000\n" +
             "numOpposite : 2\n" +
@@ -80,7 +81,7 @@ public class LitigationController {
     }
 
     //====== 회원 소송 삭제 ======//
-    @ApiOperation(value = "회원 소송 삭제", notes = "회원의 소송리스트에 해당 소송을 삭제합니다.")
+    @ApiOperation(value = "회원 소송 삭제 API", notes = "회원의 소송리스트에 해당 소송을 삭제합니다.")
     @DeleteMapping(value = "/api/members/{member_id}/litigations/{litigation_id}")
     public CommonResponse<Object> deleteLitigation(@PathVariable("member_id") Long member_id, @PathVariable("litigation_id") Long litigation_id, HttpServletRequest request){
         //Member ID 검증
@@ -94,7 +95,7 @@ public class LitigationController {
     }
 
     //====== 소송 기본 정보 수정 ======//
-    @ApiOperation(value = "회원 소송 기본 정보 수정", notes = "회원 소송의 기본적인 정보를 수정합니다.\n\n" +
+    @ApiOperation(value = "회원 소송 기본 정보 수정 API", notes = "회원 소송의 기본적인 정보를 수정합니다.\n\n" +
             "[TEST DATA]" +
             "title : {판례 제목}\n" +
             "type : {판례 타입 - CIVIL or CRIMINAL}\n" +
@@ -140,8 +141,8 @@ public class LitigationController {
     }
 
     //소송 단계 검색
-    @ApiOperation(value = "소송 단계 검색", notes = "소송의 각 단계에 대한 정보를 제공합니다.(step = 0~4)")
-    @GetMapping(value = "/api/member/litigations/step/{id}")
+    @ApiOperation(value = "소송 단계 검색 API", notes = "소송의 각 단계에 대한 정보를 제공합니다.(step = 0~4)")
+    @GetMapping(value = "/api/litigations/step/{id}")
     public CommonResponse<Object> getLitigationStepInfo(@PathVariable("id") Long id){
         Optional<LitigationStep> findOne = litigationStepRepository.findById(id);
         if(findOne.isEmpty()) throw new RuntimeException("해당 번호의 소송 단계는 존재하지 않습니다.");

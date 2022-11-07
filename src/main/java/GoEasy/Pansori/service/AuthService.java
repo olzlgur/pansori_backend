@@ -37,7 +37,7 @@ public class AuthService {
         // authenticate 메서드가 실행이 될 때 CustomeUserDetailService에서 만든 loadUserByUsername 메서드 실행
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
-         member = memberRepository.findByEmail(member.getEmail()).get(); //인증 성공 후 멤버 정보 가져오기
+         member = memberRepository.findByEmail(member.getEmail()).get(); //인증 성공 후 회원 정보 가져오기
 
         // 인증 정보를 기반으로 JWT 토큰 생성
         TokenDto tokenDto = jwtProvider.generateToken(member);

@@ -24,7 +24,7 @@ public class AuthController {
 
 
 
-    @ApiOperation(value = "로그인", notes = "성공시 jwt 토큰을 data에 담아서 반환합니다.\n\n" +
+    @ApiOperation(value = "로그인 API", notes = "성공시 jwt 토큰을 data에 담아서 반환합니다.\n\n" +
             "[TEST DATA]\n" +
             "email : testEmail@gmail.com\n" +
             "password : dmsgk123A!")
@@ -34,7 +34,7 @@ public class AuthController {
         return responseService.getSuccessResponse("로그인에 성공했습니다.", tokenDto);
     }
 
-    @ApiOperation(value = "토큰 재발급", notes = "성공시 새로운 JWT 토큰을 data에 담아서 반환합니다.\n\n" +
+    @ApiOperation(value = "토큰 재발급 API", notes = "성공시 새로운 JWT 토큰을 data에 담아서 반환합니다.\n\n" +
             "[TEST DATA]\n" +
             "위의 로그인 API를 통해 나온 TOKEN 결과 값 입력")
     @PostMapping("/api/refresh")

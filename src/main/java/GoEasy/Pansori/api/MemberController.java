@@ -77,8 +77,8 @@ public class MemberController {
     @ApiOperation(value = " 회원 가입 API", notes = "입력된 정보를 토대로 회원을 생성합니다.\n\n" +
             "[TEST DATA]\n" +
             "email : any email\n" +
-            "password : dmsgk123A!\n" +
-            "authority : USER_ROLE\n" +
+            "password : rhdlwl123A!\n" +
+            "name : any string" +
             "job : any string" +
             "region : any string")
     @PostMapping(value = "/api/members")
@@ -91,9 +91,7 @@ public class MemberController {
     //====== 회원 정보 수정 API ======//
     @ApiOperation(value = " 회원 정보 수정 API", notes = "회원 정보를 수정합니다.\n\n" +
             "[TEST DATA]\n" +
-            "email : any email\n" +
-            "password : dmsgk123A!\n" +
-            "authority : USER_ROLE\n" +
+            "name : any syring" +
             "job : any string" +
             "region : any string")
     @PutMapping(value = "/api/members/{id}")
@@ -109,11 +107,8 @@ public class MemberController {
 
     @ApiOperation(value = " 회원 비밀번호 수정 API", notes = "회원 비밀번호를 수정합니다.\n\n" +
             "[TEST DATA]\n" +
-            "email : any email\n" +
-            "password : dmsgk123A!\n" +
-            "authority : USER_ROLE\n" +
-            "job : any string" +
-            "region : any string")
+            "existedPassword : 기존 비밀번호" +
+            "newPassword : 새 비밀번호")
     @PutMapping(value = "/api/members/{id}/password")
     public CommonResponse<Object> updatePassword(@PathVariable("id") Long id, @RequestBody PasswordUpdateRequestDto requestDto, HttpServletRequest request){
         //Member ID 검증
@@ -123,7 +118,7 @@ public class MemberController {
         if(requestDto.getExistedPassword() == null || requestDto.getNewPassword() == null){
             throw new IllegalArgumentException("비밀번호는 공백이 될 수 없습니다.");}
 
-        //멤버 정보 가져오기
+        //회원 정보 가져오기
         Member member = memberService.findOneById(id);
 
         //Pasword Update

@@ -28,7 +28,7 @@ public class PrecedentController {
     private final ResponseService responseService;
 
     @GetMapping("/api/precedent/findOne")
-    @ApiOperation(value = "비회원 판례 디테일 조회", notes = "넘어온 판례 번호를 통해 판례를 조회합니다.(해당 멤버의 검색 기록에 해당 판례가 추가됩니다.)\n\n" +
+    @ApiOperation(value = "비회원 판례 디테일 조회", notes = "넘어온 판례 번호를 통해 판례를 조회합니다.(해당 회원의 검색 기록에 해당 판례가 추가됩니다.)\n\n" +
             "[TEST DATA]\n" +
             "id : 64440")
     public CommonResponse<Object> findOne_NoLogin(@RequestParam(value = "id")Long id, HttpServletRequest request){
@@ -36,7 +36,7 @@ public class PrecedentController {
         return responseService.getSuccessResponse("성공했습니다..", precedent);
     }
 
-    @ApiOperation(value = "판례 디테일 조회", notes = "넘어온 판례 번호를 통해 판례를 조회합니다.(해당 멤버의 검색 기록에 해당 판례가 추가됩니다.)\n\n" +
+    @ApiOperation(value = "판례 디테일 조회", notes = "넘어온 판례 번호를 통해 판례를 조회합니다.(해당 회원의 검색 기록에 해당 판례가 추가됩니다.)\n\n" +
             "[TEST DATA]\n" +
             "id : 64440")
     @GetMapping("/api/member/precedent/findOne")

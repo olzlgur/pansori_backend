@@ -23,14 +23,14 @@ class LitigationApiTest {
 
     @BeforeEach
     public void before(){
-        //멤버 추가
+        //회원 추가
         Member member = Member.createMemberByEmailAndPW("testEmail@gmail.com", "dmsgk123123123!A");
         memberService.join(member);
     }
 
 
     @Test
-    public void 멤버_소송추가() throws Exception {
+    public void 회원_소송추가() throws Exception {
         //given
         Member member = memberService.findOneByEmail("testEmail@gmail.com");
         LitRequestDto requestDto = LitRequestDto.builder()
@@ -54,7 +54,7 @@ class LitigationApiTest {
     }
 
     @Test
-    public void 멤버_소송삭제() throws Exception {
+    public void 회원_소송삭제() throws Exception {
         //given
         Member member = memberService.findOneByEmail("testEmail@gmail.com");
         LitRequestDto requestDto = LitRequestDto.builder()
@@ -78,7 +78,7 @@ class LitigationApiTest {
     }
 
     @Test
-    public void 멤버_소송조회() throws Exception {
+    public void 회원_소송조회() throws Exception {
         //given
         Member member = memberService.findOneByEmail("testEmail@gmail.com");
         Litigation litigation1 = createTempLitigation("테스트 소송1");
