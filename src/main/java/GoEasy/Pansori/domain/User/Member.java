@@ -89,6 +89,8 @@ public class Member {
     }
     public void deleteLitigation(Litigation litigation){this.litigations.remove(litigation);}
 
+    public void addSearchRecord(SearchRecord searchRecord){this.searchRecordList.add(searchRecord);}
+    public void deleteSearchRecrod(SearchRecord searchRecord){this.searchRecordList.remove(searchRecord);}
 
 
 }

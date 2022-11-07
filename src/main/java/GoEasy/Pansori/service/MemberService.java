@@ -138,11 +138,23 @@ public class MemberService {
 
         SearchRecord searchRecord = SearchRecord.createSearchRecord(member, precedent);
 
-        //검색 기록 로직
-        List<SearchRecord> records = member.getSearchRecordList();
-        records.add(searchRecord); // 검색 기록 추가
+        //검색 기록 추가
+        member.addSearchRecord(searchRecord);
 
         recordRepository.save(searchRecord);
+    }
+
+    //판례 검색기록 삭제
+    @Transactional
+    public void deleteRecord(Member member, Long record_id) {
+        //Search record 조회
+        Optional<SearchRecord> findOne = recordRepository.findById(record_id);
+        if(findOne.isEmpty()){
+            throw new IllegalArgumentException("해당 번호의 검색 기록은 존재하지 않습니다.");}
+
+        //Search record 삭제
+        recordRepository.delete(findOne.get());
+        member.deleteSearchRecrod(findOne.get());
     }
 
     //소송 추가
