@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class LitResponseDto {
+public class LitigationDto {
 
     private Long id;
     private String title; // 소송 제목
@@ -32,7 +32,7 @@ public class LitResponseDto {
     private String step4;
 
     @Builder
-    public LitResponseDto(Long id, String title, LitigationType type, String court, Long cost, Integer num_opposite, Long sendCost, Long step, String step0, String step1, String step2, String step3, String step4) {
+    public LitigationDto(Long id, String title, LitigationType type, String court, Long cost, Integer num_opposite, Long sendCost, Long step, String step0, String step1, String step2, String step3, String step4) {
         this.id = id;
         this.title = title;
         this.type = type;
@@ -48,8 +48,8 @@ public class LitResponseDto {
         this.step4 = step4;
     }
 
-    static public LitResponseDto createDTO(Litigation litigation){
-        LitResponseDto dto = new LitResponseDto();
+    static public LitigationDto createDTO(Litigation litigation){
+        LitigationDto dto = new LitigationDto();
         dto.id = litigation.getId();
         dto.title = litigation.getTitle();
         dto.type = litigation.getType();

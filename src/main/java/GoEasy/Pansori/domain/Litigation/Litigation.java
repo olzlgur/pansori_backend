@@ -69,6 +69,12 @@ public class Litigation extends BaseTimeEntity {
         litigation.numOpposite = request.getNumOpposite();
         litigation.sendCost = request.getSendCost();
         litigation.step = 0l;
+        litigation.step0 = "0 0 0 0 0";
+        litigation.step1 = "0 0 0";
+        litigation.step2 = "0 0";
+        litigation.step3 = "0 0 0";
+        litigation.step4 = "0 0 0 0 0";
+
 
         return litigation;
     }
