@@ -115,7 +115,7 @@ public class MemberService {
 
         //북마크 조회
         Optional<Bookmark> findOne = bookmarkRepository.findById(id);
-        if(findOne.isEmpty()){
+        if(findOne.isEmpty() || !findOne.get().getMember().equals(member)){ //해당 엔티티가 없음 or 엔티티의 소유주가 해당 멤버가 아님
             throw new IllegalArgumentException("해당 판례 번호의 북마크가 존재하지 않습니다.");}
         Bookmark bookmark = findOne.get();
 
@@ -144,7 +144,7 @@ public class MemberService {
     public void deleteRecord(Member member, Long record_id) {
         //Search record 조회
         Optional<SearchRecord> findOne = recordRepository.findById(record_id);
-        if(findOne.isEmpty()){
+        if(findOne.isEmpty() || !findOne.get().getMember().equals(member)){ //해당 엔티티가 없음 or 엔티티의 소유주가 해당 멤버가 아님
             throw new IllegalArgumentException("해당 번호의 검색 기록은 존재하지 않습니다.");}
 
         //Search record 삭제
@@ -174,7 +174,7 @@ public class MemberService {
     public void deleteLitigation(Member member, Long id) {
         //소송 조회
         Optional<Litigation> findOne = litigationRepository.findById(id);
-        if(findOne.isEmpty()){
+        if(findOne.isEmpty() || !findOne.get().getMember().equals(member)){ //해당 엔티티가 없음 or 엔티티의 소유주가 해당 멤버가 아님
             throw new IllegalArgumentException("해당 번호의 소송이 존재하지 않습니다.");}
         Litigation litigation = findOne.get();
 
@@ -185,10 +185,10 @@ public class MemberService {
 
     //소송 step 정보 update
     @Transactional
-    public Litigation updateLitigaiton(Long id, LitSaveRequestDto requestDto) {
+    public Litigation updateLitigaiton(Member member, Long id, LitSaveRequestDto requestDto) {
         //소송 조회
         Optional<Litigation> findOne = litigationRepository.findById(id);
-        if(findOne.isEmpty()){
+        if(findOne.isEmpty() || !findOne.get().getMember().equals(member)){ //해당 엔티티가 없음 or 엔티티의 소유주가 해당 멤버가 아님
             throw new IllegalArgumentException("해당 번호의 소송이 존재하지 않습니다.");}
         Litigation litigation = findOne.get();
 
@@ -199,10 +199,10 @@ public class MemberService {
 
     //소송 기본 정보 수정
     @Transactional
-    public Litigation modifyLitigationInfo(Long id, LitModifyRequestDto requestDto) {
+    public Litigation modifyLitigationInfo(Member member, Long id, LitModifyRequestDto requestDto) {
         //소송 조회
         Optional<Litigation> findOne = litigationRepository.findById(id);
-        if(findOne.isEmpty()){
+        if(findOne.isEmpty() || !findOne.get().getMember().equals(member)){ //해당 엔티티가 없음 or 엔티티의 소유주가 해당 멤버가 아님
             throw new IllegalArgumentException("해당 번호의 소송이 존재하지 않습니다.");}
         Litigation litigation = findOne.get();
 

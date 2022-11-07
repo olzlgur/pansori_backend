@@ -113,7 +113,7 @@ public class LitigationController {
         Member member = memberService.findOneById(member_id);
 
         //Litigation 정보 수정
-        Litigation litigation = memberService.modifyLitigationInfo(litigation_id, requestDto);
+        Litigation litigation = memberService.modifyLitigationInfo(member, litigation_id, requestDto);
         return responseService.getSuccessResponse("소송 정보 수정 성공", LitigationDto.createDTO(litigation));
     }
 
@@ -136,7 +136,7 @@ public class LitigationController {
         Member member = memberService.findOneById(member_id);
 
         //Litigation Step 업데이트
-        Litigation litigation = memberService.updateLitigaiton(litigation_id, requestDto);
+        Litigation litigation = memberService.updateLitigaiton(member, litigation_id, requestDto);
         return responseService.getSuccessResponse("소송 정보 저장 성공", LitigationDto.createDTO(litigation));
     }
 
