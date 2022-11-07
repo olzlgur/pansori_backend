@@ -111,22 +111,17 @@ public class MemberService {
 
     // 판례 즐겨찾기 삭제
     @Transactional
-    public void deleteBookmark(Member member, Long prec_id){
-        //북마크 조회 및 삭제
-        boolean find = false;
-        for (Bookmark bookmark : member.getBookmarks()) {
-            if(bookmark.getPrecedent().getId().equals(prec_id)){
-                find = true;
-                member.deleteBookmark(bookmark);
-                bookmarkRepository.delete(bookmark);
-                break;
-            }
-        }
+    public void deleteBookmark(Member member, Long id){
 
-        // 만약 해당 판례번호의 북마크가 없을 시 에러 발생
-        if(!find){
-            throw new RuntimeException("해당 판례 번호의 북마크가 존재하지 않습니다.");
-        }
+        //북마크 조회
+        Optional<Bookmark> findOne = bookmarkRepository.findById(id);
+        if(findOne.isEmpty()){
+            throw new IllegalArgumentException("해당 판례 번호의 북마크가 존재하지 않습니다.");}
+        Bookmark bookmark = findOne.get();
+
+        //북마크 삭제
+        bookmarkRepository.delete(bookmark);
+        member.deleteBookmark(bookmark);
     }
 
     // 판례 검색기록 추가

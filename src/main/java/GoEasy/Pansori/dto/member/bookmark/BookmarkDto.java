@@ -6,12 +6,12 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class BookmarkResponseDto {
+public class BookmarkDto {
     private Long precedent_id;
     private String title;
 
     @Builder
-    public BookmarkResponseDto(Long precedent_id, String title) {
+    public BookmarkDto(Long precedent_id, String title) {
         this.precedent_id = precedent_id;
         this.title = title;
     }
