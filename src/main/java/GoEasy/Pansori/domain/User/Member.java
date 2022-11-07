@@ -83,10 +83,7 @@ public class Member {
 
     public void deleteBookmark(Bookmark bookmark) {this.bookmarks.remove(bookmark);}
 
-    public void addLitigation(Litigation litigation){
-        litigation.setMember(this);
-        this.litigations.add(litigation);
-    }
+    public void addLitigation(Litigation litigation){this.litigations.add(litigation);}
     public void deleteLitigation(Litigation litigation){this.litigations.remove(litigation);}
 
     public void addSearchRecord(SearchRecord searchRecord){this.searchRecordList.add(searchRecord);}

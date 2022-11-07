@@ -11,6 +11,7 @@ import GoEasy.Pansori.service.MemberService;
 import GoEasy.Pansori.service.ResponseService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,19 +32,21 @@ public class LitigationController {
 
     //====== 회원 전체 소송 조회 ======//
     @ApiOperation(value = "회원 소송리스트 조회", notes = "해당 회원의 소송 리스트를 조회합니다.")
-    @GetMapping(value = "/api/member/litigations")
-    public CommonResponse<Object> getLitigations(HttpServletRequest request){
-        //Http Header에서 user email 정보 가져오기
-        String email = jwtUtils.getEmailFromRequestHeader(request);
+    @GetMapping(value = "/api/members/{id}/litigations")
+    public CommonResponse<Object> getLitigations(@PathVariable("id") Long id, HttpServletRequest request){
+        //Member ID 검증
+        if(!jwtUtils.checkJWTwithID(request, id)) throw new AccessDeniedException("허가되지 않은 접근입니다.");
 
-        //회원 조회
-        Member member = memberService.findOneByEmail(email);
+        //Member 정보 조회
+        Member member = memberService.findOneById(id);
 
+        //Litigations 정보 가져오기
         List<Litigation> litigations = member.getLitigations();
-        List<LitResponseDto> litigationResponseDtos = new ArrayList<>();
+        List<LitigationDto> litigationResponseDtos = new ArrayList<>();
 
+        //Litigations convert to dto
         for(Litigation litigation : litigations){
-            LitResponseDto dto = LitResponseDto.createDTO(litigation);
+            LitigationDto dto = LitigationDto.createDTO(litigation);
             litigationResponseDtos.add(dto);
         }
 
@@ -58,15 +61,36 @@ public class LitigationController {
             "cost : 10000\n" +
             "numOpposite : 2\n" +
             "sendCost : 500")
-    @PostMapping(value = "/api/member/litigations")
-    public CommonResponse<Object> addLitigation(@RequestBody LitRequestDto litRequestDto, HttpServletRequest request){
-        String email = jwtUtils.getEmailFromRequestHeader(request);
-        Member member = memberService.findOneByEmail(email);
+    @PostMapping(value = "/api/members/{id}/litigations")
+    public CommonResponse<Object> addLitigation(@PathVariable("id") Long id, @RequestBody LitRequestDto litRequestDto, HttpServletRequest request){
+        //Member ID 검증
+        if(!jwtUtils.checkJWTwithID(request, id)) throw new AccessDeniedException("허가되지 않은 접근입니다.");
 
+        //Member 정보 조회
+        Member member = memberService.findOneById(id);
+
+        //Litigation 생성
         Litigation litigation = Litigation.createLitigation(litRequestDto);
         memberService.addLitigation(member, litigation);
 
-        return responseService.getSuccessResponse("소송 추가 성공", null);
+        //Litigation convert to dto
+        LitigationDto dto = LitigationDto.createDTO(litigation);
+
+        return responseService.getSuccessResponse("소송 추가 성공", dto);
+    }
+
+    //====== 회원 소송 삭제 ======//
+    @ApiOperation(value = "회원 소송 삭제", notes = "회원의 소송리스트에 해당 소송을 삭제합니다.")
+    @DeleteMapping(value = "/api/members/{member_id}/litigations/{litigation_id}")
+    public CommonResponse<Object> deleteLitigation(@PathVariable("member_id") Long member_id, @PathVariable("litigation_id") Long litigation_id, HttpServletRequest request){
+        //Member ID 검증
+        if(!jwtUtils.checkJWTwithID(request, member_id)) throw new AccessDeniedException("허가되지 않은 접근입니다.");
+
+        //Member 정보 조회
+        Member member = memberService.findOneById(member_id);
+
+        memberService.deleteLitigation(member, litigation_id);
+        return responseService.getSuccessResponse("소송 삭제 성공", null);
     }
 
     //====== 소송 기본 정보 수정 ======//
@@ -78,23 +102,21 @@ public class LitigationController {
             "sendCost : {송달료}\n" +
             "court : {법원 이름}\n" +
             "numOpposite : {소송 대상자 수}" )
-    @PutMapping(value = "/api/member/litigations/{id}")
-    public CommonResponse<Object> modifyLitigationInfo(@PathVariable("id") Long litigation_id, @RequestBody LitModifyRequestDto requestDto, HttpServletRequest request){
-        String email = jwtUtils.getEmailFromRequestHeader(request);
-        Member member = memberService.findOneByEmail(email);
+    @PutMapping(value = "/api/members/{member_id}/litigations/{litigation_id}")
+    public CommonResponse<Object> modifyLitigationInfo(@PathVariable("member_id") Long member_id, @PathVariable("litigation_id") Long litigation_id,
+                                                       @RequestBody LitModifyRequestDto requestDto, HttpServletRequest request){
+        //Member ID 검증
+        if(!jwtUtils.checkJWTwithID(request, member_id)) throw new AccessDeniedException("허가되지 않은 접근입니다.");
 
-        boolean find = false;
-        Litigation findLitigation = null;
-        for (Litigation litigation : member.getLitigations()) {
-            if(litigation.getId().equals(litigation_id)){find = true; findLitigation = litigation; break;}
-        }
-        if(!find) throw new RuntimeException("현재 회원에게는 해당 번호의 소송이 존재하지 않습니다.");
+        //Member 정보 조회
+        Member member = memberService.findOneById(member_id);
 
-        Litigation litigation = memberService.modifyLitigationInfo(findLitigation, requestDto);
-        return responseService.getSuccessResponse("소송 정보 수정 성공", LitResponseDto.createDTO(litigation));
+        //Litigation 정보 수정
+        Litigation litigation = memberService.modifyLitigationInfo(litigation_id, requestDto);
+        return responseService.getSuccessResponse("소송 정보 수정 성공", LitigationDto.createDTO(litigation));
     }
 
-    //====== 소송 체크리스트 정보 수정 ======//
+    //====== 소송 체크리스트 정보 업데이트 ======//
     @ApiOperation(value = "회원 소송 체크리스트 정보 업데이트", notes = "회원의 체크리스트에 대한 정보를 저장합니다.\n\n" +
             "[TEST DATA]" +
             "step : {현재 단계}\n" +
@@ -103,36 +125,19 @@ public class LitigationController {
             "step2 : {단계2 진행 정보 - default : 0 0}\n" +
             "step3 : {단계3 진행 정보 - default : 0 0 0}\n" +
             "step4 : {단계4 진행 정보 - default : 0 0 0 0 0}\n")
-    @PutMapping(value = "/api/member/litigations/{id}/step")
-    public CommonResponse<Object> updateLitigationStep(@PathVariable("id") Long litigation_id, @RequestBody LitSaveRequestDto requestDto, HttpServletRequest request){
-        String email = jwtUtils.getEmailFromRequestHeader(request);
-        Member member = memberService.findOneByEmail(email);
+    @PutMapping(value = "/api/members/{member_id}/litigations/{litigation_id}/step")
+    public CommonResponse<Object> updateLitigationStep(@PathVariable("member_id") Long member_id, @PathVariable("litigation_id") Long litigation_id,
+                                                       @RequestBody LitSaveRequestDto requestDto, HttpServletRequest request){
+        //Member ID 검증
+        if(!jwtUtils.checkJWTwithID(request, member_id)) throw new AccessDeniedException("허가되지 않은 접근입니다.");
 
-        boolean find = false;
-        Litigation findLitigaiton = null;
-        for (Litigation litigation : member.getLitigations()) {
-            if(litigation.getId().equals(litigation_id)){find = true; findLitigaiton = litigation; break;}
-        }
-        if(!find) throw new RuntimeException("현재 회원에게는 해당 번호의 소송이 존재하지 않습니다.");
+        //Member 정보 조회
+        Member member = memberService.findOneById(member_id);
 
-        Litigation litigation = memberService.updateLitigaiton(findLitigaiton, requestDto);
-        return responseService.getSuccessResponse("소송 정보 저장 성공", LitResponseDto.createDTO(litigation));
+        //Litigation Step 업데이트
+        Litigation litigation = memberService.updateLitigaiton(litigation_id, requestDto);
+        return responseService.getSuccessResponse("소송 정보 저장 성공", LitigationDto.createDTO(litigation));
     }
-
-
-
-    //====== 회원 소송 삭제 ======//
-    @ApiOperation(value = "회원 소송 삭제", notes = "회원의 소송리스트에 해당 소송을 삭제합니다.")
-    @DeleteMapping(value = "/api/member/litigations/{id}")
-    public CommonResponse<Object> deleteLitigation(@PathVariable("id") Long litigation_id, HttpServletRequest request){
-        String email = jwtUtils.getEmailFromRequestHeader(request);
-        Member member = memberService.findOneByEmail(email);
-
-        memberService.deleteLitigation(member, litigation_id);
-        return responseService.getSuccessResponse("소송 삭제 성공", null);
-    }
-
-
 
     //소송 단계 검색
     @ApiOperation(value = "소송 단계 검색", notes = "소송의 각 단계에 대한 정보를 제공합니다.(step = 0~4)")

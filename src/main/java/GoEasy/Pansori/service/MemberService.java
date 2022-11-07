@@ -159,35 +159,54 @@ public class MemberService {
 
         //동일한 소송 타이틀 확인
         for (Litigation lit : litigations) {
+            //동일한 소송 타이틀이 존재할 시 에러 반환
             if(lit.getTitle().equals(litigation.getTitle())) throw new RuntimeException("동일한 이름의 소송이 존재합니다.");
         }
 
         //나의 소송리스트에 소송 추가
+        litigation.setMember(member);
         member.addLitigation(litigation);
+
     }
 
     //소송 삭제
     @Transactional
     public void deleteLitigation(Member member, Long id) {
-        List<Litigation> litigations = member.getLitigations();
+        //소송 조회
+        Optional<Litigation> findOne = litigationRepository.findById(id);
+        if(findOne.isEmpty()){
+            throw new IllegalArgumentException("해당 번호의 소송이 존재하지 않습니다.");}
+        Litigation litigation = findOne.get();
 
-        boolean find = false;
-        for (Litigation litigation : litigations) {
-            if(litigation.getId().equals(id)){ member.deleteLitigation(litigation); litigationRepository.delete(litigation);  find = true; break;}
-        }
-
-        if(!find) throw new RuntimeException("해당 번호 소송은 존재하지 않습니다.");
+        //소송 삭제
+        litigationRepository.delete(litigation);
+        member.deleteLitigation(litigation);
     }
 
-    //소송 수정
+    //소송 step 정보 update
     @Transactional
-    public Litigation updateLitigaiton(Litigation litigation, LitSaveRequestDto requestDto) {
+    public Litigation updateLitigaiton(Long id, LitSaveRequestDto requestDto) {
+        //소송 조회
+        Optional<Litigation> findOne = litigationRepository.findById(id);
+        if(findOne.isEmpty()){
+            throw new IllegalArgumentException("해당 번호의 소송이 존재하지 않습니다.");}
+        Litigation litigation = findOne.get();
+
+        //소송 step 정보 업데이트
         litigation.setStep(requestDto);
         return litigation;
     }
 
+    //소송 기본 정보 수정
     @Transactional
-    public Litigation modifyLitigationInfo(Litigation litigation, LitModifyRequestDto requestDto) {
+    public Litigation modifyLitigationInfo(Long id, LitModifyRequestDto requestDto) {
+        //소송 조회
+        Optional<Litigation> findOne = litigationRepository.findById(id);
+        if(findOne.isEmpty()){
+            throw new IllegalArgumentException("해당 번호의 소송이 존재하지 않습니다.");}
+        Litigation litigation = findOne.get();
+
+        //소송 정보 수정
         litigation.setInfo(requestDto);
         return litigation;
     }
