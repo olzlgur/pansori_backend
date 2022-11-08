@@ -3,13 +3,14 @@ package GoEasy.Pansori.service;
 import GoEasy.Pansori.domain.precedent.DetailPrecedent;
 import GoEasy.Pansori.dto.Precedent.PrecedentListDto;
 import GoEasy.Pansori.dto.PrecedentDetailDto;
+import GoEasy.Pansori.exception.ApiException;
 import GoEasy.Pansori.repository.PrecedentRepository;
-import GoEasy.Pansori.exception.customException.CustomTypeException;
 import kr.co.shineware.nlp.komoran.constant.DEFAULT_MODEL;
 import kr.co.shineware.nlp.komoran.core.Komoran;
 import kr.co.shineware.nlp.komoran.model.KomoranResult;
 import kr.co.shineware.nlp.komoran.model.Token;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -24,6 +25,9 @@ public class PrecedentService {
 
     public PrecedentDetailDto findOne(Long precedent_id) {
         DetailPrecedent detailPrecedent = precedentRepository.findOne(precedent_id);
+        if(detailPrecedent == null){
+            throw new ApiException(HttpStatus.NOT_FOUND, "해당 번호의 판례가 존재하지 않습니다.");}
+
         String content = (String) detailPrecedent.getPrecContent();
         String temp = "";
         String contentSplit[];
@@ -46,7 +50,7 @@ public class PrecedentService {
             precedentListDto.setRelationWord(precedentRepository.searchRelation(morphemeAnalysis(content).get(0)));
         }
         if (precedentListDto.getPrecedentDtoList().size() == 0){
-            throw new CustomTypeException("검색 결과가 없습니다.");
+            throw new ApiException(HttpStatus.NOT_FOUND, "검색 결과가 없습니다.");
         }
         return precedentListDto;
     }
@@ -69,7 +73,7 @@ public class PrecedentService {
             }
         }
         if (contents.size() == 0){
-            throw new CustomTypeException("검색 결과가 없습니다.");
+            throw new ApiException(HttpStatus.NOT_FOUND, "검색 결과가 없습니다.");
         }
         return contents;
     }

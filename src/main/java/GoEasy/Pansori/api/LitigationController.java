@@ -5,12 +5,14 @@ import GoEasy.Pansori.domain.Litigation.Litigation;
 import GoEasy.Pansori.domain.Litigation.LitigationStep;
 import GoEasy.Pansori.domain.User.Member;
 import GoEasy.Pansori.dto.member.litigation.*;
+import GoEasy.Pansori.exception.ApiException;
 import GoEasy.Pansori.jwt.JwtUtils;
 import GoEasy.Pansori.repository.LitigationStepRepository;
 import GoEasy.Pansori.service.MemberService;
 import GoEasy.Pansori.service.ResponseService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,7 +37,7 @@ public class LitigationController {
     @GetMapping(value = "/api/members/{id}/litigations")
     public CommonResponse<Object> getLitigations(@PathVariable("id") Long id, HttpServletRequest request){
         //Member ID 검증
-        if(!jwtUtils.checkJWTwithID(request, id)) throw new AccessDeniedException("허가되지 않은 접근입니다.");
+        if(!jwtUtils.checkJWTwithID(request, id)) throw new ApiException(HttpStatus.FORBIDDEN, "허가되지 않은 접근입니다.");
 
         //Member 정보 조회
         Member member = memberService.findOneById(id);
@@ -65,7 +67,7 @@ public class LitigationController {
     @PostMapping(value = "/api/members/{id}/litigations")
     public CommonResponse<Object> addLitigation(@PathVariable("id") Long id, @RequestBody LitRequestDto litRequestDto, HttpServletRequest request){
         //Member ID 검증
-        if(!jwtUtils.checkJWTwithID(request, id)) throw new AccessDeniedException("허가되지 않은 접근입니다.");
+        if(!jwtUtils.checkJWTwithID(request, id)) throw new ApiException(HttpStatus.FORBIDDEN, "허가되지 않은 접근입니다.");
 
         //Member 정보 조회
         Member member = memberService.findOneById(id);
@@ -85,7 +87,7 @@ public class LitigationController {
     @DeleteMapping(value = "/api/members/{member_id}/litigations/{litigation_id}")
     public CommonResponse<Object> deleteLitigation(@PathVariable("member_id") Long member_id, @PathVariable("litigation_id") Long litigation_id, HttpServletRequest request){
         //Member ID 검증
-        if(!jwtUtils.checkJWTwithID(request, member_id)) throw new AccessDeniedException("허가되지 않은 접근입니다.");
+        if(!jwtUtils.checkJWTwithID(request, member_id)) throw new ApiException(HttpStatus.FORBIDDEN, "허가되지 않은 접근입니다.");
 
         //Member 정보 조회
         Member member = memberService.findOneById(member_id);
@@ -107,7 +109,7 @@ public class LitigationController {
     public CommonResponse<Object> modifyLitigationInfo(@PathVariable("member_id") Long member_id, @PathVariable("litigation_id") Long litigation_id,
                                                        @RequestBody LitModifyRequestDto requestDto, HttpServletRequest request){
         //Member ID 검증
-        if(!jwtUtils.checkJWTwithID(request, member_id)) throw new AccessDeniedException("허가되지 않은 접근입니다.");
+        if(!jwtUtils.checkJWTwithID(request, member_id)) throw new ApiException(HttpStatus.FORBIDDEN, "허가되지 않은 접근입니다.");
 
         //Member 정보 조회
         Member member = memberService.findOneById(member_id);
@@ -130,7 +132,7 @@ public class LitigationController {
     public CommonResponse<Object> updateLitigationStep(@PathVariable("member_id") Long member_id, @PathVariable("litigation_id") Long litigation_id,
                                                        @RequestBody LitSaveRequestDto requestDto, HttpServletRequest request){
         //Member ID 검증
-        if(!jwtUtils.checkJWTwithID(request, member_id)) throw new AccessDeniedException("허가되지 않은 접근입니다.");
+        if(!jwtUtils.checkJWTwithID(request, member_id)) throw new ApiException(HttpStatus.FORBIDDEN, "허가되지 않은 접근입니다.");
 
         //Member 정보 조회
         Member member = memberService.findOneById(member_id);
@@ -145,7 +147,7 @@ public class LitigationController {
     @GetMapping(value = "/api/litigations/step/{id}")
     public CommonResponse<Object> getLitigationStepInfo(@PathVariable("id") Long id){
         Optional<LitigationStep> findOne = litigationStepRepository.findById(id);
-        if(findOne.isEmpty()) throw new RuntimeException("해당 번호의 소송 단계는 존재하지 않습니다.");
+        if(findOne.isEmpty()) throw new ApiException(HttpStatus.NOT_FOUND, "해당 번호의 소송 단계는 존재하지 않습니다.");
         LitStepInfoDto responseDto = new LitStepInfoDto(findOne.get());
         return responseService.getSuccessResponse("소송 단계 검색 완료", responseDto);
     }

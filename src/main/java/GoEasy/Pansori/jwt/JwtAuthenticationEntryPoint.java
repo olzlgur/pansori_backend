@@ -1,9 +1,12 @@
 package GoEasy.Pansori.jwt;
 
 import GoEasy.Pansori.domain.CommonResponse;
+import GoEasy.Pansori.exception.ApiException;
 import GoEasy.Pansori.exception.ErrorCode;
+import GoEasy.Pansori.exception.ErrorResponseEntity;
 import GoEasy.Pansori.service.ResponseService;
 import lombok.RequiredArgsConstructor;
+import org.json.simple.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -22,21 +25,19 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-
         ErrorCode errorCode = (ErrorCode) request.getAttribute("exception");
-        CommonResponse<Object> responseData;
+        setResponse(response, errorCode);
+    }
 
-        if( errorCode == null ){
-            responseData = responseService.getFailureResponse(
-                    ErrorCode.UNKNOWN_ERROR.getHttpStatus().value(),
-                    ErrorCode.UNKNOWN_ERROR.getMessage());
-        }
-        else {
-            responseData = responseService.getFailureResponse(
-                    errorCode.getHttpStatus().value(),
-                    errorCode.getMessage());
-        }
+    //한글 출력을 위해 getWriter() 사용
+    private void setResponse(HttpServletResponse response, ErrorCode exceptionCode) throws IOException {
+        response.setContentType("application/json;charset=UTF-8");
+        response.setStatus(exceptionCode.getHttpStatus().value());
 
-        responseService.convertHttpToResposne(response, responseData);
+        JSONObject responseJson = new JSONObject();
+        responseJson.put("message", exceptionCode.getMessage());
+        responseJson.put("code", exceptionCode.getHttpStatus().name());
+
+        response.getWriter().print(responseJson);
     }
 }

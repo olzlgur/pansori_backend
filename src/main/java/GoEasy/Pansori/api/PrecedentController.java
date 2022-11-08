@@ -2,9 +2,11 @@ package GoEasy.Pansori.api;
 
 import GoEasy.Pansori.domain.CommonResponse;
 import GoEasy.Pansori.domain.User.Member;
+import GoEasy.Pansori.domain.User.QMember;
 import GoEasy.Pansori.dto.Precedent.PrecedentListDto;
 import GoEasy.Pansori.dto.PrecedentDetailDto;
 import GoEasy.Pansori.dto.SearchRequestDto;
+import GoEasy.Pansori.exception.ApiException;
 import GoEasy.Pansori.jwt.JwtUtils;
 import GoEasy.Pansori.service.MemberService;
 import GoEasy.Pansori.service.PrecedentService;
@@ -12,14 +14,17 @@ import GoEasy.Pansori.service.ResponseService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 
+import static GoEasy.Pansori.domain.User.QMember.member;
+
 @RestController
 @RequiredArgsConstructor
-@Transactional
 public class PrecedentController {
 
     private final PrecedentService precedentService;
@@ -27,20 +32,11 @@ public class PrecedentController {
     private final JwtUtils jwtUtils;
     private final ResponseService responseService;
 
-    @GetMapping("/api/precedent/findOne")
-    @ApiOperation(value = "비회원 판례 디테일 조회", notes = "넘어온 판례 번호를 통해 판례를 조회합니다.(해당 회원의 검색 기록에 해당 판례가 추가됩니다.)\n\n" +
-            "[TEST DATA]\n" +
-            "id : 64440")
-    public CommonResponse<Object> findOne_NoLogin(@RequestParam(value = "id")Long id, HttpServletRequest request){
-       PrecedentDetailDto precedent = precedentService.findOne(id);
-        return responseService.getSuccessResponse("성공했습니다..", precedent);
-    }
-
+    @GetMapping("/api/precedents/{id}")
     @ApiOperation(value = "판례 디테일 조회", notes = "넘어온 판례 번호를 통해 판례를 조회합니다.(해당 회원의 검색 기록에 해당 판례가 추가됩니다.)\n\n" +
             "[TEST DATA]\n" +
             "id : 64440")
-    @GetMapping("/api/member/precedent/findOne")
-    public CommonResponse<Object> findOne(@RequestParam(value = "id")Long id, HttpServletRequest request){
+    public CommonResponse<Object> getDetailPrecedent(@PathVariable("id") Long id, HttpServletRequest request){
 
         String email = jwtUtils.getEmailFromRequestHeader(request);
         Member member = memberService.findOneByEmail(email);
@@ -54,9 +50,9 @@ public class PrecedentController {
     @ApiOperation(value = "판례 검색", notes = "입력된 검색어를 통해 판례를 검색합니다.\n\n" +
             "[TEST DATA]\n" +
             "content : 음주운전")
-    @PostMapping("/api/precedent/searchAccuracy")
-    public CommonResponse<Object> searchAccuracy(@RequestBody SearchRequestDto searchRequestDto){
-        PrecedentListDto precedentListDto = precedentService.searchAccuracy(searchRequestDto.getContent());
+    @GetMapping("/api/precedents/searchAccuracy")
+    public CommonResponse<Object> getSearchResult(@RequestParam(value = "content") String content){
+        PrecedentListDto precedentListDto = precedentService.searchAccuracy(content);
         return responseService.getSuccessResponse("성공했습니다.", precedentListDto);
     }
 

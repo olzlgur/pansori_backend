@@ -2,6 +2,7 @@ package GoEasy.Pansori.jwt;
 
 import GoEasy.Pansori.domain.User.Member;
 import GoEasy.Pansori.dto.member.token.TokenDto;
+import GoEasy.Pansori.exception.ApiException;
 import GoEasy.Pansori.exception.ErrorCode;
 import GoEasy.Pansori.exception.FilterException;
 import io.jsonwebtoken.*;
@@ -10,6 +11,7 @@ import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -80,7 +82,7 @@ public class JwtProvider {
         Claims claims = parseClaims(accessToken);
 
         if(claims.get(AUTHORITIES_KEY) == null){
-            throw new RuntimeException("권한 정보가 없는 토큰입니다.");
+            throw new ApiException(HttpStatus.UNAUTHORIZED, "권한 정보가 없는 토큰입니다.");
         }
 
         //클레임에서 권한 정보 가져오기
@@ -109,7 +111,7 @@ public class JwtProvider {
         }
         catch (UnsupportedJwtException e){
             log.info("지원되지 않는 JWT 토큰입니다.");
-            throw new FilterException(ErrorCode.UNSPORRTED_JWT);
+            throw new FilterException(ErrorCode.UNSUPORRTED_JWT);
         }
         catch (IllegalArgumentException e){
             log.info("올바른 JWT 토큰이 아닙니다.");

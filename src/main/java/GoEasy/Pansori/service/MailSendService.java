@@ -1,9 +1,11 @@
 package GoEasy.Pansori.service;
 
 
-import GoEasy.Pansori.exception.customException.CustomTypeException;
+import GoEasy.Pansori.exception.ApiException;
+import GoEasy.Pansori.exception.ErrorCode;
 import GoEasy.Pansori.utils.MailUtils;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
@@ -52,6 +54,7 @@ public class MailSendService {
             e.printStackTrace();
         }
 
+
         return "메일 전송";
     }
 
@@ -70,10 +73,10 @@ public class MailSendService {
         String key = (String) session.getAttribute(userEmail);
 
         if(key == null) {
-            throw new CustomTypeException("인증번호가 만료되었습니다.");
+            throw new ApiException(HttpStatus.UNAUTHORIZED, "인증번호가 만료되었습니다.");
         }
         else if (!key.equals(authKey)){
-            throw new CustomTypeException("잘못된 인증번호입니다.");
+            throw new ApiException(HttpStatus.FORBIDDEN, "잘못된 인증번호입니다.");
         }
 
         return "인증되었습니다.";

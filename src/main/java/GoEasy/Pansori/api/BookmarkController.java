@@ -67,7 +67,7 @@ public class BookmarkController {
 
         //판례 정보 가져오기
         SimplePrecedent precedent = precedentRepository.findOne(requestDto.getPrecedent_id());
-        if(precedent == null){throw new IllegalArgumentException("해당 번호의 판례는 존재하지 않습니다.");}
+        if(precedent == null){throw new ApiException(HttpStatus.NOT_FOUND, "해당 번호의 판례는 존재하지 않습니다.");}
 
         // 북마크 생성
         Bookmark bookmark = Bookmark.builder()

@@ -5,15 +5,16 @@ import GoEasy.Pansori.dto.member.MemberUpdateRequestDto;
 import GoEasy.Pansori.dto.member.PasswordUpdateRequestDto;
 import GoEasy.Pansori.dto.member.litigation.LitModifyRequestDto;
 import GoEasy.Pansori.dto.member.litigation.LitSaveRequestDto;
+import GoEasy.Pansori.exception.ApiException;
 import GoEasy.Pansori.jwt.JwtProvider;
 import GoEasy.Pansori.domain.SearchRecord;
 import GoEasy.Pansori.domain.User.Bookmark;
 import GoEasy.Pansori.domain.User.Member;
 import GoEasy.Pansori.domain.precedent.SimplePrecedent;
 import GoEasy.Pansori.repository.*;
-import GoEasy.Pansori.exception.customException.CustomTypeException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,14 +44,14 @@ public class MemberService {
 
     public Member findOneById(Long id){
         Optional<Member> findOne = memberRepository.findById(id);
-        if(findOne.isEmpty()) throw new NullPointerException("해당 ID의 회원은 존재하지 않습니다.");
+        if(findOne.isEmpty()) throw new ApiException(HttpStatus.NOT_FOUND ,"해당 ID의 회원은 존재하지 않습니다.");
 
         return findOne.get();
     }
 
     public Member findOneByEmail(String email){
         Optional<Member> findOne = memberRepository.findByEmail(email);
-        if(findOne.isEmpty()) throw new RuntimeException("해당 이메일 사용자는 존재하지 않습니다.");
+        if(findOne.isEmpty()) throw new ApiException(HttpStatus.NOT_FOUND, "해당 이메일을 가진 회원은 존재하지 않습니다.");
 
         return findOne.get();
     }
@@ -58,7 +59,7 @@ public class MemberService {
     @Transactional
     public void deleteById(Long id){
         Optional<Member> findOne = memberRepository.findById(id);
-        if(findOne.isEmpty()) throw new IllegalArgumentException("해당 ID의 회원은 존재하지 않습니다.");
+        if(findOne.isEmpty()) throw new ApiException(HttpStatus.NOT_FOUND ,"해당 ID의 회원은 존재하지 않습니다.");
         memberRepository.deleteById(id);
     }
 
@@ -71,7 +72,7 @@ public class MemberService {
     @Transactional
     public void updatePassword(Member member, PasswordUpdateRequestDto requestDto) {
         if(!passwordEncoder.matches(requestDto.getExistedPassword(), member.getPassword())){
-            throw new IllegalArgumentException("기존 비밀번호가 일치하지 않습니다.");
+            throw new ApiException(HttpStatus.NOT_ACCEPTABLE, "기존 비밀번호가 일치하지 않습니다.");
         }
 
         validatePasswordType(requestDto.getNewPassword());
@@ -94,15 +95,14 @@ public class MemberService {
     @Transactional
     public Long addBookmark(Member member, Bookmark bookmark){
         if(bookmark.getPrecedent() == null){
-            throw new IllegalStateException("존재하지 않는 판례입니다.");
+            throw new ApiException(HttpStatus.NOT_FOUND, "해당 번호의 판례가 존재하지 않습니다.");
         }
 
         for (Bookmark _bookmark : member.getBookmarks()) {
             if(_bookmark.getPrecedent() == bookmark.getPrecedent()){
-                throw new IllegalStateException("이미 북마크에 존재하는 판례입니다.");
+                throw new ApiException(HttpStatus.CONFLICT, "해당 번호의 판례가 이미 북마크에 존재합니다.");
             }
         }
-
 
         member.addBookmark(bookmark);
         bookmarkRepository.save(bookmark);
@@ -116,7 +116,8 @@ public class MemberService {
         //북마크 조회
         Optional<Bookmark> findOne = bookmarkRepository.findById(id);
         if(findOne.isEmpty() || !findOne.get().getMember().equals(member)){ //해당 엔티티가 없음 or 엔티티의 소유주가 해당 멤버가 아님
-            throw new IllegalArgumentException("해당 판례 번호의 북마크가 존재하지 않습니다.");}
+            throw new ApiException(HttpStatus.NOT_FOUND, "해당 번호의 판례가 존재하지 않습니다.");}
+
         Bookmark bookmark = findOne.get();
 
         //북마크 삭제
@@ -129,7 +130,7 @@ public class MemberService {
     public void addSearchRecord(Member member, Long prec_id){
         //Search Record 생성
         SimplePrecedent precedent = precedentRepository.findOne(prec_id);
-        if(precedent == null){ throw new RuntimeException("해당 판례 번호는 존재하지 않습니다.");}
+        if(precedent == null){ throw new ApiException(HttpStatus.NOT_FOUND, "해당 번호의 판례가 존재하지 않습니다.");}
 
         SearchRecord searchRecord = SearchRecord.createSearchRecord(member, precedent);
 
@@ -145,7 +146,7 @@ public class MemberService {
         //Search record 조회
         Optional<SearchRecord> findOne = recordRepository.findById(record_id);
         if(findOne.isEmpty() || !findOne.get().getMember().equals(member)){ //해당 엔티티가 없음 or 엔티티의 소유주가 해당 멤버가 아님
-            throw new IllegalArgumentException("해당 번호의 검색 기록은 존재하지 않습니다.");}
+            throw new ApiException(HttpStatus.NOT_FOUND, "해당 번호의 검색 기록이 존재하지 않습니다.");}
 
         //Search record 삭제
         recordRepository.delete(findOne.get());
@@ -160,7 +161,7 @@ public class MemberService {
         //동일한 소송 타이틀 확인
         for (Litigation lit : litigations) {
             //동일한 소송 타이틀이 존재할 시 에러 반환
-            if(lit.getTitle().equals(litigation.getTitle())) throw new RuntimeException("동일한 이름의 소송이 존재합니다.");
+            if(lit.getTitle().equals(litigation.getTitle())) throw new ApiException(HttpStatus.CONFLICT, "동일한 이름의 소송이 존재합니다.");
         }
 
         //나의 소송리스트에 소송 추가
@@ -175,7 +176,7 @@ public class MemberService {
         //소송 조회
         Optional<Litigation> findOne = litigationRepository.findById(id);
         if(findOne.isEmpty() || !findOne.get().getMember().equals(member)){ //해당 엔티티가 없음 or 엔티티의 소유주가 해당 멤버가 아님
-            throw new IllegalArgumentException("해당 번호의 소송이 존재하지 않습니다.");}
+            throw new ApiException(HttpStatus.NOT_FOUND, "해당 번호의 나의 소송이 존재하지 않습니다.");}
         Litigation litigation = findOne.get();
 
         //소송 삭제
@@ -189,7 +190,7 @@ public class MemberService {
         //소송 조회
         Optional<Litigation> findOne = litigationRepository.findById(id);
         if(findOne.isEmpty() || !findOne.get().getMember().equals(member)){ //해당 엔티티가 없음 or 엔티티의 소유주가 해당 멤버가 아님
-            throw new IllegalArgumentException("해당 번호의 소송이 존재하지 않습니다.");}
+            throw new ApiException(HttpStatus.NOT_FOUND, "해당 번호의 나의 소송이 존재하지 않습니다.");}
         Litigation litigation = findOne.get();
 
         //소송 step 정보 업데이트
@@ -203,7 +204,7 @@ public class MemberService {
         //소송 조회
         Optional<Litigation> findOne = litigationRepository.findById(id);
         if(findOne.isEmpty() || !findOne.get().getMember().equals(member)){ //해당 엔티티가 없음 or 엔티티의 소유주가 해당 멤버가 아님
-            throw new IllegalArgumentException("해당 번호의 소송이 존재하지 않습니다.");}
+            throw new ApiException(HttpStatus.NOT_FOUND, "해당 번호의 나의 소송이 존재하지 않습니다.");}
         Litigation litigation = findOne.get();
 
         //소송 정보 수정
@@ -214,18 +215,11 @@ public class MemberService {
 
     //====== 관련 메서드 =======//
 
-    private void checkPassword(String password, String encodedPassword) {
-        boolean isSame = passwordEncoder.matches(password, encodedPassword);
-        if(!isSame) {
-            throw new CustomTypeException("아이디 혹은 비밀번호를 확인하세요.");
-        }
-    }
-
     public void validateDuplicateMember(Member member) {
         Optional<Member> findMembers =
                 memberRepository.findByEmail(member.getEmail());
         if (findMembers.isPresent()) {
-            throw new CustomTypeException("이미 존재하는 회원입니다."); }
+            throw new ApiException(HttpStatus.CONFLICT, "이미 회원가입된 이메일입니다."); }
     }
 
     public void validateEmailType(String userEmail){
@@ -233,7 +227,7 @@ public class MemberService {
         Pattern p = Pattern.compile(regex);
         Matcher m = p.matcher(userEmail);
         if(!m.matches()) {
-            throw new CustomTypeException("올바르지 않은 이메일 형식입니다.");
+            throw new ApiException(HttpStatus.UNPROCESSABLE_ENTITY, "올바르지 않은 이메일 형식입니다.");
         }
 
     }
@@ -245,7 +239,7 @@ public class MemberService {
         Matcher m = p.matcher(password);
         System.out.println("여기안됨");
         if(!m.matches()) {
-            throw new CustomTypeException("올바르지 않은 패스워드 형식입니다.");
+            throw new ApiException(HttpStatus.UNPROCESSABLE_ENTITY, "올바르지 않은 패스워드 형식입니다.");
         }
     }
 

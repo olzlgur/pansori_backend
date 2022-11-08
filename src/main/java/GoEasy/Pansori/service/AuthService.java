@@ -1,5 +1,7 @@
 package GoEasy.Pansori.service;
 
+import GoEasy.Pansori.exception.ApiException;
+import GoEasy.Pansori.exception.ErrorCode;
 import GoEasy.Pansori.jwt.JwtProvider;
 import GoEasy.Pansori.domain.RefreshToken;
 import GoEasy.Pansori.domain.User.Member;
@@ -8,6 +10,7 @@ import GoEasy.Pansori.dto.member.LoginRequestDto;
 import GoEasy.Pansori.repository.MemberRepository;
 import GoEasy.Pansori.repository.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -59,7 +62,7 @@ public class AuthService {
 
         // RefreshToken 적용
         if(!jwtProvider.validateToken(tokenDto.getRefreshToken())){
-            throw new RuntimeException("Refresh Token이 유효하지 않습니다.");
+            throw new ApiException(ErrorCode.INVALID_JWT.getHttpStatus(), "Refresh Token이 유효하지 않습니다.");
         }
 
         // AccessToken에서 Member ID 가져오기
@@ -67,11 +70,11 @@ public class AuthService {
 
         // 저장소에서 Member ID 기반으로 Refresh Token 값 가져오기
         RefreshToken refreshToken = refreshTokenRepository.findByKey(authentication.getName())
-                .orElseThrow(() -> new RuntimeException("로그아웃 된 사용자입니다."));
+                .orElseThrow(() -> new ApiException(ErrorCode.EXPIRED_JWT.getHttpStatus(), "로그아웃 된 사용자입니다."));
 
         // Refresh 토큰 일치하는지 검사
         if(!refreshToken.getValue().equals(tokenDto.getRefreshToken())){
-            throw new RuntimeException("토큰의 유저 정보가 일치하지 않습니다.");
+            throw new ApiException(HttpStatus.UNAUTHORIZED, "토큰의 유저 정보가 일치하지 않습니다.");
         }
 
         Member member = memberRepository.findByEmail(authentication.getName()).get();
