@@ -1,12 +1,17 @@
 spring:
+  data:
+    elasticsearch:
+      cluster-nodes=localhost: 9300
+  main:
+    allow-bean-definition-overriding: true
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://goeasy-db.clvgcrbhh40l.ap-northeast-2.rds.amazonaws.com/pansoriDB?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
-    username: admin
-    password: rhdlwl123!
-#    url: jdbc:mysql://127.0.0.1:3306/PansoriDB?serverTimezone=UTC&characterEncoding=UTF-8
-#    password: Goeasy1234!
-#    username: goeasy
+#    url: jdbc:mysql://goeasy-db.clvgcrbhh40l.ap-northeast-2.rds.amazonaws.com/pansoriDB?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+#    username: admin
+#    password: rhdlwl123!
+    url: jdbc:mysql://127.0.0.1:3306/PansoriDB?serverTimezone=UTC&characterEncoding=UTF-8
+    password: Goeasy1234!
+    username: goeasy
 #    url: jdbc:mysql://127.0.0.1:3306/PansoriDB?serverTimezone=UTC&characterEncoding=UTF-8
 #    username: root
 #    password: 1234
@@ -43,5 +48,9 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
-
-  spring.main.allow-bean-definition-overriding: true
+server:
+  compression:
+    enabled: true
+    mime-types: text/html,text/plain,text/css,application/javascript,application/json
+    min-response-size: 500
+#  spring.main.allow-bean-definition-overriding: true
