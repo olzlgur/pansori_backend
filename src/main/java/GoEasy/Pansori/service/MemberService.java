@@ -104,6 +104,7 @@ public class MemberService {
             }
         }
 
+
         member.addBookmark(bookmark);
         bookmarkRepository.save(bookmark);
         return bookmark.getId();

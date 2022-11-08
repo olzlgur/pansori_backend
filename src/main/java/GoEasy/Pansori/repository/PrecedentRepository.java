@@ -97,7 +97,6 @@ public class PrecedentRepository {
         }
 
         sql += "order by date desc, score desc ";
-        System.out.println(contents.size());
         Query query = em.createNativeQuery(sql);
         for (int index = 1; index <= contents.size(); index++) {
             query.setParameter(index, contents.get(index-1));
@@ -139,8 +138,6 @@ public class PrecedentRepository {
 
         String sql = "select s from SimplePrecedent s ";
 
-        System.out.println(contents.size());
-
         sql += "where s.abstractive like '%" + contents.get(0) + "%' ";
 
         for (int index = 1; index < contents.size(); index++) {
@@ -148,8 +145,6 @@ public class PrecedentRepository {
         }
 
         sql += "order by s.date desc";
-
-        System.out.println(sql);
 
         List<SimplePrecedent> resultList = em.createQuery(sql, SimplePrecedent.class)
                 .getResultList();

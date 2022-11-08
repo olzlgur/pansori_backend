@@ -3,16 +3,18 @@ package GoEasy.Pansori.domain.precedent;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.PersistenceConstructor;
+import org.springframework.data.elasticsearch.annotations.Document;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
 @Getter @Setter
 @NoArgsConstructor
+@Document(indexName = "simplePrecedent")
 public class SimplePrecedent {
 
     @Id
@@ -40,4 +42,18 @@ public class SimplePrecedent {
 
     private String abstractive; // 요약
 
+    @PersistenceConstructor
+    public SimplePrecedent(Long id, String caseId, String title, Date date, String courtName, String courtTypeCode, String caseType, Integer caseTypeCode, String verdictType, String verdict, String abstractive) {
+        this.id = id;
+        this.caseId = caseId;
+        this.title = title;
+        this.date = date;
+        this.courtName = courtName;
+        this.courtTypeCode = courtTypeCode;
+        this.caseType = caseType;
+        this.caseTypeCode = caseTypeCode;
+        this.verdictType = verdictType;
+        this.verdict = verdict;
+        this.abstractive = abstractive;
+    }
 }
