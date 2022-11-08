@@ -7,12 +7,14 @@ import GoEasy.Pansori.domain.precedent.SimplePrecedent;
 import GoEasy.Pansori.dto.member.bookmark.AddBookmarkRequestDto;
 import GoEasy.Pansori.dto.member.bookmark.BookmarkDto;
 import GoEasy.Pansori.dto.member.bookmark.DeleteBookmarkRequestDto;
+import GoEasy.Pansori.exception.ApiException;
 import GoEasy.Pansori.jwt.JwtUtils;
 import GoEasy.Pansori.repository.SimplePrecedentRepository;
 import GoEasy.Pansori.service.MemberService;
 import GoEasy.Pansori.service.ResponseService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,10 +37,10 @@ public class BookmarkController {
     @ApiOperation(value = "북마크 조회 API", notes = "회원의 북마크 리스트를 조회합니다.\n\n")
     @GetMapping(value = "/api/members/{id}/bookmarks")
     public CommonResponse<Object> getBookmarks(@PathVariable("id") Long id, HttpServletRequest request){
-        //회원 ID 검증
-        jwtUtils.checkJWTwithID(request, id);
+        //Member ID 검증
+        if(!jwtUtils.checkJWTwithID(request, id)) throw new ApiException(HttpStatus.FORBIDDEN, "허가되지 않은 접근입니다.");
 
-        //회원 정보 가져오기
+        //Member 조회
         Member member = memberService.findOneById(id);
 
         List<BookmarkDto> bookmarks = new ArrayList<>();
@@ -59,10 +61,10 @@ public class BookmarkController {
             "precedent_id : 64440")
     @PostMapping(value = "/api/members/{id}/bookmarks")
     public CommonResponse<Object> addBookmark(@PathVariable("id") Long id, @RequestBody AddBookmarkRequestDto requestDto, HttpServletRequest request){
-        //회원 ID 검증
-        jwtUtils.checkJWTwithID(request, id);
+        //Member ID 검증
+        if(!jwtUtils.checkJWTwithID(request, id)) throw new ApiException(HttpStatus.FORBIDDEN, "허가되지 않은 접근입니다.");
 
-        //회원 정보 가져오기
+        //Member 조회
         Member member = memberService.findOneById(id);
 
         //판례 정보 가져오기
@@ -83,10 +85,10 @@ public class BookmarkController {
     @ApiOperation(value = "북마크 삭제 API", notes = "회원 북마크 리스트에 해당 판례를 삭제합니다.")
     @DeleteMapping(value = "/api/members/{member_id}/bookmarks/{bookmark_id}")
     public CommonResponse<Object> deleteBookmark(@PathVariable("member_id") Long member_id, @PathVariable("bookmark_id") Long bookmark_id, HttpServletRequest request){
-        //회원 ID 검증
-        jwtUtils.checkJWTwithID(request, member_id);
+        //Member ID 검증
+        if(!jwtUtils.checkJWTwithID(request, member_id)) throw new ApiException(HttpStatus.FORBIDDEN, "허가되지 않은 접근입니다.");
 
-        //회원 정보 가져오기
+        //Member 조회
         Member member = memberService.findOneById(member_id);
 
         //북마크 삭제

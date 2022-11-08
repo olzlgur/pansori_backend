@@ -38,11 +38,21 @@ public class PrecedentController {
             "id : 64440")
     public CommonResponse<Object> getDetailPrecedent(@PathVariable("id") Long id, HttpServletRequest request){
 
-        String email = jwtUtils.getEmailFromRequestHeader(request);
-        Member member = memberService.findOneByEmail(email);
-
-        memberService.addSearchRecord(member, id);
         PrecedentDetailDto precedent = precedentService.findOne(id);
+        return responseService.getSuccessResponse("성공했습니다..", precedent);
+    }
+
+    @ApiOperation(value = "회원 검색기록 추가", notes = "넘어온 판례 번호를 회원의 검색기록에 추가합니다.")
+    @PostMapping("/api/members/{member_id}/searchRecords/{precedent_id}")
+    public CommonResponse<Object> addSearchRecord(@PathVariable("member_id") Long member_id, @PathVariable("precedent_id") Long precedent_id, HttpServletRequest request){
+        //Member ID 검증
+        if(!jwtUtils.checkJWTwithID(request, member_id)) throw new ApiException(HttpStatus.FORBIDDEN, "허가되지 않은 접근입니다.");
+        //Member 조회
+        Member member = memberService.findOneById(member_id);
+        //precedent 조회 (해당 판례가 존재하지 않을 시 에러 발생)
+        PrecedentDetailDto precedent = precedentService.findOne(precedent_id);
+        //검색 기록 추가
+        memberService.addSearchRecord(member, precedent_id);
 
         return responseService.getSuccessResponse("성공했습니다..", precedent);
     }
