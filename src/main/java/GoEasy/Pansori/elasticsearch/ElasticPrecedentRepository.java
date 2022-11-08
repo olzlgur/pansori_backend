@@ -1,15 +1,13 @@
 package GoEasy.Pansori.elasticsearch;
 
-import GoEasy.Pansori.domain.precedent.SimplePrecedent;
-import org.springframework.stereotype.Repository;
-import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
+
+import org.springframework.data.elasticsearch.core.SearchHits;
 
 import java.util.List;
 
-@Repository
-public interface ElasticPrecedentRepository extends ElasticsearchRepository<ElasticSimplePrecedent, Long> {
+public interface ElasticPrecedentRepository{
 //        Page<T> searchSimilar(T entity, @Nullable String[] fields, Pageable pageable);
+//    Optional<ElasticSimplePrecedent> findById(String id);
 
-        List<ElasticSimplePrecedent> findByPrecedentId(Long id);
-
+     public List<Object> findByAbstractive(List<String> contents, Integer pageNumber);
 }

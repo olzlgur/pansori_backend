@@ -13,45 +13,45 @@ import java.util.Date;
 
 @Getter @Setter
 @NoArgsConstructor
-@Document(indexName = "simplePrecedent")
+@Document(indexName = "simple_precedent")
 public class ElasticSimplePrecedent {
 
     @Id
     @Column(name = "precedent_id")
-    private Long id; //판례일련번호
+    private String id; //판례일련번호
 
     private String caseId; //사건번호
 
     @Column(length = 3000)
     private String title; //사건명
 
-    private Date date; //선고일자
+    private Integer date; //선고일자
 
-    private String courtName; //법원명
+    private String court_name; //법원명
 
-    private String courtTypeCode; //법원종류코드
+    private String court_type_code; //법원종류코드
 
-    private String caseType; //사건종류명
+    private String case_type; //사건종류명
 
-    private Integer caseTypeCode; //사건종류코드
+    private Integer case_type_code; //사건종류코드
 
-    private String verdictType; //판결유형
+    private String verdict_type; //판결유형
 
     private String verdict; //선고
 
     private String abstractive; // 요약
 
     @PersistenceConstructor
-    public ElasticSimplePrecedent(Long id, String caseId, String title, Date date, String courtName, String courtTypeCode, String caseType, Integer caseTypeCode, String verdictType, String verdict, String abstractive) {
+    public ElasticSimplePrecedent(String id, String caseId, String title, Integer date, String court_name, String court_type_code, String case_type, Integer case_type_code, String verdict_type, String verdict, String abstractive) {
         this.id = id;
         this.caseId = caseId;
         this.title = title;
         this.date = date;
-        this.courtName = courtName;
-        this.courtTypeCode = courtTypeCode;
-        this.caseType = caseType;
-        this.caseTypeCode = caseTypeCode;
-        this.verdictType = verdictType;
+        this.court_name = court_name;
+        this.court_type_code = court_type_code;
+        this.case_type = case_type;
+        this.case_type_code = case_type_code;
+        this.verdict_type = verdict_type;
         this.verdict = verdict;
         this.abstractive = abstractive;
     }
