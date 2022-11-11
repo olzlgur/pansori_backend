@@ -30,10 +30,8 @@ public class JwtFilter extends OncePerRequestFilter {
 
         // Request Header에서 토큰 꺼내기
         String jwt = resolveToken(request);
-
         if(jwt == null){
-            System.out.println("JWT 토큰이 존재하지 않습니다.");
-        }
+            System.out.println("jwt 토큰이 존재하지 않습니다.");}
 
         // Token validation 검증
         try{

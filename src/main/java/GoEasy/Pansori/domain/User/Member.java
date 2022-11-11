@@ -65,7 +65,7 @@ public class Member {
         return member;
     }
 
-    public void encodingPW(String password){
+    public void setPassword(String password){
         this.password = password;
     }
 

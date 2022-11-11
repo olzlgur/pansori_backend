@@ -111,7 +111,7 @@ public class JwtProvider {
         }
         catch (UnsupportedJwtException e){
             log.info("지원되지 않는 JWT 토큰입니다.");
-            throw new FilterException(ErrorCode.UNSUPORRTED_JWT);
+            throw new FilterException(ErrorCode.UNSUPPORTED_JWT);
         }
         catch (IllegalArgumentException e){
             log.info("올바른 JWT 토큰이 아닙니다.");

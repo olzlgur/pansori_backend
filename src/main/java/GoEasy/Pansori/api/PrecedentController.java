@@ -33,7 +33,7 @@ public class PrecedentController {
     private final ResponseService responseService;
 
     @GetMapping("/api/precedents/{id}")
-    @ApiOperation(value = "판례 디테일 조회", notes = "넘어온 판례 번호를 통해 판례를 조회합니다.(해당 회원의 검색 기록에 해당 판례가 추가됩니다.)\n\n" +
+    @ApiOperation(value = "판례 디테일 조회 API", notes = "넘어온 판례 번호를 통해 판례를 조회합니다.(해당 회원의 검색 기록에 해당 판례가 추가됩니다.)\n\n" +
             "[TEST DATA]\n" +
             "id : 64440")
     public CommonResponse<Object> getDetailPrecedent(@PathVariable("id") Long id, HttpServletRequest request){
@@ -42,7 +42,7 @@ public class PrecedentController {
         return responseService.getSuccessResponse("성공했습니다..", precedent);
     }
 
-    @ApiOperation(value = "회원 검색기록 추가", notes = "넘어온 판례 번호를 회원의 검색기록에 추가합니다.")
+    @ApiOperation(value = "회원 검색기록 추가 API", notes = "넘어온 판례 번호를 회원의 검색기록에 추가합니다.")
     @PostMapping("/api/members/{member_id}/searchRecords/{precedent_id}")
     public CommonResponse<Object> addSearchRecord(@PathVariable("member_id") Long member_id, @PathVariable("precedent_id") Long precedent_id, HttpServletRequest request){
         //Member ID 검증
@@ -54,10 +54,10 @@ public class PrecedentController {
         //검색 기록 추가
         memberService.addSearchRecord(member, precedent_id);
 
-        return responseService.getSuccessResponse("성공했습니다..", precedent);
+        return responseService.getSuccessResponse("판례 검색 기록 추가 성공", null);
     }
 
-    @ApiOperation(value = "판례 검색", notes = "입력된 검색어를 통해 판례를 검색합니다.\n\n" +
+    @ApiOperation(value = "판례 검색 API", notes = "입력된 검색어를 통해 판례를 검색합니다.\n\n" +
             "[TEST DATA]\n" +
             "content : 음주운전")
     @GetMapping("/api/precedents/searchAccuracy")
