@@ -39,7 +39,23 @@ public class MailController {
         return responseService.getSuccessResponse("메일을 성공적으로 보냈습니다.", null);
     }
 
-    @ApiOperation(value = "인증 번호 확인", notes = "해당 이메일로 전송된 인증번호를 확인합니다.\n")
+    @ApiOperation(value = " 회원 비밀번호 수정 API (비밀번호 찾기 API 이후) - 관리자 인증 필요", notes = "회원 비밀번호를 수정합니다.\n" +
+            "관리자 access key 필요" +
+            "[TEST DATA]\n" +
+            "email : 비밀번호 변경할 회원 이메일" +
+            "newPassword : 새 비밀번호")
+    @PutMapping(value = "/api/mail/find/password")
+    public CommonResponse<Object> setNewPassword(@RequestBody NewPasswordRequestDto requestDto, HttpServletRequest request){
+        //Member 이메일 조회
+        Member member = memberService.findOneByEmail(requestDto.getEmail());
+
+        //새 비밀번호 설정
+        memberService.updatePassword(member, requestDto.getNewPassword());
+
+        return responseService.getSuccessResponse("새 비밀번호로 설정", null);
+    }
+
+    @ApiOperation(value = "인증 번호 확인 API", notes = "해당 이메일로 전송된 인증번호를 확인합니다.\n")
     @GetMapping("/api/mail/confirm")
     public CommonResponse<Object> confirmAuthKey(@RequestParam(value = "email") String email,
                                @RequestParam(value = "authKey") String authKey, HttpServletRequest request){

@@ -70,13 +70,9 @@ public class MemberService {
     }
 
     @Transactional
-    public void updatePassword(Member member, PasswordUpdateRequestDto requestDto) {
-        if(!passwordEncoder.matches(requestDto.getExistedPassword(), member.getPassword())){
-            throw new ApiException(HttpStatus.NOT_ACCEPTABLE, "기존 비밀번호가 일치하지 않습니다.");
-        }
-
-        validatePasswordType(requestDto.getNewPassword());
-        member.encodingPW(passwordEncoder.encode(requestDto.getNewPassword())); //비밀번호 수정
+    public void updatePassword(Member member, String newPassword) {
+        validatePasswordType(newPassword); //비밀번호 유효성 검사
+        member.setPassword(passwordEncoder.encode(newPassword)); //비밀번호 수정
     }
 
     // 회원가입
@@ -86,7 +82,7 @@ public class MemberService {
         validateEmailType(member.getEmail());
         validatePasswordType(member.getPassword());
         String encPassword = passwordEncoder.encode(member.getPassword());
-        member.encodingPW(encPassword);
+        member.setPassword(encPassword);
         memberRepository.save(member);
         return member.getId();
     }
