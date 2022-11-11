@@ -49,8 +49,6 @@ public class PrecedentController {
         if(!jwtUtils.checkJWTwithID(request, member_id)) throw new ApiException(HttpStatus.FORBIDDEN, "허가되지 않은 접근입니다.");
         //Member 조회
         Member member = memberService.findOneById(member_id);
-        //precedent 조회 (해당 판례가 존재하지 않을 시 에러 발생)
-        PrecedentDetailDto precedent = precedentService.findOne(precedent_id);
         //검색 기록 추가
         memberService.addSearchRecord(member, precedent_id);
 

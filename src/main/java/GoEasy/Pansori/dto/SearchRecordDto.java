@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
-public class SearchRecordDto {
+public class SearchRecordDto implements Comparable<SearchRecordDto> {
 
     private Long id;
     private LocalDateTime createdDate;
@@ -26,5 +26,12 @@ public class SearchRecordDto {
         this.id = searchRecord.getId();
         this.createdDate = searchRecord.getCreatedDate();
         this.precedentDto = PrecedentDto.createPrecedentDto(searchRecord.getPrecedent());
+    }
+
+    @Override
+    public int compareTo(SearchRecordDto other) {
+        if(this.createdDate.isAfter(other.createdDate)) return -1;
+        else if (this.createdDate.isBefore(other.createdDate)) return 1;
+        else return 0;
     }
 }

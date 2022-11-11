@@ -2,7 +2,6 @@ package GoEasy.Pansori.service;
 
 import GoEasy.Pansori.domain.Litigation.Litigation;
 import GoEasy.Pansori.dto.member.MemberUpdateRequestDto;
-import GoEasy.Pansori.dto.member.PasswordUpdateRequestDto;
 import GoEasy.Pansori.dto.member.litigation.LitModifyRequestDto;
 import GoEasy.Pansori.dto.member.litigation.LitSaveRequestDto;
 import GoEasy.Pansori.exception.ApiException;
@@ -19,6 +18,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -128,11 +129,18 @@ public class MemberService {
         SimplePrecedent precedent = precedentRepository.findOne(prec_id);
         if(precedent == null){ throw new ApiException(HttpStatus.NOT_FOUND, "해당 번호의 판례가 존재하지 않습니다.");}
 
-        SearchRecord searchRecord = SearchRecord.createSearchRecord(member, precedent);
+        int today = LocalDateTime.now().getDayOfYear();
+        for(SearchRecord record : member.getSearchRecordList()){
+            if(record.getCreatedDate().getDayOfYear() == today){ //같은 날짜 판례 확인
+                if(record.getPrecedent().getId().equals(prec_id)) { //같은 판례 있는지 확인
+                    member.deleteSearchRecrod(record); //같은 날짜 같은 판례 있을 경우 검색 기록에서 삭제 -> 이후에 날짜 update해서 add
+                    recordRepository.delete(record);
+                    break;
+                }}}
 
         //검색 기록 추가
+        SearchRecord searchRecord = SearchRecord.createSearchRecord(member, precedent);
         member.addSearchRecord(searchRecord);
-
         recordRepository.save(searchRecord);
     }
 

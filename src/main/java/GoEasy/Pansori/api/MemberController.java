@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -152,6 +153,9 @@ public class MemberController {
             SearchRecordDto searchRecordDto = new SearchRecordDto(searchRecord);
             searchRecordList.add(searchRecordDto);
         }
+
+        //생성일 기준으로 정렬
+        Collections.sort(searchRecordList);
 
         return responseService.getSuccessResponse("검색 기록을 찾았습니다.", searchRecordList);
     }
