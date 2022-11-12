@@ -1,11 +1,10 @@
-package GoEasy.Pansori.dto.member.bookmark;
+package GoEasy.Pansori.dto.bookmark;
 
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class AddBookmarkRequestDto {
+public class DeleteBookmarkRequestDto {
     private Long precedent_id;
 }

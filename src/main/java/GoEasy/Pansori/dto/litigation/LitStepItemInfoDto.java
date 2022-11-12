@@ -1,4 +1,4 @@
-package GoEasy.Pansori.dto.member.litigation;
+package GoEasy.Pansori.dto.litigation;
 
 import GoEasy.Pansori.domain.Litigation.LitigationStep;
 import GoEasy.Pansori.domain.Litigation.LitigationStepItem;

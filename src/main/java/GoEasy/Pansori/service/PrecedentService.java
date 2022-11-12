@@ -2,7 +2,7 @@ package GoEasy.Pansori.service;
 
 import GoEasy.Pansori.domain.precedent.DetailPrecedent;
 import GoEasy.Pansori.dto.Precedent.PrecedentListDto;
-import GoEasy.Pansori.dto.PrecedentDetailDto;
+import GoEasy.Pansori.dto.Precedent.PrecedentDetailDto;
 import GoEasy.Pansori.exception.ApiException;
 import GoEasy.Pansori.repository.PrecedentRepository;
 import kr.co.shineware.nlp.komoran.constant.DEFAULT_MODEL;

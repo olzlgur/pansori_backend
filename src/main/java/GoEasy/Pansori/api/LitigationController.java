@@ -4,7 +4,7 @@ import GoEasy.Pansori.domain.CommonResponse;
 import GoEasy.Pansori.domain.Litigation.Litigation;
 import GoEasy.Pansori.domain.Litigation.LitigationStep;
 import GoEasy.Pansori.domain.User.Member;
-import GoEasy.Pansori.dto.member.litigation.*;
+import GoEasy.Pansori.dto.litigation.*;
 import GoEasy.Pansori.exception.ApiException;
 import GoEasy.Pansori.jwt.JwtUtils;
 import GoEasy.Pansori.repository.LitigationStepRepository;
@@ -13,7 +13,6 @@ import GoEasy.Pansori.service.ResponseService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;

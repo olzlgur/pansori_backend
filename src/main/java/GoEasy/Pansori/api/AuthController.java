@@ -1,17 +1,14 @@
 package GoEasy.Pansori.api;
 
 import GoEasy.Pansori.domain.CommonResponse;
-import GoEasy.Pansori.domain.User.Member;
-import GoEasy.Pansori.dto.RefreshRequestDto;
-import GoEasy.Pansori.dto.member.JoinRequestDto;
+import GoEasy.Pansori.dto.token.RefreshRequestDto;
 import GoEasy.Pansori.dto.member.LoginRequestDto;
-import GoEasy.Pansori.dto.member.token.TokenDto;
+import GoEasy.Pansori.dto.token.TokenDto;
 import GoEasy.Pansori.service.AuthService;
 import GoEasy.Pansori.service.MemberService;
 import GoEasy.Pansori.service.ResponseService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

@@ -1,7 +1,7 @@
 package GoEasy.Pansori.jwt;
 
 import GoEasy.Pansori.domain.User.Member;
-import GoEasy.Pansori.dto.member.token.TokenDto;
+import GoEasy.Pansori.dto.token.TokenDto;
 import GoEasy.Pansori.exception.ApiException;
 import GoEasy.Pansori.exception.ErrorCode;
 import GoEasy.Pansori.exception.FilterException;

@@ -5,7 +5,7 @@ import GoEasy.Pansori.exception.ErrorCode;
 import GoEasy.Pansori.jwt.JwtProvider;
 import GoEasy.Pansori.domain.RefreshToken;
 import GoEasy.Pansori.domain.User.Member;
-import GoEasy.Pansori.dto.member.token.TokenDto;
+import GoEasy.Pansori.dto.token.TokenDto;
 import GoEasy.Pansori.dto.member.LoginRequestDto;
 import GoEasy.Pansori.repository.MemberRepository;
 import GoEasy.Pansori.repository.RefreshTokenRepository;

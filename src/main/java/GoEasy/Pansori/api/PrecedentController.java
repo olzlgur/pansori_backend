@@ -2,26 +2,19 @@ package GoEasy.Pansori.api;
 
 import GoEasy.Pansori.domain.CommonResponse;
 import GoEasy.Pansori.domain.User.Member;
-import GoEasy.Pansori.domain.User.QMember;
 import GoEasy.Pansori.dto.Precedent.PrecedentListDto;
-import GoEasy.Pansori.dto.PrecedentDetailDto;
-import GoEasy.Pansori.dto.SearchRequestDto;
+import GoEasy.Pansori.dto.Precedent.PrecedentDetailDto;
 import GoEasy.Pansori.exception.ApiException;
 import GoEasy.Pansori.jwt.JwtUtils;
 import GoEasy.Pansori.service.MemberService;
 import GoEasy.Pansori.service.PrecedentService;
 import GoEasy.Pansori.service.ResponseService;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.transaction.Transactional;
-
-import static GoEasy.Pansori.domain.User.QMember.member;
 
 @RestController
 @RequiredArgsConstructor

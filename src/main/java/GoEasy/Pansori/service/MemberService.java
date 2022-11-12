@@ -2,8 +2,8 @@ package GoEasy.Pansori.service;
 
 import GoEasy.Pansori.domain.Litigation.Litigation;
 import GoEasy.Pansori.dto.member.MemberUpdateRequestDto;
-import GoEasy.Pansori.dto.member.litigation.LitModifyRequestDto;
-import GoEasy.Pansori.dto.member.litigation.LitSaveRequestDto;
+import GoEasy.Pansori.dto.litigation.LitModifyRequestDto;
+import GoEasy.Pansori.dto.litigation.LitSaveRequestDto;
 import GoEasy.Pansori.exception.ApiException;
 import GoEasy.Pansori.jwt.JwtProvider;
 import GoEasy.Pansori.domain.SearchRecord;
@@ -18,7 +18,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -180,7 +179,7 @@ public class MemberService {
         //소송 조회
         Optional<Litigation> findOne = litigationRepository.findById(id);
         if(findOne.isEmpty() || !findOne.get().getMember().equals(member)){ //해당 엔티티가 없음 or 엔티티의 소유주가 해당 멤버가 아님
-            throw new ApiException(HttpStatus.NOT_FOUND, "해당 번호의 나의 소송이 존재하지 않습니다.");}
+            throw new ApiException(HttpStatus.NOT_FOUND, "해당 번호 소송이 회원의 소송 목록에 존재하지 않습니다.");}
         Litigation litigation = findOne.get();
 
         //소송 삭제
