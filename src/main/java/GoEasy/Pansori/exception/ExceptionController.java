@@ -28,6 +28,7 @@ public class ExceptionController {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity handleBasicException(HttpServletRequest request, Exception ex){
+        System.out.println(ex.getMessage());
         return ErrorResponseEntity.toResponseEntity(ex);
     }
 }
