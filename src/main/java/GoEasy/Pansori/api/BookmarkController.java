@@ -42,16 +42,15 @@ public class BookmarkController {
         //Member 조회
         Member member = memberService.findOneById(id);
 
-        List<BookmarkDto> bookmarks = new ArrayList<>();
+        List<BookmarkDto> bookmarkDtos = new ArrayList<>();
 
         for (Bookmark bookmark : member.getBookmarks()) {
-            BookmarkDto bookmarkDto = BookmarkDto.builder()
-                    .title(bookmark.getPrecedent().getTitle())
-                    .precedent_id(bookmark.getPrecedent().getId()).build();
-            bookmarks.add(bookmarkDto);
+            SimplePrecedent precedent = precedentRepository.findOne(bookmark.getPrecedent().getId());
+            BookmarkDto dto = BookmarkDto.createDto(precedent);
+            bookmarkDtos.add(dto);
         }
 
-        return responseService.getSuccessResponse("회원 북마크 조회 성공", bookmarks);
+        return responseService.getSuccessResponse("회원 북마크 조회 성공", bookmarkDtos);
     }
 
     //북마크 추가
