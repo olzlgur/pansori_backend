@@ -150,7 +150,7 @@ public class MemberController {
         //검색 기록 조회
         List<SearchRecordDto> searchRecordList = new ArrayList<>();
         for(SearchRecord searchRecord : member.getSearchRecordList()){
-            SearchRecordDto searchRecordDto = new SearchRecordDto(searchRecord);
+            SearchRecordDto searchRecordDto = SearchRecordDto.createDto(searchRecord);
             searchRecordList.add(searchRecordDto);
         }
 

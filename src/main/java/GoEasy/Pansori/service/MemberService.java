@@ -1,6 +1,11 @@
 package GoEasy.Pansori.service;
 
+import GoEasy.Pansori.domain.Inquiry.Comment;
 import GoEasy.Pansori.domain.Litigation.Litigation;
+import GoEasy.Pansori.domain.Inquiry.Inquiry;
+import GoEasy.Pansori.dto.Inquiry.CommentCreateRequestDto;
+import GoEasy.Pansori.dto.Inquiry.CommentUpdateRequestDto;
+import GoEasy.Pansori.dto.Inquiry.InquiryUpdateRequestDto;
 import GoEasy.Pansori.dto.member.MemberUpdateRequestDto;
 import GoEasy.Pansori.dto.litigation.LitModifyRequestDto;
 import GoEasy.Pansori.dto.litigation.LitSaveRequestDto;
