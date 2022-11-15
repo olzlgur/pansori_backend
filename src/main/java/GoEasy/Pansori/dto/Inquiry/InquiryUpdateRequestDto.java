@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class InquiryCreateRequestDto {
+public class InquiryUpdateRequestDto {
     private InquiryType type;
     private String content;
 }

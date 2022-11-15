@@ -216,6 +216,62 @@ public class MemberService {
     }
 
 
+    //고객 문의 추가
+    @Transactional
+    public Inquiry addInquiry(Member member, Inquiry inquiry) {
+        // 연관관계 설정
+        member.addInquiry(inquiry);
+        inquiry.setMember(member);
+
+        // Customer Support 저장
+        inquiryRepository.save(inquiry);
+        return inquiry;
+    }
+
+    //고객 문의 수정
+    @Transactional
+    public void updateInquiry(Inquiry inquiry, InquiryUpdateRequestDto requestDto) {
+        inquiry.update(requestDto);
+    }
+
+    //고객 문의 삭제
+    @Transactional
+    public void deleteInquiry(Member member, Inquiry inquiry) {
+        member.deleteInquiry(inquiry);
+        inquiryRepository.delete(inquiry);
+    }
+
+    //고객 문의에 대한 답글 추가
+    @Transactional
+    public Comment addComment(Member writer, Inquiry _inquiry, String content) {
+        //영속성 확보
+        Inquiry inquiry = inquiryRepository.findById(_inquiry.getId()).get();
+
+        //Comment 생성
+        Comment comment = new Comment(writer, inquiry, content);
+        inquiry.setComment(comment);
+
+        return comment;
+    }
+
+    //고객 문의에 대한 답글 수정
+    @Transactional
+    public void updateComment(Comment comment, CommentUpdateRequestDto requestDto) {
+        //영속성 확보
+        comment = commentRepository.findById(comment.getId()).get();
+        comment.update(requestDto);
+    }
+
+    //고객 문의에 대한 답글 삭제
+    @Transactional
+    public void deleteComment(Inquiry inquiry, Comment comment) {
+        inquiry.deleteComment(comment);
+        commentRepository.delete(comment);
+    }
+
+
+
+
     //====== 관련 메서드 =======//
 
     public void validateDuplicateMember(Member member) {
