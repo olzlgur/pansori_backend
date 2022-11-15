@@ -1,4 +1,4 @@
-package GoEasy.Pansori.dto.member.litigation;
+package GoEasy.Pansori.dto.litigation;
 
 import lombok.Builder;
 import lombok.Getter;

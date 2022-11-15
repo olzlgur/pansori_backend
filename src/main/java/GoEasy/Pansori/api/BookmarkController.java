@@ -4,9 +4,8 @@ import GoEasy.Pansori.domain.CommonResponse;
 import GoEasy.Pansori.domain.User.Bookmark;
 import GoEasy.Pansori.domain.User.Member;
 import GoEasy.Pansori.domain.precedent.SimplePrecedent;
-import GoEasy.Pansori.dto.member.bookmark.AddBookmarkRequestDto;
-import GoEasy.Pansori.dto.member.bookmark.BookmarkDto;
-import GoEasy.Pansori.dto.member.bookmark.DeleteBookmarkRequestDto;
+import GoEasy.Pansori.dto.bookmark.AddBookmarkRequestDto;
+import GoEasy.Pansori.dto.bookmark.BookmarkDto;
 import GoEasy.Pansori.exception.ApiException;
 import GoEasy.Pansori.jwt.JwtUtils;
 import GoEasy.Pansori.repository.SimplePrecedentRepository;
@@ -43,16 +42,15 @@ public class BookmarkController {
         //Member 조회
         Member member = memberService.findOneById(id);
 
-        List<BookmarkDto> bookmarks = new ArrayList<>();
+        List<BookmarkDto> bookmarkDtos = new ArrayList<>();
 
         for (Bookmark bookmark : member.getBookmarks()) {
-            BookmarkDto bookmarkDto = BookmarkDto.builder()
-                    .title(bookmark.getPrecedent().getTitle())
-                    .precedent_id(bookmark.getPrecedent().getId()).build();
-            bookmarks.add(bookmarkDto);
+            SimplePrecedent precedent = precedentRepository.findOne(bookmark.getPrecedent().getId());
+            BookmarkDto dto = BookmarkDto.createDto(precedent);
+            bookmarkDtos.add(dto);
         }
 
-        return responseService.getSuccessResponse("회원 북마크 조회 성공", bookmarks);
+        return responseService.getSuccessResponse("회원 북마크 조회 성공", bookmarkDtos);
     }
 
     //북마크 추가

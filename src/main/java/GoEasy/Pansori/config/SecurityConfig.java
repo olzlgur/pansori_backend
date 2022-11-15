@@ -63,6 +63,7 @@ public class SecurityConfig{
                 .antMatchers(HttpMethod.GET, "/api/members").hasAuthority("ROLE_ADMIN")
                 .antMatchers(HttpMethod.GET, "/api/members/{\\d+}").hasAuthority("ROLE_ADMIN")
                 .antMatchers(HttpMethod.DELETE, "/api/members/{\\d+}").hasAuthority("ROLE_ADMIN")
+                .antMatchers(HttpMethod.PUT, "/api/mail/find/password").hasAuthority("ROLE_ADMIN")
                 .antMatchers("/api/members/**").authenticated()
                 .anyRequest().permitAll()
 

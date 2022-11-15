@@ -2,7 +2,7 @@ package GoEasy.Pansori.domain;
 
 import GoEasy.Pansori.domain.Litigation.Litigation;
 import GoEasy.Pansori.domain.User.Member;
-import GoEasy.Pansori.dto.member.litigation.LitRequestDto;
+import GoEasy.Pansori.dto.litigation.LitCreateRequestDto;
 import GoEasy.Pansori.service.MemberService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,13 +33,13 @@ class LitigationApiTest {
     public void 회원_소송추가() throws Exception {
         //given
         Member member = memberService.findOneByEmail("testEmail@gmail.com");
-        LitRequestDto requestDto = LitRequestDto.builder()
+        LitCreateRequestDto requestDto = LitCreateRequestDto.builder()
                 .court("광주지방법원")
                 .num_opposite(3)
                 .cost(1000l)
                 .sendCost(500l)
                 .title("테스트 소송")
-                .type(LitigationType.CIVIL)
+                .type(LitigationType.손해배상_기)
                 .build();
 
         Litigation litigation = Litigation.createLitigation(requestDto);
@@ -57,13 +57,13 @@ class LitigationApiTest {
     public void 회원_소송삭제() throws Exception {
         //given
         Member member = memberService.findOneByEmail("testEmail@gmail.com");
-        LitRequestDto requestDto = LitRequestDto.builder()
+        LitCreateRequestDto requestDto = LitCreateRequestDto.builder()
                 .court("광주지방법원")
                 .num_opposite(3)
                 .cost(1000l)
                 .sendCost(500l)
                 .title("테스트 소송")
-                .type(LitigationType.CIVIL)
+                .type(LitigationType.손해배상_기)
                 .build();
 
         Litigation litigation = Litigation.createLitigation(requestDto);
@@ -98,13 +98,13 @@ class LitigationApiTest {
     }
 
     private Litigation createTempLitigation(String title){
-        LitRequestDto requestDto = LitRequestDto.builder()
+        LitCreateRequestDto requestDto = LitCreateRequestDto.builder()
                 .court("테스트")
                 .num_opposite(3)
                 .cost(1000l)
                 .sendCost(500l)
                 .title(title)
-                .type(LitigationType.CIVIL)
+                .type(LitigationType.손해배상_기)
                 .build();
 
         return Litigation.createLitigation(requestDto);

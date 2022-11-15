@@ -2,13 +2,16 @@ package GoEasy.Pansori.api;
 
 import GoEasy.Pansori.domain.User.Member;
 import GoEasy.Pansori.dto.MailDto;
-import GoEasy.Pansori.jwt.JwtUtils;
 import GoEasy.Pansori.domain.CommonResponse;
-import GoEasy.Pansori.service.MailSendService;
+import GoEasy.Pansori.dto.NewPasswordRequestDto;
+import GoEasy.Pansori.dto.member.PasswordUpdateRequestDto;
+import GoEasy.Pansori.exception.ApiException;
+import GoEasy.Pansori.service.MailService;
 import GoEasy.Pansori.service.MemberService;
 import GoEasy.Pansori.service.ResponseService;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,32 +19,49 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @AllArgsConstructor
 public class MailController {
-    private final MailSendService mailService;
+    private final MailService mailService;
     private final MemberService memberService;
     private final ResponseService responseService;
 
-    @ApiOperation(value = "새 계정 생성 시 발송되는 인증 메일", notes = "해당 이메일로 인증 번호 메일을 발송합니다.\n")
+    @ApiOperation(value = "새 계정 생성 API", notes = "해당 이메일로 인증 번호를 발송합니다.\n")
     @PostMapping("/api/mail/new/account")
     public CommonResponse<Object> sendMail_newAccount(@RequestBody MailDto mailDto, HttpServletRequest request) {
         Member member = Member.createMemberByEmailAndPW(mailDto.getEmail(), null);
-        memberService.validateDuplicateMember(member); //이메일 인증
+        memberService.validateDuplicateMember(member); //중복 이메일 확인 -> 중복 이메일 존재 시 throw error
         mailService.mailSend(mailDto.getEmail(), request, 1);
         return responseService.getSuccessResponse("메일을 성공적으로 보냈습니다.", null);
     }
 
-    @ApiOperation(value = "계정 찾기 시 발송되는 인증 메일", notes = "해당 이메일로 인증 번호 메일을 발송합니다.\n")
-    @PostMapping("/api/mail/find/account")
-    public CommonResponse<Object> sendMail_findAccount(@RequestBody MailDto mailDto, HttpServletRequest request) {
+    @ApiOperation(value = "비밀번호 찾기 API", notes = "해당 이메일로 인증 번호를 발송합니다.\n")
+    @PostMapping("/api/mail/find/password")
+    public CommonResponse<Object> sendMail_findPassword(@RequestBody MailDto mailDto, HttpServletRequest request) {
         mailService.mailSend(mailDto.getEmail(), request, 2);
         return responseService.getSuccessResponse("메일을 성공적으로 보냈습니다.", null);
     }
 
-    @ApiOperation(value = "인증 번호 확인", notes = "해당 이메일로 전송된 인증번호를 확인합니다.\n")
-    @GetMapping("/api/mail/confirm")
-    public CommonResponse<Object> confirmAuthKey(@RequestParam(value = "email")String email,
-                               @RequestParam(value = "authKey")String authKey, HttpServletRequest request){
+    @ApiOperation(value = " 회원 비밀번호 수정 API (비밀번호 찾기 API 이후) - 관리자 인증 필요", notes = "회원 비밀번호를 수정합니다.\n" +
+            "관리자 access key 필요" +
+            "[TEST DATA]\n" +
+            "email : 비밀번호 변경할 회원 이메일" +
+            "newPassword : 새 비밀번호")
+    @PutMapping(value = "/api/mail/find/password")
+    public CommonResponse<Object> setNewPassword(@RequestBody NewPasswordRequestDto requestDto, HttpServletRequest request){
+        //Member 이메일 조회
+        Member member = memberService.findOneByEmail(requestDto.getEmail());
 
+        //새 비밀번호 설정
+        memberService.updatePassword(member, requestDto.getNewPassword());
+
+        return responseService.getSuccessResponse("새 비밀번호로 설정", null);
+    }
+
+    @ApiOperation(value = "인증 번호 확인 API", notes = "해당 이메일로 전송된 인증번호를 확인합니다.\n")
+    @GetMapping("/api/mail/confirm")
+    public CommonResponse<Object> confirmAuthKey(@RequestParam(value = "email") String email,
+                               @RequestParam(value = "authKey") String authKey, HttpServletRequest request){
         mailService.confirmAuthKey(email, authKey, request);
+        memberService.findOneByEmail(email); //해당 이메일을 가진 멤버가 있는지 확인
+
         return responseService.getSuccessResponse("메일 인증이 완료되었습니다.", null);
     }
 }

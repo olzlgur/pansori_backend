@@ -1,6 +1,7 @@
 package GoEasy.Pansori.domain.User;
 
 import GoEasy.Pansori.domain.Authority;
+import GoEasy.Pansori.domain.Inquiry.Inquiry;
 import GoEasy.Pansori.domain.Litigation.Litigation;
 import GoEasy.Pansori.domain.SearchRecord;
 import GoEasy.Pansori.dto.member.JoinRequestDto;
@@ -47,6 +48,9 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Litigation> litigations = new ArrayList<>();
 
+    @OneToMany(mappedBy = "member")
+    private List<Inquiry> inquries = new ArrayList<>();
+
     public static Member registerMember(JoinRequestDto request){
         Member member = new Member();
         member.email = request.getEmail();
@@ -65,7 +69,7 @@ public class Member {
         return member;
     }
 
-    public void encodingPW(String password){
+    public void setPassword(String password){
         this.password = password;
     }
 
@@ -89,5 +93,7 @@ public class Member {
     public void addSearchRecord(SearchRecord searchRecord){this.searchRecordList.add(searchRecord);}
     public void deleteSearchRecrod(SearchRecord searchRecord){this.searchRecordList.remove(searchRecord);}
 
+    public void addInquiry(Inquiry inquiry){this.inquries.add(inquiry);}
+    public void deleteInquiry(Inquiry inquiry){this.inquries.remove(inquiry);}
 
 }

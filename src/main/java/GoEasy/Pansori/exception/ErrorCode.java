@@ -15,7 +15,7 @@ public enum ErrorCode {
 
     EXPIRED_JWT(HttpStatus.BAD_REQUEST, "만료된 JWT 토큰입니다."),
 
-    UNSUPORRTED_JWT(HttpStatus.NOT_ACCEPTABLE, "지원되지 않는 JWT 토큰입니다."),
+    UNSUPPORTED_JWT(HttpStatus.NOT_ACCEPTABLE, "지원되지 않는 JWT 토큰입니다."),
 
     INVALID_JWT(HttpStatus.BAD_REQUEST, "올바른 JWT 토큰이 아닙니다."),
 

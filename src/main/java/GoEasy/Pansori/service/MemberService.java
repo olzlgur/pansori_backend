@@ -1,10 +1,14 @@
 package GoEasy.Pansori.service;
 
+import GoEasy.Pansori.domain.Inquiry.Comment;
 import GoEasy.Pansori.domain.Litigation.Litigation;
+import GoEasy.Pansori.domain.Inquiry.Inquiry;
+import GoEasy.Pansori.dto.Inquiry.CommentCreateRequestDto;
+import GoEasy.Pansori.dto.Inquiry.CommentUpdateRequestDto;
+import GoEasy.Pansori.dto.Inquiry.InquiryUpdateRequestDto;
 import GoEasy.Pansori.dto.member.MemberUpdateRequestDto;
-import GoEasy.Pansori.dto.member.PasswordUpdateRequestDto;
-import GoEasy.Pansori.dto.member.litigation.LitModifyRequestDto;
-import GoEasy.Pansori.dto.member.litigation.LitSaveRequestDto;
+import GoEasy.Pansori.dto.litigation.LitModifyRequestDto;
+import GoEasy.Pansori.dto.litigation.LitSaveRequestDto;
 import GoEasy.Pansori.exception.ApiException;
 import GoEasy.Pansori.jwt.JwtProvider;
 import GoEasy.Pansori.domain.SearchRecord;
@@ -19,6 +23,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -35,6 +40,8 @@ public class MemberService {
     private final LitigationRepository litigationRepository;
     private final SearchRecordRepository recordRepository;
     private final SimplePrecedentRepository precedentRepository;
+    private final InquiryRepository inquiryRepository;
+    private final CommentRepository commentRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
 
@@ -70,13 +77,9 @@ public class MemberService {
     }
 
     @Transactional
-    public void updatePassword(Member member, PasswordUpdateRequestDto requestDto) {
-        if(!passwordEncoder.matches(requestDto.getExistedPassword(), member.getPassword())){
-            throw new ApiException(HttpStatus.NOT_ACCEPTABLE, "기존 비밀번호가 일치하지 않습니다.");
-        }
-
-        validatePasswordType(requestDto.getNewPassword());
-        member.encodingPW(passwordEncoder.encode(requestDto.getNewPassword())); //비밀번호 수정
+    public void updatePassword(Member member, String newPassword) {
+        validatePasswordType(newPassword); //비밀번호 유효성 검사
+        member.setPassword(passwordEncoder.encode(newPassword)); //비밀번호 수정
     }
 
     // 회원가입
@@ -86,7 +89,7 @@ public class MemberService {
         validateEmailType(member.getEmail());
         validatePasswordType(member.getPassword());
         String encPassword = passwordEncoder.encode(member.getPassword());
-        member.encodingPW(encPassword);
+        member.setPassword(encPassword);
         memberRepository.save(member);
         return member.getId();
     }
@@ -133,11 +136,18 @@ public class MemberService {
         SimplePrecedent precedent = precedentRepository.findOne(prec_id);
         if(precedent == null){ throw new ApiException(HttpStatus.NOT_FOUND, "해당 번호의 판례가 존재하지 않습니다.");}
 
-        SearchRecord searchRecord = SearchRecord.createSearchRecord(member, precedent);
+        int today = LocalDateTime.now().getDayOfYear();
+        for(SearchRecord record : member.getSearchRecordList()){
+            if(record.getCreatedDate().getDayOfYear() == today){ //같은 날짜 판례 확인
+                if(record.getPrecedent().getId().equals(prec_id)) { //같은 판례 있는지 확인
+                    member.deleteSearchRecrod(record); //같은 날짜 같은 판례 있을 경우 검색 기록에서 삭제 -> 이후에 날짜 update해서 add
+                    recordRepository.delete(record);
+                    break;
+                }}}
 
         //검색 기록 추가
+        SearchRecord searchRecord = SearchRecord.createSearchRecord(member, precedent);
         member.addSearchRecord(searchRecord);
-
         recordRepository.save(searchRecord);
     }
 
@@ -177,7 +187,7 @@ public class MemberService {
         //소송 조회
         Optional<Litigation> findOne = litigationRepository.findById(id);
         if(findOne.isEmpty() || !findOne.get().getMember().equals(member)){ //해당 엔티티가 없음 or 엔티티의 소유주가 해당 멤버가 아님
-            throw new ApiException(HttpStatus.NOT_FOUND, "해당 번호의 나의 소송이 존재하지 않습니다.");}
+            throw new ApiException(HttpStatus.NOT_FOUND, "해당 번호 소송이 회원의 소송 목록에 존재하지 않습니다.");}
         Litigation litigation = findOne.get();
 
         //소송 삭제
@@ -212,6 +222,62 @@ public class MemberService {
         litigation.setInfo(requestDto);
         return litigation;
     }
+
+
+    //고객 문의 추가
+    @Transactional
+    public Inquiry addInquiry(Member member, Inquiry inquiry) {
+        // 연관관계 설정
+        member.addInquiry(inquiry);
+        inquiry.setMember(member);
+
+        // Customer Support 저장
+        inquiryRepository.save(inquiry);
+        return inquiry;
+    }
+
+    //고객 문의 수정
+    @Transactional
+    public void updateInquiry(Inquiry inquiry, InquiryUpdateRequestDto requestDto) {
+        inquiry.update(requestDto);
+    }
+
+    //고객 문의 삭제
+    @Transactional
+    public void deleteInquiry(Member member, Inquiry inquiry) {
+        member.deleteInquiry(inquiry);
+        inquiryRepository.delete(inquiry);
+    }
+
+    //고객 문의에 대한 답글 추가
+    @Transactional
+    public Comment addComment(Member writer, Inquiry _inquiry, String content) {
+        //영속성 확보
+        Inquiry inquiry = inquiryRepository.findById(_inquiry.getId()).get();
+
+        //Comment 생성
+        Comment comment = new Comment(writer, inquiry, content);
+        inquiry.setComment(comment);
+
+        return comment;
+    }
+
+    //고객 문의에 대한 답글 수정
+    @Transactional
+    public void updateComment(Comment comment, CommentUpdateRequestDto requestDto) {
+        //영속성 확보
+        comment = commentRepository.findById(comment.getId()).get();
+        comment.update(requestDto);
+    }
+
+    //고객 문의에 대한 답글 삭제
+    @Transactional
+    public void deleteComment(Inquiry inquiry, Comment comment) {
+        inquiry.deleteComment(comment);
+        commentRepository.delete(comment);
+    }
+
+
 
 
     //====== 관련 메서드 =======//

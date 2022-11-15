@@ -19,10 +19,12 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -32,6 +34,7 @@ public class MemberController {
     private final MemberService memberService;
     private final SimplePrecedentRepository precedentRepository;
     private final ResponseService responseService;
+    private final PasswordEncoder passwordEncoder;
 
     private final JwtUtils jwtUtils;
 
@@ -127,7 +130,9 @@ public class MemberController {
         Member member = memberService.findOneById(id);
 
         //Pasword Update
-        memberService.updatePassword(member, requestDto);
+        if(!passwordEncoder.matches(requestDto.getNewPassword(), member.getPassword())){ // 기존 비밀번호 일치 여부
+            throw new ApiException(HttpStatus.FORBIDDEN, "기존 비밀번호가 일치하지 않습니다.");}
+        memberService.updatePassword(member, requestDto.getNewPassword());
         return responseService.getSuccessResponse("비밀번호 업데이트 성공", null);
     }
 
@@ -145,9 +150,12 @@ public class MemberController {
         //검색 기록 조회
         List<SearchRecordDto> searchRecordList = new ArrayList<>();
         for(SearchRecord searchRecord : member.getSearchRecordList()){
-            SearchRecordDto searchRecordDto = new SearchRecordDto(searchRecord);
+            SearchRecordDto searchRecordDto = SearchRecordDto.createDto(searchRecord);
             searchRecordList.add(searchRecordDto);
         }
+
+        //생성일 기준으로 정렬
+        Collections.sort(searchRecordList);
 
         return responseService.getSuccessResponse("검색 기록을 찾았습니다.", searchRecordList);
     }

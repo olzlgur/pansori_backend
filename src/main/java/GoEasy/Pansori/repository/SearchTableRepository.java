@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-@Repository
 public interface SearchTableRepository extends JpaRepository<SearchTable, Long> {
     SearchTable findByWord(String word);
 }

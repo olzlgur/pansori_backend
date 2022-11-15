@@ -1,11 +1,10 @@
-package GoEasy.Pansori.dto.member.litigation;
+package GoEasy.Pansori.dto.litigation;
 
 import GoEasy.Pansori.domain.Litigation.LitigationStep;
 import GoEasy.Pansori.domain.Litigation.LitigationStepItem;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 
