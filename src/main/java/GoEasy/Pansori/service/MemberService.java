@@ -40,6 +40,8 @@ public class MemberService {
     private final LitigationRepository litigationRepository;
     private final SearchRecordRepository recordRepository;
     private final SimplePrecedentRepository precedentRepository;
+    private final InquiryRepository inquiryRepository;
+    private final CommentRepository commentRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
 

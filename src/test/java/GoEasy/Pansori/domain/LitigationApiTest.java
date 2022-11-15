@@ -39,7 +39,7 @@ class LitigationApiTest {
                 .cost(1000l)
                 .sendCost(500l)
                 .title("테스트 소송")
-                .type(LitigationType.CIVIL)
+                .type(LitigationType.손해배상_기)
                 .build();
 
         Litigation litigation = Litigation.createLitigation(requestDto);
@@ -63,7 +63,7 @@ class LitigationApiTest {
                 .cost(1000l)
                 .sendCost(500l)
                 .title("테스트 소송")
-                .type(LitigationType.CIVIL)
+                .type(LitigationType.손해배상_기)
                 .build();
 
         Litigation litigation = Litigation.createLitigation(requestDto);
@@ -104,7 +104,7 @@ class LitigationApiTest {
                 .cost(1000l)
                 .sendCost(500l)
                 .title(title)
-                .type(LitigationType.CIVIL)
+                .type(LitigationType.손해배상_기)
                 .build();
 
         return Litigation.createLitigation(requestDto);
