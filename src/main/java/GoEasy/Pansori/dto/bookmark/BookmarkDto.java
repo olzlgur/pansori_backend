@@ -12,6 +12,8 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 public class BookmarkDto {
+
+    private Long bookmark_id; //북마크 번호
     private Long precedent_id; //판례 번호
     private String title; //판례 제목
 
@@ -24,8 +26,10 @@ public class BookmarkDto {
     private String verdict; //선고
 
 
-    public static BookmarkDto createDto(SimplePrecedent precedent){
+    public static BookmarkDto createDto(Bookmark bookmark){
         BookmarkDto dto = new BookmarkDto();
+        SimplePrecedent precedent = bookmark.getPrecedent();
+        dto.bookmark_id = bookmark.getId();
         dto.precedent_id = precedent.getId();
         dto.title = precedent.getTitle();
         dto.case_id = precedent.getCaseId();

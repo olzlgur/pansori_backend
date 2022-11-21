@@ -45,8 +45,7 @@ public class BookmarkController {
         List<BookmarkDto> bookmarkDtos = new ArrayList<>();
 
         for (Bookmark bookmark : member.getBookmarks()) {
-            SimplePrecedent precedent = precedentRepository.findOne(bookmark.getPrecedent().getId());
-            BookmarkDto dto = BookmarkDto.createDto(precedent);
+            BookmarkDto dto = BookmarkDto.createDto(bookmark);
             bookmarkDtos.add(dto);
         }
 
@@ -96,6 +95,23 @@ public class BookmarkController {
         return responseService.getSuccessResponse("북마크 판례 삭제 성공", null);
     }
 
+    @ApiOperation(value = "단일 북마크 조회 API", notes = "회원 북마크 리스트에 대해 특정 판례를 조회합니다.")
+    @GetMapping(value = "/api/members/{member_id}/bookmarks/precedents/{precedent_id}")
+    public CommonResponse<Object> findBookmark(@PathVariable("member_id") Long member_id, @PathVariable("precedent_id") Long precedent_id, HttpServletRequest request){
+        //Member ID 검증
+        if(!jwtUtils.checkJWTwithID(request, member_id)) throw new ApiException(HttpStatus.FORBIDDEN, "허가되지 않은 접근입니다.");
+
+        //Member 조회
+        Member member = memberService.findOneById(member_id);
+
+        //북마크 조회
+        boolean findOne = false;
+        for (Bookmark bookmark : member.getBookmarks()) {
+            if(bookmark.getPrecedent().getId().equals(precedent_id)){ findOne = true; break;}}
+
+
+        return responseService.getSuccessResponse("북마크 조회 성공", findOne);
+    }
 
 
 }
