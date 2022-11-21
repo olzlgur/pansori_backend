@@ -34,29 +34,3 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
-
-cloud:
-  aws:
-    s3:
-      bucket: pansori.s3.bucket
-    credentials:
-      access-key: AKIASKTFCHJXTQXTVPWA
-      secret-key: 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
-    region:
-      static: ap-northeast-2
-      auto: false
-    stack:
-      auto: false
-
-server:
-  compression:
-    enabled: true
-    mime-types: text/html,text/plain,text/css,application/javascript,application/json
-    min-response-size: 10000
-
-logging:
-  level:
-    com:
-      amazonaws:
-        util:
-          EC2MetadataUtils: ERROR

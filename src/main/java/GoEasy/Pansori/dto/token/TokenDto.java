@@ -1,4 +1,4 @@
-package GoEasy.Pansori.dto.member.token;
+package GoEasy.Pansori.dto.token;
 
 import com.sun.istack.NotNull;
 import io.swagger.annotations.ApiModelProperty;

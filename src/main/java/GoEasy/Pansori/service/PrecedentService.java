@@ -5,7 +5,7 @@ import GoEasy.Pansori.domain.precedent.SimplePrecedent;
 import GoEasy.Pansori.dto.Precedent.FindOneResponseContentDto;
 import GoEasy.Pansori.dto.Precedent.FindOneResponseDto;
 import GoEasy.Pansori.dto.Precedent.PrecedentListDto;
-import GoEasy.Pansori.dto.PrecedentDetailDto;
+import GoEasy.Pansori.dto.Precedent.PrecedentDetailDto;
 import GoEasy.Pansori.exception.ApiException;
 import GoEasy.Pansori.repository.PrecedentRepository;
 import GoEasy.Pansori.repository.SimplePrecedentRepository;

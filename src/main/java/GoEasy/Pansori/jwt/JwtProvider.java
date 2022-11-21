@@ -1,7 +1,7 @@
 package GoEasy.Pansori.jwt;
 
 import GoEasy.Pansori.domain.User.Member;
-import GoEasy.Pansori.dto.member.token.TokenDto;
+import GoEasy.Pansori.dto.token.TokenDto;
 import GoEasy.Pansori.exception.ApiException;
 import GoEasy.Pansori.exception.ErrorCode;
 import GoEasy.Pansori.exception.FilterException;
@@ -111,12 +111,14 @@ public class JwtProvider {
         }
         catch (UnsupportedJwtException e){
             log.info("지원되지 않는 JWT 토큰입니다.");
-            throw new FilterException(ErrorCode.UNSUPORRTED_JWT);
+            throw new FilterException(ErrorCode.UNSUPPORTED_JWT);
         }
         catch (IllegalArgumentException e){
             log.info("올바른 JWT 토큰이 아닙니다.");
             throw new FilterException(ErrorCode.INVALID_JWT);
         }
+        catch (Exception e){
+            throw new FilterException(ErrorCode.UNKNOWN_ERROR);}
     }
 
     private Claims parseClaims(String accessToken){

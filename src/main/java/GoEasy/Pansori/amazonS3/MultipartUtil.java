@@ -5,12 +5,7 @@ import org.springframework.util.StringUtils;
 import java.util.UUID;
 
 public class MultipartUtil {
-    private static final String BASE_DIR = "images";
-
-    //로컬에서 사용자 홈 디렉토리 경로 반환
-    public static String getLocalHomteDirectory(){
-        return System.getProperty("user.home");
-    }
+    private static final String BASE_DIR = "members";
 
     //새로운 파일 고유 ID 생성
     public static String createFileId(){
@@ -26,7 +21,14 @@ public class MultipartUtil {
     }
 
     //파일 전체 경로 생성
-    public static String createPath(String fileId, String format){
-        return String.format("%s/%s.%s", BASE_DIR, fileId, format);
+    public static String createPath(String fileName, String fileId, String format){
+        return String.format("%s/%s_%s.%s", BASE_DIR, fileName, fileId, format);
+    }
+
+    public static String getFileName(String originalFileName) {
+        if(StringUtils.hasText(originalFileName)){
+            return originalFileName.substring(0, originalFileName.indexOf('.'));
+        }
+        return null;
     }
 }

@@ -5,6 +5,7 @@ import GoEasy.Pansori.exception.ApiException;
 import GoEasy.Pansori.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -29,7 +30,7 @@ public class CustomUserDetailService implements UserDetailsService {
         Optional<Member> findOne = memberRepository.findByEmail(username);
 
         if(findOne.isEmpty()){
-            throw new ApiException(HttpStatus.NOT_FOUND, username + " -> 데이터베이스에서 찾을 수 없습니다.");
+            throw new BadCredentialsException("자격 증명에 실패했습니다.");
         }
         else{
             return createUserDetails(findOne.get());

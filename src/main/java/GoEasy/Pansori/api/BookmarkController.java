@@ -4,9 +4,8 @@ import GoEasy.Pansori.domain.CommonResponse;
 import GoEasy.Pansori.domain.User.Bookmark;
 import GoEasy.Pansori.domain.User.Member;
 import GoEasy.Pansori.domain.precedent.SimplePrecedent;
-import GoEasy.Pansori.dto.member.bookmark.AddBookmarkRequestDto;
-import GoEasy.Pansori.dto.member.bookmark.BookmarkDto;
-import GoEasy.Pansori.dto.member.bookmark.DeleteBookmarkRequestDto;
+import GoEasy.Pansori.dto.bookmark.AddBookmarkRequestDto;
+import GoEasy.Pansori.dto.bookmark.BookmarkDto;
 import GoEasy.Pansori.exception.ApiException;
 import GoEasy.Pansori.jwt.JwtUtils;
 import GoEasy.Pansori.repository.SimplePrecedentRepository;
@@ -43,16 +42,14 @@ public class BookmarkController {
         //Member 조회
         Member member = memberService.findOneById(id);
 
-        List<BookmarkDto> bookmarks = new ArrayList<>();
+        List<BookmarkDto> bookmarkDtos = new ArrayList<>();
 
         for (Bookmark bookmark : member.getBookmarks()) {
-            BookmarkDto bookmarkDto = BookmarkDto.builder()
-                    .title(bookmark.getPrecedent().getTitle())
-                    .precedent_id(bookmark.getPrecedent().getId()).build();
-            bookmarks.add(bookmarkDto);
+            BookmarkDto dto = BookmarkDto.createDto(bookmark);
+            bookmarkDtos.add(dto);
         }
 
-        return responseService.getSuccessResponse("회원 북마크 조회 성공", bookmarks);
+        return responseService.getSuccessResponse("회원 북마크 조회 성공", bookmarkDtos);
     }
 
     //북마크 추가
@@ -98,6 +95,23 @@ public class BookmarkController {
         return responseService.getSuccessResponse("북마크 판례 삭제 성공", null);
     }
 
+    @ApiOperation(value = "단일 북마크 조회 API", notes = "회원 북마크 리스트에 대해 특정 판례를 조회합니다.")
+    @GetMapping(value = "/api/members/{member_id}/bookmarks/precedents/{precedent_id}")
+    public CommonResponse<Object> findBookmark(@PathVariable("member_id") Long member_id, @PathVariable("precedent_id") Long precedent_id, HttpServletRequest request){
+        //Member ID 검증
+        if(!jwtUtils.checkJWTwithID(request, member_id)) throw new ApiException(HttpStatus.FORBIDDEN, "허가되지 않은 접근입니다.");
+
+        //Member 조회
+        Member member = memberService.findOneById(member_id);
+
+        //북마크 조회
+        boolean findOne = false;
+        for (Bookmark bookmark : member.getBookmarks()) {
+            if(bookmark.getPrecedent().getId().equals(precedent_id)){ findOne = true; break;}}
+
+
+        return responseService.getSuccessResponse("북마크 조회 성공", findOne);
+    }
 
 
 }
