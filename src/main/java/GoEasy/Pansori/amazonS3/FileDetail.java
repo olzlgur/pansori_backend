@@ -21,15 +21,18 @@ public class FileDetail {
     @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    public static FileDetail multipartOf(MultipartFile multipartFile){
+    public static FileDetail multipartOf(Long memberId, MultipartFile multipartFile){
+
         final String fileId = MultipartUtil.createFileId();
         final String format = MultipartUtil.getFormat(multipartFile.getContentType());
+        final String fileRoot = memberId + "/";
+        final String fileName = fileRoot + MultipartUtil.getFileName(multipartFile.getOriginalFilename());
 
         return FileDetail.builder()
                 .id(fileId)
-                .name(multipartFile.getOriginalFilename())
+                .name(fileName)
                 .format(format)
-                .path(MultipartUtil.createPath(fileId, format))
+                .path(MultipartUtil.createPath(fileName, fileId, format))
                 .bytes(multipartFile.getSize())
                 .build();
     }
