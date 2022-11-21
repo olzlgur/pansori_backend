@@ -14,6 +14,7 @@ import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import static GoEasy.Pansori.domain.QSearchTable.searchTable;
 
@@ -30,6 +31,13 @@ public class PrecedentRepository {
 
     public DetailPrecedent findOne(Long id) {
         return em.find(DetailPrecedent.class, id);
+    }
+
+    public List<Object[]> findDetail(Long id) {
+        String sql = "select precedent_id, content from detail_table where precedent_id = ?";
+        Query query = em.createNativeQuery(sql).setParameter(1, id);
+        List<Object[]> result = query.getResultList();
+        return result;
     }
 
     public List<DetailPrecedent> findAll() {
@@ -99,10 +107,10 @@ public class PrecedentRepository {
         sql += "order by date desc, score desc ";
         Query query = em.createNativeQuery(sql);
         for (int index = 1; index <= contents.size(); index++) {
-            query.setParameter(index, contents.get(index-1));
+            query.setParameter(index, contents.get(index - 1));
         }
         for (int index = 1; index <= contents.size(); index++) {
-            query.setParameter(index + contents.size(), contents.get(index-1));
+            query.setParameter(index + contents.size(), contents.get(index - 1));
         }
         List<Object[]> resultList = query.getResultList();
         for (Object[] row : resultList) {
@@ -121,11 +129,12 @@ public class PrecedentRepository {
         return precedentListDto;
     }
 
-    public List<String> searchRelation(String word){
+    public List<String> searchRelation(String word) {
         return queryFactory
                 .select(searchTable.word)
                 .from(searchTable)
                 .where(searchTable.word.startsWith(word))
+                .where(searchTable.word.ne(word))
                 .orderBy(searchTable.count.desc())
                 .limit(5)
                 .fetch();
@@ -164,7 +173,7 @@ public class PrecedentRepository {
         return precedentListDto;
     }
 
-    public String searchMistake(String word){
+    public String searchMistake(String word) {
 
         System.out.println(word);
 

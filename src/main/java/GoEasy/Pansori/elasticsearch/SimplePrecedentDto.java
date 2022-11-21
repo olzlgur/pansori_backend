@@ -1,6 +1,9 @@
 package GoEasy.Pansori.elasticsearch;
 
 import lombok.*;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Column;
 import java.util.Date;
@@ -11,14 +14,17 @@ import java.util.Date;
 @Getter
 public class SimplePrecedentDto {
 
-    @Column( name = "precedent_id")
-    private Long id; //판례일련번호
+    private String precedent_id; //판례일련번호
+
+    private String id;
 
     private String caseId; //사건번호
 
     private String title; //사건명
 
-    private Date date; //선고일자
+//    @DateTimeFormat(pattern = "yyyy-mm-dd")
+    @DateTimeFormat(pattern = "yyyy-mm-dd")
+    private String date; //선고일자
 
     private String courtName; //법원명
 

@@ -66,6 +66,11 @@ public class PrecedentController {
         return responseService.getSuccessResponse("성공했습니다.", precedentListDto);
     }
 
+    @GetMapping("/api/precedents/findDetail")
+    public CommonResponse<Object> getDetail(@RequestParam(value = "id") Long id){
+        return responseService.getSuccessResponse("성공했습니다.", precedentService.findDetail(id));
+    }
+
 //    @GetMapping("/onePrecedent")
 //    public CommonResponse<Object> findOnePrecedent(@RequestParam(value = "id")Long id){
 //        PrecedentApiDto onePrecedent = precedentService.findOnePrecedent(id);
