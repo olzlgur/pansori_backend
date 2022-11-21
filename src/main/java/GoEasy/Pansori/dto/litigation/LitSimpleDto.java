@@ -33,7 +33,7 @@ public class LitSimpleDto {
         Integer totalStep = 5;
         Long curStep = litigation.getStep() + 1;
 
-        return (curStep / totalStep) * 100;
+        return (float)(curStep) / (float)(totalStep) * 100;
     }
 
 }

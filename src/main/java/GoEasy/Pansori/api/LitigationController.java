@@ -70,7 +70,7 @@ public class LitigationController {
         //Member litigation list에 존재하는 소송 번호인지 확인
         Litigation findOne = null;
         for(Litigation lit : litigations){
-            if(lit.getId().equals(litigation_id)) findOne = lit; break;}
+            if(lit.getId().equals(litigation_id)){findOne = lit; break;}}
         if(findOne == null) throw new ApiException(HttpStatus.NOT_FOUND, "해당 번호 소송이 회원의 소송 목록에 존재하지 않습니다.");
 
         //Litigations convert to dto
