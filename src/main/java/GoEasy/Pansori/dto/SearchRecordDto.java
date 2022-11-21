@@ -43,6 +43,7 @@ public class SearchRecordDto implements Comparable<SearchRecordDto> {
         SimplePrecedent precedent = searchRecord.getPrecedent();
         dto.precedent_id = precedent.getId();
         dto.title = precedent.getTitle();
+        dto.case_id = precedent.getCaseId();
         dto.date = precedent.getDate();
         dto.court_name = precedent.getCourtName();
         dto.verdict = precedent.getVerdict();

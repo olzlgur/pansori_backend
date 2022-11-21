@@ -117,6 +117,8 @@ public class JwtProvider {
             log.info("올바른 JWT 토큰이 아닙니다.");
             throw new FilterException(ErrorCode.INVALID_JWT);
         }
+        catch (Exception e){
+            throw new FilterException(ErrorCode.UNKNOWN_ERROR);}
     }
 
     private Claims parseClaims(String accessToken){

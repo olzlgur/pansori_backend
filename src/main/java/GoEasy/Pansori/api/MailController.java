@@ -60,7 +60,6 @@ public class MailController {
     public CommonResponse<Object> confirmAuthKey(@RequestParam(value = "email") String email,
                                @RequestParam(value = "authKey") String authKey, HttpServletRequest request){
         mailService.confirmAuthKey(email, authKey, request);
-        memberService.findOneByEmail(email); //해당 이메일을 가진 멤버가 있는지 확인
 
         return responseService.getSuccessResponse("메일 인증이 완료되었습니다.", null);
     }
