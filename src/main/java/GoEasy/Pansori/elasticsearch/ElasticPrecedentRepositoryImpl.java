@@ -3,9 +3,7 @@ package GoEasy.Pansori.elasticsearch;
 import lombok.RequiredArgsConstructor;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.search.sort.FieldSortBuilder;
-import org.elasticsearch.search.sort.SortBuilders;
-import org.elasticsearch.search.sort.SortOrder;
+import org.elasticsearch.search.sort.*;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHit;
@@ -18,7 +16,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.elasticsearch.index.query.QueryBuilders.regexpQuery;
+import static org.elasticsearch.search.sort.SortOrder.DESC;
 
 
 @Component
@@ -28,28 +26,42 @@ public class ElasticPrecedentRepositoryImpl implements ElasticPrecedentRepositor
     private final ElasticsearchOperations elasticsearchOperations;
 
     @Override
-    public List<Object> findByAbstractive(List<String> contents, Integer pageNumber) {
+    public ElasticResponseDto findByAbstractive(List<String> contents, Integer pageNumber) {
         Integer pageOffset = 10;
-
+        ElasticResponseContentDto elasticResponseContentDto;
+        List<ElasticResponseContentDto> elasticResponseContentDtoList = new ArrayList<>();
+        ElasticResponseDto elasticResponseDto = new ElasticResponseDto();
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-
-        FieldSortBuilder dateSortBuilder = SortBuilders.fieldSort("score").order(SortOrder.ASC);
+        FieldSortBuilder dateSortBuilder = SortBuilders.fieldSort("date").order(DESC);
+//        SortBuilder SortBuilder = SortBuilders.fieldSort("score").order(ASC).(scoreSort());
 
         for (String content : contents) {
-            boolQueryBuilder.should(QueryBuilders.matchQuery("abstractive", content));
+            boolQueryBuilder.should(QueryBuilders.wildcardQuery("abstractive", "*" + content + "*"));
         }
 
-        PageRequest pageRequest = PageRequest.of(pageNumber, pageOffset);
+        PageRequest pageRequest = PageRequest.of(pageNumber - 1, pageOffset);
         NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
                 .withSorts(dateSortBuilder)
                 .withQuery(boolQueryBuilder)
                 .withPageable(pageRequest)
                 .build();
         SearchHits<ElasticSimplePrecedent> hits = elasticsearchOperations.search(searchQuery, ElasticSimplePrecedent.class, IndexCoordinates.of("simple_precedent"));
-        List<Object> result = new ArrayList<>();
-        for (SearchHit hit : hits.getSearchHits()) {
-            result.add(hit.getContent());
+
+        for (SearchHit<ElasticSimplePrecedent> hit : hits) {
+            elasticResponseContentDto = new ElasticResponseContentDto(hit.getContent());
+            elasticResponseContentDtoList.add(elasticResponseContentDto);
         }
-        return result;
+        elasticResponseDto.setElasticResponseContentDtoList(elasticResponseContentDtoList);
+
+
+        elasticResponseDto.setTotal((int) hits.getTotalHits());
+        elasticResponseDto.setTotalPageNumber((int) (hits.getTotalHits() + 1) / 10);
+
+        return elasticResponseDto;
+    }
+
+    @Override
+    public void save(ElasticSimplePrecedent elasticSimplePrecedent) {
+
     }
 }

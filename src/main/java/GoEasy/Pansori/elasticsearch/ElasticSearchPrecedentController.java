@@ -12,13 +12,13 @@ public class ElasticSearchPrecedentController {
 
     private final ElasticPrecedentService elasticPrecedentService;
     private final ResponseService responseService;
-//    @PostMapping("/elastic/insertPrec")
-//    public CommonResponse<Object> save(@RequestBody SimplePrecedentDto simplePrecedentDto) {
-//
-//        Long id = elasticPrecedentService.save(simplePrecedentDto);
-//
-//        return responseService.getSuccessResponse("성공했습니다..", id);
-//    }
+    @PostMapping("/elastic/insertPrec")
+    public CommonResponse<Object> save(@RequestBody SimplePrecedentDto simplePrecedentDto) {
+
+        String id = elasticPrecedentService.save(simplePrecedentDto);
+
+        return responseService.getSuccessResponse("성공했습니다..", id);
+    }
 //    @GetMapping("/elastic/getPrec")
 //    public CommonResponse<Object> get(@RequestParam(value = "id")Long id) {
 //        return responseService.getSuccessResponse("성공했습니다..", elasticPrecedentService.searchById(id));
