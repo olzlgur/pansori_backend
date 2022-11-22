@@ -2,8 +2,10 @@ package GoEasy.Pansori.api;
 
 import GoEasy.Pansori.domain.SearchTable;
 import GoEasy.Pansori.domain.precedent.DetailPrecedent;
+import GoEasy.Pansori.domain.precedent.SimplePrecedent;
 import GoEasy.Pansori.repository.PrecedentRepository;
 import GoEasy.Pansori.repository.SearchTableRepository;
+import GoEasy.Pansori.repository.SimplePrecedentRepository;
 import GoEasy.Pansori.service.PrecedentService;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONObject;
@@ -21,6 +23,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class searchDBController {
     private final PrecedentRepository precedentRepository;
+    private final SimplePrecedentRepository simplePrecedentRepository;
     private final EntityManager em;
     private final SearchTableRepository searchTableRepository;
     private final PrecedentService precedentService;
@@ -38,11 +41,10 @@ public class searchDBController {
     @GetMapping("api/db")
     public void searchDB(@RequestParam(value = "start")int start, @RequestParam(value = "end")int end) {
 
-        List<DetailPrecedent> detailPrecedentList = precedentRepository.findAll();
+        List<String> abstractiveList = simplePrecedentRepository.findAll();
         List<String> strarr;
-
         for (int index = start; index < start + end; index++) {
-            strarr = precedentService.morphemeAnalysis(detailPrecedentList.get(index).getPrecContent());
+            strarr = precedentService.morphemeAnalysis(abstractiveList.get(index));
             for (int strindex = 0; strindex < strarr.size(); strindex++) {
                 String word = strarr.get(strindex);
                 if (word.length() == 1) {

@@ -55,6 +55,7 @@ dependencies {
 	implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.13.4'
 	implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '3.0.0'
 	implementation group: 'io.springfox', name: 'springfox-boot-starter', version: '3.0.0'
+	implementation 'org.jsoup:jsoup:1.14.3'
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
 

@@ -1,11 +1,13 @@
 package GoEasy.Pansori.elasticsearch;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
@@ -17,15 +19,18 @@ import java.util.Date;
 public class ElasticSimplePrecedent {
 
     @Id
-    @Column(name = "precedent_id")
-    private String id; //판례일련번호
+    private String precedent_id; //판례일련번호
+
+    private String id;
 
     private String caseId; //사건번호
 
     @Column(length = 3000)
     private String title; //사건명
 
-    private Integer date; //선고일자
+//    @DateTimeFormat(pattern = "yyyy-mm-dd")
+//    @Field(type = FieldType.Date, pattern="yyyy-mm-dd")
+    private String date; //선고일자
 
     private String court_name; //법원명
 
@@ -42,7 +47,8 @@ public class ElasticSimplePrecedent {
     private String abstractive; // 요약
 
     @PersistenceConstructor
-    public ElasticSimplePrecedent(String id, String caseId, String title, Integer date, String court_name, String court_type_code, String case_type, Integer case_type_code, String verdict_type, String verdict, String abstractive) {
+    public ElasticSimplePrecedent(String precedent_id, String id, String caseId, String title, String date, String court_name, String court_type_code, String case_type, Integer case_type_code, String verdict_type, String verdict, String abstractive) {
+        this.precedent_id = precedent_id;
         this.id = id;
         this.caseId = caseId;
         this.title = title;

@@ -97,7 +97,7 @@
 //            } catch (InterruptedException e) {
 //                throw new RuntimeException(e);
 //            }
-//            urlString = "http://www.law.go.kr/DRF/lawService.do?target=prec&type=XML&OC=" + ocId + "&ID=" + Long.toString(simplePrecedent.getId());
+//            urlString = "+" + ocId + "&ID=" + Long.toString(simplePrecedent.getId());
 //
 //            try{
 //                URL url = new URL(urlString);
