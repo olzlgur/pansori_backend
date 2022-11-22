@@ -105,12 +105,12 @@ public class BookmarkController {
         Member member = memberService.findOneById(member_id);
 
         //북마크 조회
-        boolean findOne = false;
+        BookmarkDto bookmarkDto = null;
         for (Bookmark bookmark : member.getBookmarks()) {
-            if(bookmark.getPrecedent().getId().equals(precedent_id)){ findOne = true; break;}}
+            if(bookmark.getPrecedent().getId().equals(precedent_id)){ bookmarkDto = BookmarkDto.createDto(bookmark); break;}}
 
 
-        return responseService.getSuccessResponse("북마크 조회 성공", findOne);
+        return responseService.getSuccessResponse("북마크 단일 조회 성공", bookmarkDto);
     }
 
 
