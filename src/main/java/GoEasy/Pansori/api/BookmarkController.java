@@ -109,6 +109,9 @@ public class BookmarkController {
         for (Bookmark bookmark : member.getBookmarks()) {
             if(bookmark.getPrecedent().getId().equals(precedent_id)){ bookmarkDto = BookmarkDto.createDto(bookmark); break;}}
 
+//        if(bookmarkDto == null){
+//            throw new ApiException(HttpStatus.NOT_FOUND, "해당 번호의 판례를 가진 북마크는 존재하지 않습니다.");}
+
 
         return responseService.getSuccessResponse("북마크 단일 조회 성공", bookmarkDto);
     }
