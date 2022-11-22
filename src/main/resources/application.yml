@@ -43,10 +43,10 @@ spring:
 cloud:
   aws:
     s3:
-      bucket: pansori.s3.bucket
+      bucket: pansori
     credentials:
-      access-key: AKIASKTFCHJXTQXTVPWA
-      secret-key: 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
+      access-key: AKIASKTFCHJX7EH7KRMX
+      secret-key: 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
     region:
       static: ap-northeast-2
       auto: false
