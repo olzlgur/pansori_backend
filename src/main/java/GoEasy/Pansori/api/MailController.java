@@ -4,24 +4,29 @@ import GoEasy.Pansori.domain.User.Member;
 import GoEasy.Pansori.dto.MailDto;
 import GoEasy.Pansori.domain.CommonResponse;
 import GoEasy.Pansori.dto.NewPasswordRequestDto;
-import GoEasy.Pansori.dto.member.PasswordUpdateRequestDto;
 import GoEasy.Pansori.exception.ApiException;
 import GoEasy.Pansori.service.MailService;
 import GoEasy.Pansori.service.MemberService;
 import GoEasy.Pansori.service.ResponseService;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class MailController {
     private final MailService mailService;
     private final MemberService memberService;
     private final ResponseService responseService;
+    @Value("${api.secret-key}")
+    private String apiSecretKey;
 
     @ApiOperation(value = "새 계정 생성 API", notes = "해당 이메일로 인증 번호를 발송합니다.\n")
     @PostMapping("/api/mail/new/account")
@@ -46,6 +51,11 @@ public class MailController {
             "newPassword : 새 비밀번호")
     @PutMapping(value = "/api/mail/find/password")
     public CommonResponse<Object> setNewPassword(@RequestBody NewPasswordRequestDto requestDto, HttpServletRequest request){
+        //Secret key 인증
+        if(requestDto.getSecretKey().equals(apiSecretKey)){
+            throw new ApiException(HttpStatus.FORBIDDEN, "허가되지 않은 접근입니다.");
+        }
+
         //Member 이메일 조회
         Member member = memberService.findOneByEmail(requestDto.getEmail());
 
