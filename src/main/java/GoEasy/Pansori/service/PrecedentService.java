@@ -64,8 +64,10 @@ public class PrecedentService {
         for (String strTemp : splitList1) {
             if (strTemp.contains("##")) {
                 splitList2 = strTemp.split("##");
-                findOneResponseContentDto = new FindOneResponseContentDto(splitList2[0], splitList2[1]);
-                findOneResponseContentDtoList.add(findOneResponseContentDto);
+                if (splitList2.length == 2 ) {
+                    findOneResponseContentDto = new FindOneResponseContentDto(splitList2[0], splitList2[1]);
+                    findOneResponseContentDtoList.add(findOneResponseContentDto);
+                }
             }
         }
         findOneResponseDto = new FindOneResponseDto(simplePrecedent.getId(), simplePrecedent.getCaseId(), simplePrecedent.getCaseType(), simplePrecedent.getCaseTypeCode(), simplePrecedent.getCourtName(),
