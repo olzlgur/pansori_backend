@@ -60,7 +60,7 @@ public class MemberController {
     public CommonResponse<Object> findOneMember(@PathVariable("id") Long id, HttpServletRequest request){
         String email = jwtUtils.getEmailFromRequestHeader(request);
         Member member = memberService.findOneByEmail(email);
-        if(!member.getAuthority().equals(Authority.ROLE_ADMIN)){ throw new ApiException(HttpStatus.FORBIDDEN, "해당 접근에 대한 권한이 없습니다.");}
+        if(!jwtUtils.checkJWTwithID(request, id)) throw new ApiException(HttpStatus.FORBIDDEN, "허가되지 않은 접근입니다.");
 
         Member findOne = memberService.findOneById(id);
         MemberDto memberDto = new MemberDto(findOne);
