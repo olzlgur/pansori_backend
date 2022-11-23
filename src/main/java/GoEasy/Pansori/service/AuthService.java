@@ -60,11 +60,6 @@ public class AuthService {
     @Transactional
     public TokenDto reissueToken(TokenDto tokenDto){
 
-        // RefreshToken 적용
-        if(!jwtProvider.validateToken(tokenDto.getRefreshToken())){
-            throw new ApiException(ErrorCode.INVALID_JWT.getHttpStatus(), "Refresh Token이 유효하지 않습니다.");
-        }
-
         // AccessToken에서 Member ID 가져오기
         Authentication authentication = jwtProvider.getAuthentication(tokenDto.getAccessToken());
 
