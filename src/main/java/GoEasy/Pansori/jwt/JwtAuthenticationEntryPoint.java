@@ -32,6 +32,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     //한글 출력을 위해 getWriter() 사용
     private void setResponse(HttpServletResponse response, ErrorCode exceptionCode) throws IOException {
         response.setContentType("application/json;charset=UTF-8");
+        response.setHeader("Access-Control-Allow-Origin", "*");
         JSONObject responseJson = new JSONObject();
 
         if(exceptionCode.equals(ErrorCode.EXPIRED_JWT)){
