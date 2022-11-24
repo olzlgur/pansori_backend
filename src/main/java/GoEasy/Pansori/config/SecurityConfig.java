@@ -61,7 +61,7 @@ public class SecurityConfig{
                 .antMatchers("/api/auth/**").authenticated()
                 .antMatchers(HttpMethod.POST,"/api/members").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/members").hasAuthority("ROLE_ADMIN")
-                .antMatchers(HttpMethod.GET, "/api/members/{\\d+}").hasAuthority("ROLE_ADMIN")
+                .antMatchers(HttpMethod.GET, "/api/members/{\\d+}").authenticated()
                 .antMatchers(HttpMethod.DELETE, "/api/members/{\\d+}").hasAuthority("ROLE_ADMIN")
                 .antMatchers(HttpMethod.PUT, "/api/mail/find/password").hasAuthority("ROLE_ADMIN")
                 .antMatchers("/api/members/**").authenticated()

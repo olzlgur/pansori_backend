@@ -26,6 +26,7 @@ public class MemberDto {
     private Authority authority;
     private String job;
     private String region;
+    private String name;
 
     public MemberDto(Member member){
         this.id = member.getId();
@@ -33,6 +34,7 @@ public class MemberDto {
         this.authority = member.getAuthority();
         this.job = member.getJob();
         this.region = member.getRegion();
+        this.name = member.getName();
     }
 
 }
