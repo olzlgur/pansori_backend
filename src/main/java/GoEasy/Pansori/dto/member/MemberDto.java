@@ -23,6 +23,8 @@ public class MemberDto {
 
     private Long id;
     private String email;
+
+    private String name;
     private Authority authority;
     private String job;
     private String region;
@@ -31,6 +33,7 @@ public class MemberDto {
     public MemberDto(Member member){
         this.id = member.getId();
         this.email = member.getEmail();
+        this.name = member.getName();
         this.authority = member.getAuthority();
         this.job = member.getJob();
         this.region = member.getRegion();

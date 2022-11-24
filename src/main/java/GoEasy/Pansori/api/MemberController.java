@@ -54,8 +54,8 @@ public class MemberController {
         return responseService.getSuccessResponse("회원 전체 조회 성공", memberDtos);
     }
 
-    //====== 개인 회원 조회 API (관리자 전용) ======//
-    @ApiOperation(value = " 개인 회원 조회(관리자 전용)", notes = "해당 id를 가진 회원을 조회합니다..\n\n")
+    //====== 개인 회원 조회 API ======//
+    @ApiOperation(value = " 개인 회원 조회", notes = "해당 id를 가진 회원을 조회합니다..\n\n")
     @GetMapping(value = "/api/members/{id}")
     public CommonResponse<Object> findOneMember(@PathVariable("id") Long id, HttpServletRequest request){
         if(!jwtUtils.checkJWTwithID(request, id)) throw new ApiException(HttpStatus.FORBIDDEN, "허가되지 않은 접근입니다.");

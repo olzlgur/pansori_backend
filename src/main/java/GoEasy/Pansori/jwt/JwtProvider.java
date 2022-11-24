@@ -59,6 +59,7 @@ public class JwtProvider {
                 .setSubject("access_token")    // payload "sub" : "access_token"
                 .claim(AUTHORITIES_KEY, member.getAuthority())     // payload : "auth" : "ROLE_USER" or "ROLE_AUTH"
                 .claim("email", member.getEmail())
+                .claim("name", member.getName())
                 .claim("job", member.getJob())
                 .claim("region", member.getRegion())
                 .claim("id", member.getId())

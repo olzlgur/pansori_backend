@@ -31,7 +31,7 @@ public class LitSimpleDto {
 
     private static float returnProgress(Litigation litigation){
         Integer totalStep = 5;
-        Long curStep = litigation.getStep() + 1;
+        Long curStep = litigation.getStep();
 
         return (float)(curStep) / (float)(totalStep) * 100;
     }
