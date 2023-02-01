@@ -1,8 +1,8 @@
 # pansori_backend
 
 ### Structure
-├── gradle
-├── build
+├── gradle  
+├── build  
 ├── gradle/wrapper
 └── src/main/.../weather
     ├── amazonS3
