@@ -16,6 +16,12 @@
 - 사용자의 검색 기록, 북마크, 소송 준비 과정 체크리스트 기능 구현
 - AWS EC2를 통한 spring boot와 elastic search 서버 배포, RDS를 활용한 MySQL 데이터베이스 배포
 
+### 실행 화면
+![%25EC%258A%25A4%25ED%2581%25AC%25EB%25A6%25B0%25EC%2583%25B7%25202022-10-06%2520%25EC%2598%25A4%25EC%25A0%2584%252012 11 54](https://user-images.githubusercontent.com/77485914/218255539-b503dbeb-e109-496d-91d4-2bfd42db5fd0.png)
+<img width="1048" alt="Untitled-4" src="https://user-images.githubusercontent.com/77485914/218255548-9ac9f5ed-5e1f-42bf-a84c-ae517f1fda99.png">
+<img width="1116" alt="Untitled-5" src="https://user-images.githubusercontent.com/77485914/218255560-0db3d925-2af1-478d-8256-97535b50f1c1.png">
+<img width="986" alt="Untitled-6" src="https://user-images.githubusercontent.com/77485914/218255570-7646fb54-19de-4fe9-a14c-48c85cbd4700.png">
+
 ### 시스테 구성도
 <img width="1159" alt="Untitled-3" src="https://user-images.githubusercontent.com/77485914/218255332-1d50c93e-bd1e-401d-82cc-b5ad57a54f3d.png">
 
