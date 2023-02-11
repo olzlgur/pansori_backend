@@ -16,6 +16,8 @@
 - 사용자의 검색 기록, 북마크, 소송 준비 과정 체크리스트 기능 구현
 - AWS EC2를 통한 spring boot와 elastic search 서버 배포, RDS를 활용한 MySQL 데이터베이스 배포
 
+### 시스테 구성도
 <img width="1159" alt="Untitled-3" src="https://user-images.githubusercontent.com/77485914/218255332-1d50c93e-bd1e-401d-82cc-b5ad57a54f3d.png">
 
+### ERD 설계
 ![%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7%202023-02-07%20%EC%98%A4%ED%9B%84%2011 53 23](https://user-images.githubusercontent.com/77485914/218255378-d6ddd685-a966-4c90-89ba-4ca96fb1065b.png)
