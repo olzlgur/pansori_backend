@@ -15,3 +15,5 @@
         - 추가 성능 향상을 위한 Elastic Search 적용
 - 사용자의 검색 기록, 북마크, 소송 준비 과정 체크리스트 기능 구현
 - AWS EC2를 통한 spring boot와 elastic search 서버 배포, RDS를 활용한 MySQL 데이터베이스 배포
+
+<img width="1159" alt="Untitled-3" src="https://user-images.githubusercontent.com/77485914/218255332-1d50c93e-bd1e-401d-82cc-b5ad57a54f3d.png">
