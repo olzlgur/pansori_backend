@@ -6,11 +6,6 @@
 - 복잡한 소송 절차로 인해 나홀로 준비 과정에서 겪는 다양한 어려움들이 발생함
 - 나홀로 소송을 돕기 위한 기능 제공
 
-### 💻 팀원
-[고대훈](https://github.com/Hoony0321) | [이인환](https://github.com/dlsghks1227) | [이지혁](https://github.com/olzlgur)
-|:---:|:---:|:---:|
-![50730897](https://user-images.githubusercontent.com/77485914/218256143-6684db43-f79d-4b0a-b9a3-d42612a73663.png)|![49141887](https://user-images.githubusercontent.com/77485914/218256200-119c2981-9b29-4d68-9cc7-402b742f499c.png)|<img width="400px" src="https://github.com/olzlgur.png">
-
 ### 상세 설명
 - Open Api를 통해 약 8만 4천건의 판례 데이터를 수집하여 My SQL를 활용한 데이터 베이스 구축
 - 판례 검색 기능을 위해 JPA를 사용하여 판례 검색 기능 구현
@@ -20,6 +15,11 @@
         - 추가 성능 향상을 위한 Elastic Search 적용
 - 사용자의 검색 기록, 북마크, 소송 준비 과정 체크리스트 기능 구현
 - AWS EC2를 통한 spring boot와 elastic search 서버 배포, RDS를 활용한 MySQL 데이터베이스 배포
+
+### 💻 팀원
+[고대훈](https://github.com/Hoony0321) | [이인환](https://github.com/dlsghks1227) | [이지혁](https://github.com/olzlgur)
+|:---:|:---:|:---:|
+![50730897](https://user-images.githubusercontent.com/77485914/218256143-6684db43-f79d-4b0a-b9a3-d42612a73663.png)|![49141887](https://user-images.githubusercontent.com/77485914/218256200-119c2981-9b29-4d68-9cc7-402b742f499c.png)|<img width="400px" src="https://github.com/olzlgur.png">
 
 ### 실행 화면
 ![%25EC%258A%25A4%25ED%2581%25AC%25EB%25A6%25B0%25EC%2583%25B7%25202022-10-06%2520%25EC%2598%25A4%25EC%25A0%2584%252012 11 54](https://user-images.githubusercontent.com/77485914/218255539-b503dbeb-e109-496d-91d4-2bfd42db5fd0.png)
